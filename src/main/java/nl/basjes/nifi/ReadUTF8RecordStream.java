@@ -2,15 +2,11 @@ package nl.basjes.nifi;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.nio.cs.StandardCharsets;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -18,16 +14,15 @@ public class ReadUTF8RecordStream {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReadUTF8RecordStream.class);
     private String recordStartRegex;
-    private String recordEndRegex;
+    private String recordStartPrefix;
 
     private Pattern startMatcher;
-    private Matcher endMatcher;
 
     private InputStream inputStream;
 
-    public ReadUTF8RecordStream(String recordStartRegex, String recordEndRegex, InputStream inputStream) {
+    public ReadUTF8RecordStream(String recordStartRegex, String recordStartPrefix, InputStream inputStream) {
         this.recordStartRegex = recordStartRegex;
-        this.recordEndRegex = recordEndRegex;
+        this.recordStartPrefix = recordStartPrefix;
 
         startMatcher = Pattern.compile(recordStartRegex);
         this.inputStream = inputStream;
@@ -37,32 +32,30 @@ public class ReadUTF8RecordStream {
     public void read() throws IOException, InterruptedException {
         boolean keepRunning = true;
         String previousLastRecord = "";
-        byte[] readBuffer = new byte[4096];
-        int sleepsDone = 0;
+        byte[] readBuffer = new byte[1];
+        long recordNumber = 0;
         while (keepRunning) {
-            if (sleepsDone > 10) { // FIXME: Bad magic number
-                // It must have stopped
+
+            int bytesRead = inputStream.read(readBuffer);
+            if (bytesRead == -1) { // -1 == End of stream
+                LOG.error("<End Of File>");
                 keepRunning = false;
                 continue;
             }
-            int bytesRead = inputStream.read(readBuffer);
 
-            if (bytesRead == 0) {
-                Thread.sleep(1); // Sleep 1 ms
-                sleepsDone++;
-//                return;
-                continue;
-            }
-            sleepsDone = 0;
             previousLastRecord += new String(readBuffer, UTF_8);
 
-            String [] splits = startMatcher.split(previousLastRecord, 2);
+            String[] splits = startMatcher.split(previousLastRecord, 2);
 
             if (splits.length == 2) {
-                LOG.info("{}", splits[0]);
+                recordNumber++;
+                LOG.info("\n" +
+                    "== {} ================================= \n" +
+                    "{} \n" +
+                    "== {} ================================= \n",
+                    recordNumber, recordStartPrefix+splits[0], recordNumber);
+                previousLastRecord = splits[1];
             }
-
-            previousLastRecord = splits[1];
         }
     }
 }
