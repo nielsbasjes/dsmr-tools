@@ -18,6 +18,10 @@ public class TestReadRecordStream {
 
         ReadUTF8RecordStream reader = new ReadUTF8RecordStream("\n/", "/", inputStream);
 
-        reader.read();
+        String value;
+        while ((value = reader.read() )!= null) {
+            LOG.info("\n=========== \n{}\n=========== \n", value);
+        }
+        LOG.info("---------------------- Done ----------------------");
     }
 }

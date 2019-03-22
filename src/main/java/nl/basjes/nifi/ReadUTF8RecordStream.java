@@ -5,42 +5,44 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class ReadUTF8RecordStream {
+public class ReadUTF8RecordStream implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReadUTF8RecordStream.class);
-    private String recordStartRegex;
+    private Pattern startMatcher;
     private String recordStartPrefix;
 
-    private Pattern startMatcher;
 
     private InputStream inputStream;
 
     public ReadUTF8RecordStream(String recordStartRegex, String recordStartPrefix, InputStream inputStream) {
-        this.recordStartRegex = recordStartRegex;
+        this.startMatcher = Pattern.compile(recordStartRegex);
         this.recordStartPrefix = recordStartPrefix;
 
-        startMatcher = Pattern.compile(recordStartRegex);
         this.inputStream = inputStream;
         }
 
-    // FIXME: This can be done a LOT more efficient.
-    public void read() throws IOException, InterruptedException {
-        boolean keepRunning = true;
-        String previousLastRecord = "";
-        byte[] readBuffer = new byte[1];
-        long recordNumber = 0;
-        while (keepRunning) {
+    private String previousLastRecord = "";
 
+    // TODO: This returns a record the moment the NEXT record appears. This may be a needless delay
+    // Returns null if end of stream
+    public String read() throws IOException {
+        byte[] readBuffer = new byte[1];
+        if (previousLastRecord == null) {
+            return null;
+        }
+
+        while (true) {
             int bytesRead = inputStream.read(readBuffer);
             if (bytesRead == -1) { // -1 == End of stream
-                LOG.error("<End Of File>");
-                keepRunning = false;
-                continue;
+                String returnValue = previousLastRecord;
+                previousLastRecord = null; // Next call will return null immediately
+                return returnValue;
             }
 
             previousLastRecord += new String(readBuffer, UTF_8);
@@ -48,13 +50,8 @@ public class ReadUTF8RecordStream {
             String[] splits = startMatcher.split(previousLastRecord, 2);
 
             if (splits.length == 2) {
-                recordNumber++;
-                LOG.info("\n" +
-                    "== {} ================================= \n" +
-                    "{} \n" +
-                    "== {} ================================= \n",
-                    recordNumber, recordStartPrefix+splits[0], recordNumber);
                 previousLastRecord = splits[1];
+                return splits[0];
             }
         }
     }
