@@ -1,0 +1,45 @@
+*.class
+
+# Maven
+dependency-reduced-pom.xml
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+target
+*.bak
+*.swp
+*~
+bin
+
+#Eclipse stuff
+.metadata
+.settings
+.classpath
+.project
+hs_err_pid*.log
+
+#IntelliJ stuff
+.idea
+*.iml
+
+#test files
+x
+xx
+y
+yy
+z
+zz
+
+#Pig/Hive/Hadoop logs
+pig_*.log
+SecurityAuth-*.audit
+hadoop*.log
+*-audit.log
+rm-appsummary.log
+
+# Docker
+docker/_m2/
+docker/_gnupg/
