@@ -20,12 +20,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
   <groupId>nl.basjes.nifi</groupId>
   <artifactId>nifi-read-recordstream-parent</artifactId>
   <version>0.1-SNAPSHOT</version>
+  </parent>
 
-  <packaging>pom</packaging>
-  <name>DSMR : </name>
+  <artifactId>nifi-read-recordstream</artifactId>
+  <packaging>jar</packaging>
+  <name>DSMR : Nifi : RecordReader</name>
 
   <properties>
     <jdkLevel>1.8</jdkLevel>
@@ -106,11 +109,6 @@
     <!--<version.license>License Apache 2.0</version.license>-->
     <!--<version.url>${project.url}</version.url>-->
   </properties>
-
-  <modules>
-    <module>parser</module>
-    <module>nifi-stream-record-reader</module>
-  </modules>
 
   <!--<dependencyManagement>-->
     <!--<dependencies>-->
