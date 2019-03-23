@@ -32,9 +32,15 @@ public class ReadUTF8RecordStream implements Serializable {
     // TODO: This returns a record the moment the NEXT record appears. This may be a needless delay
     // Returns null if end of stream
     public String read() throws IOException {
-        byte[] readBuffer = new byte[1];
+        byte[] readBuffer = new byte[128];
         if (previousLastRecord == null) {
             return null;
+        }
+        String[] splits = startMatcher.split(previousLastRecord, 2);
+
+        if (splits.length == 2) {
+            previousLastRecord = splits[1];
+            return recordStartPrefix + splits[0];
         }
 
         while (true) {
@@ -45,13 +51,13 @@ public class ReadUTF8RecordStream implements Serializable {
                 return returnValue;
             }
 
-            previousLastRecord += new String(readBuffer, UTF_8);
+            previousLastRecord += new String(readBuffer, 0, bytesRead, UTF_8);
 
-            String[] splits = startMatcher.split(previousLastRecord, 2);
+            splits = startMatcher.split(previousLastRecord, 2);
 
             if (splits.length == 2) {
                 previousLastRecord = splits[1];
-                return splits[0];
+                return recordStartPrefix + splits[0];
             }
         }
     }
