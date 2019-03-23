@@ -14,33 +14,35 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class ReadUTF8RecordStream implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReadUTF8RecordStream.class);
-    private Pattern startMatcher;
-    private String recordStartPrefix;
-
-
+    private Pattern endMatcher;
     private InputStream inputStream;
 
-    public ReadUTF8RecordStream(String recordStartRegex, String recordStartPrefix, InputStream inputStream) {
-        this.startMatcher = Pattern.compile(recordStartRegex);
-        this.recordStartPrefix = recordStartPrefix;
+    public ReadUTF8RecordStream(String recordEndRegex, InputStream input) {
+        endMatcher = Pattern.compile("(" + recordEndRegex + ")");
 
-        this.inputStream = inputStream;
-        }
+        inputStream = input;
+    }
 
     private String previousLastRecord = "";
 
-    // TODO: This returns a record the moment the NEXT record appears. This may be a needless delay
     // Returns null if end of stream
     public String read() throws IOException {
-        byte[] readBuffer = new byte[128];
+        byte[] readBuffer = new byte[1024];
         if (previousLastRecord == null) {
             return null;
         }
-        String[] splits = startMatcher.split(previousLastRecord, 2);
 
+        String[] splits = endMatcher.split(previousLastRecord, 2);
         if (splits.length == 2) {
+            Matcher matcher = endMatcher.matcher(previousLastRecord);
+            if (matcher.find()) {
+                String keepThis = matcher.group(1);
+                previousLastRecord = splits[1];
+                return splits[0] + keepThis;
+            }
+            // What do we do if this happens?
             previousLastRecord = splits[1];
-            return recordStartPrefix + splits[0];
+            return splits[0];
         }
 
         while (true) {
@@ -53,11 +55,17 @@ public class ReadUTF8RecordStream implements Serializable {
 
             previousLastRecord += new String(readBuffer, 0, bytesRead, UTF_8);
 
-            splits = startMatcher.split(previousLastRecord, 2);
-
+            splits = endMatcher.split(previousLastRecord, 2);
             if (splits.length == 2) {
+                Matcher matcher = endMatcher.matcher(previousLastRecord);
+                if (matcher.find()) {
+                    String keepThis = matcher.group(1);
+                    previousLastRecord = splits[1];
+                    return splits[0] + keepThis;
+                }
+                // What do we do if this happens?
                 previousLastRecord = splits[1];
-                return recordStartPrefix + splits[0];
+                return splits[0];
             }
         }
     }

@@ -16,7 +16,7 @@ public class TestReadRecordStream {
     public void runTest() throws IOException, InterruptedException {
         FileInputStream inputStream = new FileInputStream("ttyUSB0-mini.txt");
 
-        ReadUTF8RecordStream reader = new ReadUTF8RecordStream("\n/", "/", inputStream);
+        ReadUTF8RecordStream reader = new ReadUTF8RecordStream("\n![0-9A-F]{4}\n", inputStream);
 
         String value;
         while ((value = reader.read() )!= null) {
