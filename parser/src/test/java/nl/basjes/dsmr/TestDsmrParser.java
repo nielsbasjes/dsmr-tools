@@ -1,5 +1,10 @@
 package nl.basjes.dsmr;
 
+import org.junit.Test;
+
+import static nl.basjes.dsmr.CheckCRC.crcIsValid;
+import static org.junit.Assert.assertTrue;
+
 public class TestDsmrParser {
 
     // This is the example testcase documented in the specification.
@@ -28,7 +33,7 @@ public class TestDsmrParser {
     // - Instantaneous active power (+P) per phase
     // - Instantaneous active power (-P) per phase
 
-    String testcase = "\r\n"+
+    private String testcase = "\r\n"+
         "/ISk5\\2MT382-1000\r\n"+
         "\r\n"+
         "1-3:0.2.8(50)\r\n"+
@@ -68,9 +73,5 @@ public class TestDsmrParser {
         "0-1:24.2.1(101209112500W)(12785.123*m3)\r\n"+
         "!EF2F\r\n"+
         "\r\n";
-
-
-
-
 
 }
