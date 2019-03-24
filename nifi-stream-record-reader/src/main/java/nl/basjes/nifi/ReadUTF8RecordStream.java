@@ -32,6 +32,7 @@ public class ReadUTF8RecordStream implements Serializable {
             return null;
         }
 
+        // In case the previous read retrieved multiple records
         String[] splits = endMatcher.split(previousLastRecord, 2);
         if (splits.length == 2) {
             Matcher matcher = endMatcher.matcher(previousLastRecord);
@@ -40,11 +41,12 @@ public class ReadUTF8RecordStream implements Serializable {
                 previousLastRecord = splits[1];
                 return splits[0] + keepThis;
             }
-            // What do we do if this happens?
+            // FIXME: What do we do if this happens? This should not be possible.
             previousLastRecord = splits[1];
             return splits[0];
         }
 
+        // Keep reading until we have atleast one record in the buffer (sometimes we get multiple records)
         while (true) {
             int bytesRead = inputStream.read(readBuffer);
             if (bytesRead == -1) { // -1 == End of stream
@@ -55,6 +57,7 @@ public class ReadUTF8RecordStream implements Serializable {
 
             previousLastRecord += new String(readBuffer, 0, bytesRead, UTF_8);
 
+            // In case we now have (one or more) records return the first one.
             splits = endMatcher.split(previousLastRecord, 2);
             if (splits.length == 2) {
                 Matcher matcher = endMatcher.matcher(previousLastRecord);
@@ -63,7 +66,7 @@ public class ReadUTF8RecordStream implements Serializable {
                     previousLastRecord = splits[1];
                     return splits[0] + keepThis;
                 }
-                // What do we do if this happens?
+                // FIXME: What do we do if this happens? This should not be possible.
                 previousLastRecord = splits[1];
                 return splits[0];
             }
