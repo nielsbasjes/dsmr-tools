@@ -60,7 +60,7 @@ public class CheckCRC {
             crc = (crc >>> 8) ^ table[(crc ^ b) & 0xff];
         }
 
-        String actualCrc = Integer.toHexString(crc);
+        String actualCrc = String.format("%04X", crc);
         return expectedCrc.equalsIgnoreCase(actualCrc);
     }
 }

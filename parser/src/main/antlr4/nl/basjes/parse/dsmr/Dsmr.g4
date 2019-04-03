@@ -13,32 +13,49 @@ CRC         : '!' [0-9A-F][0-9A-F][0-9A-F][0-9A-F] ;
 
 COSEMID     : [01] '-' [0-9] ':' [0-9][0-9]? '.' [0-9][0-9]? '.' [0-9][0-9]? ;
 
-TIMESTAMP   : [0-9][0-9][01][0-9][0-3][0-9] [0-2][0-9] [0-5][0-9] [0-5][0-9] ;
+// YYMMDDhhmmssX ASCII presentation of Time stamp
+// Year, Month, Day, Hour, Minute, Second, and an indication whether
+// DST is active (X=S) or DST is not active (X=W).
+// Format       Y    Y     M   M     D    D     h    h     m    m     s    s      S or W
+TIMESTAMP   : [0-9][0-9] [01][0-9] [0-3][0-9] [0-2][0-9] [0-5][0-9] [0-5][0-9]  ('S'|'W');
 
 fragment HEXDIGIT: [0-9A-Fa-f][0-9A-Fa-f];
 
 HEXSTRING : HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT+;
 
-FLOAT       : [0-9][0-9]([0-9]([0-9]([0-9]([0-9])?)?)?)? '.' [0-9]([0-9]([0-9])?)? ;
+fragment DIGIT    : [0-9];
+fragment DIGIT1_2 : DIGIT    DIGIT?;
+fragment DIGIT1_3 : DIGIT1_2 DIGIT?;
+fragment DIGIT1_4 : DIGIT1_3 DIGIT?;
+fragment DIGIT1_5 : DIGIT1_4 DIGIT?;
+fragment DIGIT1_6 : DIGIT1_5 DIGIT?;
+fragment DIGIT1_7 : DIGIT1_6 DIGIT?;
+fragment DIGIT1_8 : DIGIT1_7 DIGIT?;
+fragment DIGIT1_9 : DIGIT1_8 DIGIT?;
+fragment DIGIT1_10: DIGIT1_9 DIGIT?;
 
-INT         : [0-9]([0-9]([0-9]([0-9]([0-9]([0-9]([0-9])?)?)?)?)?)?;
+FLOAT       : DIGIT1_6 '.' DIGIT1_3 ;
 
+INT         : DIGIT1_10;
 
-
-telegram  : IDENT field+ CRC ;
+telegram  : ident=IDENT field+ crc=CRC ;
 
 field
     :   id=COSEMID '('                                  ')' #empty
-    |   id=COSEMID '(' value=TIMESTAMP   'W'            ')' #timestamp
+    |   id=COSEMID '(' timestamp=TIMESTAMP              ')' #timestamp
     |   id=COSEMID '(' value=HEXSTRING                  ')' #hexstring
     |   id=COSEMID '(' value=INT                        ')' #number
-    |   id=COSEMID '(' value=(FLOAT|INT) '*' unit='kWh' ')' #electicityDelivered
-    |   id=COSEMID '(' value=(FLOAT|INT) '*' unit='kW'  ')' #electicityUsage
-    |   id=COSEMID '(' value=(FLOAT|INT) '*' unit='V'   ')' #electicityVolt
-    |   id=COSEMID '(' value=(FLOAT|INT) '*' unit='A'   ')' #electicityAmpere
+    |   id=COSEMID '(' value=(FLOAT|INT) '*' unit='kWh' ')' #electricityKiloWattHour
+    |   id=COSEMID '(' value=(FLOAT|INT) '*' unit='kW'  ')' #electricityKiloWatt
+    |   id=COSEMID '(' value=(FLOAT|INT) '*' unit='V'   ')' #electricityVolt
+    |   id=COSEMID '(' value=(FLOAT|INT) '*' unit='A'   ')' #electricityAmpere
+    |   id=COSEMID '(' timestamp=TIMESTAMP              ')' '(' value=(FLOAT|INT) '*' unit='m3'  ')' #gasCubicMeter
+    |   id=COSEMID '(' count=INT ')' '(' eventTypeId=COSEMID ')'
+                    ( '(' eventTime=TIMESTAMP ')'
+                      '(' eventDuration=INT '*' eventDurationUnit='s' ')'
+                    )+ #eventList
     ;
 
-//            "1-0:99.97.0(1)(0-0:96.7.19)(180417201458S)(0000000236*s)\r\n" +
 
 
 
@@ -80,39 +97,4 @@ field
 // '0-n:24.1.0';   // Device-Type 0-n:24.1.0.255 9 Device type 72 M-Bus client F3(0,0), tag 17
 // '0-n:96.1.0';   // Equipment identifier 0-n:96.1.0.255 2 Value 1 Data Sn (n=0..96), tag 9
 // '0-n:24.2.1';   // Last 5-minute Meter reading and capture time (e.g. slave E meter) 0-n:24.2.1.255 5 Capture time 4 Extended Register TST 0-n:24.2.1.255 2 Value 4 Extended Register Fn(3,3) (See Note 1) kWh
-
-//
-//        1-3:0.2.8(50)
-//
-//        0-0:1.0.0(190202233028W)
-//
-//        0-0:96.1.1(4530303434303037313331363530363138)
-//
-//        1-0:1.8.1(002602.072*kWh)
-//
-//        0-0:96.14.0(0001)
-//
-//        1-0:1.7.0(01.657*kW)
-//
-//        1-0:2.7.0(00.000*kW)
-//
-//        0-0:96.7.21(00005)
-//
-//        0-0:96.7.9(00003)
-//
-//        1-0:99.97.0(1)(0-0:96.7.19)(180417201458S)(0000000236*s)
-//
-//        1-0:32.32.0(00001)
-//
-//        0-0:96.13.0()
-//
-//        1-0:32.7.0(232.5*V)
-//
-//        1-0:31.7.0(002*A)
-//
-//        1-0:21.7.0(00.384*kW)
-//
-//        1-0:22.7.0(00.000*kW)
-//
-//        !AA7B
 

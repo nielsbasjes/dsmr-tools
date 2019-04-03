@@ -1,11 +1,13 @@
 package nl.basjes.dsmr;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static nl.basjes.dsmr.CheckCRC.crcIsValid;
-import static org.junit.Assert.assertTrue;
 
 public class TestDsmrParser {
+
+    private static final Logger LOG = LoggerFactory.getLogger(TestRecordStream.class);
 
     // This is the example testcase documented in the specification.
     // https://www.netbeheernederland.nl/_upload/Files/Slimme_meter_15_a727fce1f1.pdf
@@ -73,5 +75,56 @@ public class TestDsmrParser {
         "0-1:24.2.1(101209112500W)(12785.123*m3)\r\n"+
         "!EF2F\r\n"+
         "\r\n";
+
+    @Test
+    public void testParse(){
+        ParseDsmrTelegram.DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(testcase);
+
+        LOG.info("{}", dsmrTelegram);
+    }
+
+
+    @Test
+    public void testParseRealTelegram(){
+        ParseDsmrTelegram.DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse("/ISK5\\2M550T-1012\r\n" +
+            "\r\n" +
+            "1-3:0.2.8(50)\r\n" +
+            "0-0:1.0.0(190324150541W)\r\n" +
+            "0-0:96.1.1(4530303434303037313331363530363138)\r\n" +
+            "1-0:1.8.1(003432.829*kWh)\r\n" +
+            "1-0:1.8.2(003224.632*kWh)\r\n" +
+            "1-0:2.8.1(000000.000*kWh)\r\n" +
+            "1-0:2.8.2(000000.000*kWh)\r\n" +
+            "0-0:96.14.0(0001)\r\n" +
+            "1-0:1.7.0(00.433*kW)\r\n" +
+            "1-0:2.7.0(00.000*kW)\r\n" +
+            "0-0:96.7.21(00005)\r\n" +
+            "0-0:96.7.9(00003)\r\n" +
+            "1-0:99.97.0(1)(0-0:96.7.19)(180417201458S)(0000000236*s)\r\n" +
+            "1-0:32.32.0(00001)\r\n" +
+            "1-0:52.32.0(00001)\r\n" +
+            "1-0:72.32.0(00001)\r\n" +
+            "1-0:32.36.0(00001)\r\n" +
+            "1-0:52.36.0(00001)\r\n" +
+            "1-0:72.36.0(00001)\r\n" +
+            "0-0:96.13.0()\r\n" +
+            "1-0:32.7.0(236.7*V)\r\n" +
+            "1-0:52.7.0(234.5*V)\r\n" +
+            "1-0:72.7.0(236.0*V)\r\n" +
+            "1-0:31.7.0(000*A)\r\n" +
+            "1-0:51.7.0(000*A)\r\n" +
+            "1-0:71.7.0(002*A)\r\n" +
+            "1-0:21.7.0(00.045*kW)\r\n" +
+            "1-0:41.7.0(00.010*kW)\r\n" +
+            "1-0:61.7.0(00.379*kW)\r\n" +
+            "1-0:22.7.0(00.000*kW)\r\n" +
+            "1-0:42.7.0(00.000*kW)\r\n" +
+            "1-0:62.7.0(00.000*kW)\r\n" +
+            "!9DF0\r\n");
+
+        LOG.info("{}", dsmrTelegram);
+    }
+
+
 
 }

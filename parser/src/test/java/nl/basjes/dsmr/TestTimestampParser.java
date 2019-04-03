@@ -1,0 +1,42 @@
+package nl.basjes.dsmr;
+
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+
+import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+
+import static org.junit.Assert.assertEquals;
+
+public class TestTimestampParser {
+
+        private static final Logger LOG = LoggerFactory.getLogger(TestTimestampParser.class);
+
+        @Test
+        public void testReferenceExample() throws IOException, InterruptedException {
+
+            TimestampParser timestampParser = new TimestampParser();
+
+            // "0-0:1.0.0(101209113020W)"
+            // It is send at 2010, December 9 th , 11h30m20s
+            assertEquals("2010-12-09T11:30:20+01:00", timestampParser.parse("101209113020W").format(ISO_OFFSET_DATE_TIME));
+
+            // "0-1:24.2.1(101209112500W)(12785.123*m3)"
+            // Gas value of 2010, December 9 th , 11:25h is presented
+            assertEquals("2010-12-09T11:25:00+01:00", timestampParser.parse("101209112500W").format(ISO_OFFSET_DATE_TIME));
+
+            // 1-0:99.97.0(2)(0-0:96.7.19)(101208152415W)(0000000240*s)(101208151004W)(0000000301*s)
+            // Failure at 2010, December 8 th , 15h20m15s, duration 240 seconds
+            // Failure at 2010, December 8 th , 15h05m03s, duration 301 seconds
+            assertEquals("2010-12-08T15:24:15+01:00", timestampParser.parse("101208152415W").format(ISO_OFFSET_DATE_TIME));
+            assertEquals("2010-12-08T15:10:04+01:00", timestampParser.parse("101208151004W").format(ISO_OFFSET_DATE_TIME));
+
+
+            assertEquals("2018-04-17T20:14:58+02:00", timestampParser.parse("180417201458S").format(ISO_OFFSET_DATE_TIME));
+            assertEquals("2019-03-24T15:14:44+01:00", timestampParser.parse("190324151444W").format(ISO_OFFSET_DATE_TIME));
+
+     }
+
+}

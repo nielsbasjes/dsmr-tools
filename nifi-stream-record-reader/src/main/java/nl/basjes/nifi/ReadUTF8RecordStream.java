@@ -1,8 +1,5 @@
 package nl.basjes.nifi;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -13,7 +10,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class ReadUTF8RecordStream implements Serializable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ReadUTF8RecordStream.class);
     private Pattern endMatcher;
     private InputStream inputStream;
 
