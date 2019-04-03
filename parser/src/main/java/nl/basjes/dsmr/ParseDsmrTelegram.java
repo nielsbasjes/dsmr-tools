@@ -57,6 +57,43 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
 //    1-0:62.7.0.255      Instantaneous active power L3 (-P)
 
     public static class DSMRTelegramValue {
+
+        public DSMRTelegramValue(String cosemId) {
+            this.cosemId = cosemId;
+            switch (cosemId) {
+                case "0-0:1.0.0":   description = "Timestamp"; break;
+                case "0-0:96.1.1":  description = "Equipment identifier"; break;
+                case "1-0:1.8.1":   description = "Meter Reading electricity delivered to client (low tariff) in 0,001 kWh"; break;
+                case "1-0:1.8.2":   description = "Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh"; break;
+                case "1-0:2.8.1":   description = "Meter Reading electricity delivered by client (low tariff) in 0,001 kWh"; break;
+                case "1-0:2.8.2":   description = "Meter Reading electricity delivered by client (normal tariff) in 0,001 kWh"; break;
+                case "0-0:96.14.0": description = "Tariff indicator electricity"; break;
+                case "1-0:1.7.0":   description = "Actual electricity power delivered (+P) in 1 Watt resolution"; break;
+                case "1-0:2.7.0":   description = "Actual electricity power received (-P) in 1 Watt resolution"; break;
+                case "0-0:96.7.21": description = "Number of power failures in any phases"; break;
+                case "0-0:96.7.9":  description = "Number of long power failures in any phases"; break;
+                case "1-0:99:97.0": description = "Power failure event log"; break;
+                case "1-0:32.32.0": description = "Number of voltage sags in phase L1"; break;
+                case "1-0:52.32.0": description = "Number of voltage sags in phase L2"; break;
+                case "1-0:72.32.0": description = "Number of voltage sags in phase L3"; break;
+                case "1-0:32.36.0": description = "Number of voltage swells in phase L1"; break;
+                case "1-0:52.36.0": description = "Number of voltage swells in phase L2"; break;
+                case "1-0:72.36.0": description = "Number of voltage swells in phase L3"; break;
+                case "1-0:32.7.0":  description = "Instantaneous voltage L1"; break;
+                case "1-0:52.7.0":  description = "Instantaneous voltage L2"; break;
+                case "1-0:72.7.0":  description = "Instantaneous voltage L3"; break;
+                case "1-0:31.7.0":  description = "Instantaneous current L1"; break;
+                case "1-0:51.7.0":  description = "Instantaneous current L2"; break;
+                case "1-0:71.7.0":  description = "Instantaneous current L3"; break;
+                case "1-0:21.7.0":  description = "Instantaneous active power L1 (+P)"; break;
+                case "1-0:41.7.0":  description = "Instantaneous active power L2 (+P)"; break;
+                case "1-0:61.7.0":  description = "Instantaneous active power L3 (+P)"; break;
+                case "1-0:22.7.0":  description = "Instantaneous active power L1 (-P)"; break;
+                case "1-0:42.7.0":  description = "Instantaneous active power L2 (-P)"; break;
+                case "1-0:62.7.0":  description = "Instantaneous active power L3 (-P)"; break;
+                case "0-0:96.13.0": description = "Text message max 1024 characters."; break;
+            }
+        }
         String cosemId;
         BigDecimal numericValue;
         String numericUnit;
@@ -65,13 +102,18 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
 
         @Override
         public String toString() {
-            return "\nDSMRTelegramValue{" +
-                "cosemId='" + cosemId + '\'' +
-                ", numericValue=" + numericValue +
-                ", numericUnit='" + numericUnit + '\'' +
-                ", textValue='" + textValue + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+            StringBuilder sb = new StringBuilder();
+            sb.append("Value{  Id='").append(cosemId).append('\'');
+
+            if (numericValue != null) {
+                sb.append("  value = ").append(numericValue).append(" ").append(numericUnit);
+            }
+            if (textValue != null) {
+                sb.append("  text = ").append(textValue);
+            }
+                sb.append("  description = ").append(description);
+            sb.append(" }\n");
+            return sb.toString();
         }
 
     }
@@ -143,8 +185,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
 
     @Override
     public Void visitEmpty(EmptyContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue();
-        value.cosemId = ctx.id.getText();
+        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
         value.textValue = "";
         dsmrTelegram.values.add(value);
         return null;
@@ -153,8 +194,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
     TimestampParser timestampParser = new TimestampParser();
     @Override
     public Void visitTimestamp(TimestampContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue();
-        value.cosemId = ctx.id.getText();
+        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
         value.textValue = ctx.timestamp.getText();
         if ("0-0:1.0.0".equals(value.cosemId)) {
             dsmrTelegram.timestamp = timestampParser.parse(value.textValue);
@@ -176,8 +216,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
 
     @Override
     public Void visitHexstring(HexstringContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue();
-        value.cosemId = ctx.id.getText();
+        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
         value.textValue = new String(hexStringToByteArray(ctx.value.getText()), UTF_8);
         dsmrTelegram.values.add(value);
         return null;
@@ -185,8 +224,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
 
     @Override
     public Void visitNumber(NumberContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue();
-        value.cosemId = ctx.id.getText();
+        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
         value.numericValue = new BigDecimal(ctx.value.getText());
         dsmrTelegram.values.add(value);
         return null;
@@ -194,8 +232,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
 
     @Override
     public Void visitElectricityKiloWattHour(ElectricityKiloWattHourContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue();
-        value.cosemId = ctx.id.getText();
+        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
         value.numericValue = new BigDecimal(ctx.value.getText());
         value.numericUnit= ctx.unit.getText();
         dsmrTelegram.values.add(value);
@@ -204,8 +241,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
 
     @Override
     public Void visitElectricityKiloWatt(ElectricityKiloWattContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue();
-        value.cosemId = ctx.id.getText();
+        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
         value.numericValue = new BigDecimal(ctx.value.getText());
         value.numericUnit= ctx.unit.getText();
         dsmrTelegram.values.add(value);
@@ -214,8 +250,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
 
     @Override
     public Void visitElectricityVolt(ElectricityVoltContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue();
-        value.cosemId = ctx.id.getText();
+        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
         value.numericValue = new BigDecimal(ctx.value.getText());
         value.numericUnit= ctx.unit.getText();
         dsmrTelegram.values.add(value);
@@ -224,8 +259,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
 
     @Override
     public Void visitElectricityAmpere(ElectricityAmpereContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue();
-        value.cosemId = ctx.id.getText();
+        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
         value.numericValue = new BigDecimal(ctx.value.getText());
         value.numericUnit= ctx.unit.getText();
         dsmrTelegram.values.add(value);
@@ -234,8 +268,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
 
     @Override
     public Void visitGasCubicMeter(GasCubicMeterContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue();
-        value.cosemId = ctx.id.getText();
+        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
         value.numericValue = new BigDecimal(ctx.value.getText());
         value.numericUnit= ctx.unit.getText();
         dsmrTelegram.values.add(value);
@@ -245,8 +278,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
     // TODO: Implement the nested list
 //    @Override
 //    public Void visitEventList(EventListContext ctx) {
-//        DSMRTelegramValue value = new DSMRTelegramValue();
-//        value.cosemId = ctx.id.getText();
+//        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
 //        value.numericValue = new BigDecimal(ctx.value.getText());
 //        value.numericUnit= ctx.unit.getText();
 //        dsmrTelegram.values.add(value);
