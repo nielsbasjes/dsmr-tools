@@ -1,4 +1,4 @@
-package nl.basjes.dsmr;
+package nl.basjes.dsmr.parse;
 
 import java.time.*;
 import java.time.format.DateTimeFormatterBuilder;

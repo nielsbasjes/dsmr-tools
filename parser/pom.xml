@@ -22,11 +22,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>nl.basjes.nifi</groupId>
-    <artifactId>nifi-read-recordstream-parent</artifactId>
+    <groupId>nl.basjes.parse</groupId>
+    <artifactId>dsmr-parser-parent</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
-  <groupId>nl.basjes.parse.dsmr</groupId>
   <artifactId>dsmr-parser</artifactId>
 
   <name>DSMR : Parser</name>
@@ -101,8 +100,8 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>nl.basjes.nifi</groupId>
-      <artifactId>nifi-read-recordstream</artifactId>
+      <groupId>nl.basjes.parse</groupId>
+      <artifactId>stream-record-splitter</artifactId>
       <version>0.1-SNAPSHOT</version>
     </dependency>
 

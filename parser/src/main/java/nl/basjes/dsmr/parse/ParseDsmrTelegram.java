@@ -1,10 +1,10 @@
-package nl.basjes.dsmr;
+package nl.basjes.dsmr.parse;
 
-import nl.basjes.parse.dsmr.DsmrBaseVisitor;
-import nl.basjes.parse.dsmr.DsmrLexer;
-import nl.basjes.parse.dsmr.DsmrParser;
-import nl.basjes.parse.dsmr.DsmrParser.EmptyContext;
-import nl.basjes.parse.dsmr.DsmrParser.TelegramContext;
+import nl.basjes.dsmr.parse.DsmrBaseVisitor;
+import nl.basjes.dsmr.parse.DsmrLexer;
+import nl.basjes.dsmr.parse.DsmrParser;
+import nl.basjes.dsmr.parse.DsmrParser.EmptyContext;
+import nl.basjes.dsmr.parse.DsmrParser.TelegramContext;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CodePointCharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static nl.basjes.parse.dsmr.DsmrParser.*;
+import static nl.basjes.dsmr.parse.DsmrParser.*;
 
 public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
 
@@ -92,6 +92,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
                 case "1-0:42.7.0":  description = "Instantaneous active power L2 (-P)"; break;
                 case "1-0:62.7.0":  description = "Instantaneous active power L3 (-P)"; break;
                 case "0-0:96.13.0": description = "Text message max 1024 characters."; break;
+                default:            description = "?";
             }
         }
         String cosemId;
@@ -275,7 +276,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
         return null;
     }
 
-    // TODO: Implement the nested list
+// TODO: Implement the nested list
 //    @Override
 //    public Void visitEventList(EventListContext ctx) {
 //        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());

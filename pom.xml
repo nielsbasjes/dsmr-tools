@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Yet Another UserAgent Analyzer
-  ~ Copyright (C) 2013-2019 Niels Basjes
+  ~ DSMR Dutch Smart Meter Requirements parser
+  ~ Copyright (C) 2019 Niels Basjes
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>nl.basjes.nifi</groupId>
-  <artifactId>nifi-read-recordstream-parent</artifactId>
+  <groupId>nl.basjes.parse</groupId>
+  <artifactId>dsmr-parser-parent</artifactId>
   <version>0.1-SNAPSHOT</version>
 
   <packaging>pom</packaging>
@@ -108,53 +108,28 @@
   </properties>
 
   <modules>
+    <module>stream-record-splitter</module>
     <module>parser</module>
-    <module>nifi-stream-record-reader</module>
   </modules>
 
-  <!--<dependencyManagement>-->
-    <!--<dependencies>-->
-      <!--<dependency>-->
-        <!--<groupId>org.junit</groupId>-->
-        <!--<artifactId>junit-bom</artifactId>-->
-        <!--<version>${junit5.version}</version>-->
-        <!--<type>pom</type>-->
-        <!--<scope>import</scope>-->
-      <!--</dependency>-->
-    <!--</dependencies>-->
-  <!--</dependencyManagement>-->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${junit5.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
-    <!--<dependency>-->
-    <!--<groupId>nl.basjes.parse.useragent</groupId>-->
-    <!--<artifactId>yauaa</artifactId>-->
-    <!--<version>${project.version}</version>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-    <!--<groupId>org.apache.nifi</groupId>-->
-    <!--<artifactId>nifi-api</artifactId>-->
-    <!--<version>${nifi.version}</version>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-    <!--<groupId>org.apache.nifi</groupId>-->
-    <!--<artifactId>nifi-utils</artifactId>-->
-    <!--<version>${nifi.version}</version>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-    <!--<groupId>org.apache.nifi</groupId>-->
-    <!--<artifactId>nifi-mock</artifactId>-->
-    <!--<version>${nifi.version}</version>-->
-    <!--<scope>test</scope>-->
-    <!--</dependency>-->
-
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j.version}</version>
-      <scope>provided</scope>
+<!--      <scope>provided</scope>-->
     </dependency>
 
     <dependency>
@@ -164,32 +139,23 @@
       <scope>test</scope>
     </dependency>
 
-
-    <!--<dependency>-->
-    <!--<groupId>commons-io</groupId>-->
-    <!--<artifactId>commons-io</artifactId>-->
-    <!--<version>2.6</version>-->
-    <!--<scope>compile</scope>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-      <!--<groupId>org.junit.jupiter</groupId>-->
-      <!--<artifactId>junit-jupiter-engine</artifactId>-->
-      <!--<scope>test</scope>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-      <!--<groupId>org.junit.vintage</groupId>-->
-      <!--<artifactId>junit-vintage-engine</artifactId>-->
-      <!--<scope>test</scope>-->
-    <!--</dependency>-->
     <dependency>
-    <groupId>junit</groupId>
-    <artifactId>junit</artifactId>
-    <version>4.12</version>
-    <scope>test</scope>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+<!--    <dependency>-->
+<!--    <groupId>junit</groupId>-->
+<!--    <artifactId>junit</artifactId>-->
+<!--    <version>4.12</version>-->
+<!--    <scope>test</scope>-->
+<!--    </dependency>-->
 
   </dependencies>
 
@@ -247,8 +213,8 @@
   </developers>
 
   <scm>
-    <url>https://github.com/nielsbasjes/nifi-recordstream</url>
-    <connection>scm:git:https://github.com/nielsbasjes/nifi-recordstream.git</connection>
+    <url>https://github.com/nielsbasjes/dsmr-parser</url>
+    <connection>scm:git:https://github.com/nielsbasjes/dsmr-parser.git</connection>
     <developerConnection>scm:git:.</developerConnection>
   </scm>
 

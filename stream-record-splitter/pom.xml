@@ -21,106 +21,16 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-  <groupId>nl.basjes.nifi</groupId>
-  <artifactId>nifi-read-recordstream-parent</artifactId>
-  <version>0.1-SNAPSHOT</version>
+    <groupId>nl.basjes.parse</groupId>
+    <artifactId>dsmr-parser-parent</artifactId>
+    <version>0.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>nifi-read-recordstream</artifactId>
+  <groupId>nl.basjes.parse</groupId>
+  <artifactId>stream-record-splitter</artifactId>
   <packaging>jar</packaging>
-  <name>DSMR : Nifi : RecordReader</name>
+  <name>DSMR : Stream record splitter</name>
 
-  <properties>
-    <jdkLevel>1.8</jdkLevel>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
-
-    <!--&lt;!&ndash; ============================================== &ndash;&gt;-->
-    <!--&lt;!&ndash; ================ UDF Versions ================ &ndash;&gt;-->
-    <!--&lt;!&ndash; ============================================== &ndash;&gt;-->
-    <!--&lt;!&ndash; Apache Flink &ndash;&gt;-->
-    <!--<flink.version>1.7.2</flink.version>-->
-    <!--<flink.scala.version>2.11</flink.scala.version>-->
-
-    <!--&lt;!&ndash; Apache Beam &ndash;&gt;-->
-    <!--<beam.version>2.11.0</beam.version>-->
-
-    <!--&lt;!&ndash; Apache Drill &ndash;&gt;-->
-    <!--<drill.version>1.15.0</drill.version>-->
-    <!--<netty.version>4.1.32.Final</netty.version>-->
-
-    <!--&lt;!&ndash; Apache Hadoop &ndash;&gt;-->
-    <!--<hadoop.version>3.2.0</hadoop.version>-->
-
-    <!--&lt;!&ndash; Apache Pig&ndash;&gt;-->
-    <!--<pig.version>0.17.0</pig.version>-->
-
-    <!--&lt;!&ndash; Apache Hive &ndash;&gt;-->
-    <!--<hive.version>3.1.1</hive.version>-->
-
-    <!--&lt;!&ndash; Apache Nifi &ndash;&gt;-->
-    <!--<nifi.version>1.9.0</nifi.version>-->
-
-    <!--&lt;!&ndash; LogParser &ndash;&gt;-->
-    <!--<logparser.version>5.2</logparser.version>-->
-
-    <!--&lt;!&ndash; LogStash &ndash;&gt;-->
-    <!--<logstash.version>6.6.1</logstash.version>-->
-
-    <!-- ============================================== -->
-
-    <!--<checkstyle-plugin.version>3.0.0</checkstyle-plugin.version>-->
-    <!--<checkstyle.version>8.18</checkstyle.version>-->
-    <slf4j.version>1.7.26</slf4j.version>
-    <!--<rat.version>0.13</rat.version>-->
-    <!--<jacoco.version>0.8.2</jacoco.version>-->
-    <junit5.version>5.4.0</junit5.version>
-
-    <!--<spring.version>5.1.5.RELEASE</spring.version>-->
-    <!--<spring-boot.version>2.0.5.RELEASE</spring-boot.version>-->
-    <!--<spring-boot-legacy.version>2.0.0.RELEASE</spring-boot-legacy.version>-->
-
-    <!--&lt;!&ndash; See http://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html&ndash;&gt;-->
-    <!--<jacoco.surefireArgLine/>-->
-    <!--<argLine>@{jacoco.surefireArgLine} -Xmx2048m</argLine>-->
-
-    <!--<sonar.language>java</sonar.language>-->
-    <!--<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>-->
-    <!--<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>-->
-    <!--<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>-->
-
-    <!--&lt;!&ndash; For some parts the code coverage has been disabled because it is &ndash;&gt;-->
-    <!--&lt;!&ndash; either debugging or demonstration code. &ndash;&gt;-->
-    <!--&lt;!&ndash; Sonar does not look at the Jacoco configs so we need to duplicate these &ndash;&gt;-->
-    <!--&lt;!&ndash; rules here a second time. &ndash;&gt;-->
-    <!--&lt;!&ndash; This is NASTY! &ndash;&gt;-->
-    <!--<sonar.exclusions>-->
-    <!--src/main/java/nl/basjes/parse/useragent/Version.*,-->
-    <!--src/main/java/nl/basjes/parse/useragent/parser/**,-->
-    <!--src/main/java/nl/basjes/parse/useragent/debug/**,-->
-    <!--src/main/java/nl/basjes/parse/useragent/benchmarks/**,-->
-    <!--src/main/java/nl/basjes/parse/useragent/servlet/**,-->
-    <!--src/main/java/nl/basjes/parse/useragent/commandline/**,-->
-    <!--src/main/java/nl/basjes/parse/useragent/drill/**,-->
-    <!--</sonar.exclusions>-->
-
-    <!--<git-commit-id-plugin.version>2.2.3</git-commit-id-plugin.version>-->
-    <!--<version.copyright>Copyright (C) 2013-2019 Niels Basjes</version.copyright>-->
-    <!--<version.license>License Apache 2.0</version.license>-->
-    <!--<version.url>${project.url}</version.url>-->
-  </properties>
-
-  <!--<dependencyManagement>-->
-    <!--<dependencies>-->
-      <!--<dependency>-->
-        <!--<groupId>org.junit</groupId>-->
-        <!--<artifactId>junit-bom</artifactId>-->
-        <!--<version>${junit5.version}</version>-->
-        <!--<type>pom</type>-->
-        <!--<scope>import</scope>-->
-      <!--</dependency>-->
-    <!--</dependencies>-->
-  <!--</dependencyManagement>-->
 
   <dependencies>
     <!--<dependency>-->

@@ -1,4 +1,4 @@
-package nl.basjes.dsmr;
+package nl.basjes.dsmr.parse;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
