@@ -1,5 +1,6 @@
 package nl.basjes.nifi;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,4 +26,20 @@ public class TestReadRecordStream {
         }
         LOG.info("---------------------- Done ----------------------");
     }
+
+    @Ignore
+    @Test
+    public void runTestWithSimulator() throws IOException, InterruptedException {
+        FileInputStream inputStream = new FileInputStream("../simulator/ttyUSB0");
+
+        ReadUTF8RecordStream reader = new ReadUTF8RecordStream("\r\n![0-9A-F]{4}\r\n", inputStream);
+
+        String value;
+        while ((value = reader.read() )!= null) {
+            LOG.info("\n=========== \n{}\n=========== \n", value);
+
+        }
+        LOG.info("---------------------- Done ----------------------");
+    }
+
 }

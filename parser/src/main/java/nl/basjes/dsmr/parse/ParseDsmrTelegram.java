@@ -122,6 +122,27 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
     public static class DSMRTelegram {
         private String telegram;
         private String ident;
+
+        public String getTelegram() {
+            return telegram;
+        }
+
+        public String getIdent() {
+            return ident;
+        }
+
+        public ZonedDateTime getTimestamp() {
+            return timestamp;
+        }
+
+        public String getCrc() {
+            return crc;
+        }
+
+        public List<DSMRTelegramValue> getValues() {
+            return values;
+        }
+
         private ZonedDateTime timestamp;
 
         private String crc;
