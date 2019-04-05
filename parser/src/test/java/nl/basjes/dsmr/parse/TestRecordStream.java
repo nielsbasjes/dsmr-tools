@@ -1,6 +1,6 @@
 package nl.basjes.dsmr.parse;
 
-import nl.basjes.nifi.ReadUTF8RecordStream;
+import nl.basjes.parse.ReadUTF8RecordStream;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 
 import static nl.basjes.dsmr.parse.CheckCRC.crcIsValid;
 import static org.junit.Assert.assertTrue;

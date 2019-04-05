@@ -1,14 +1,20 @@
-package nl.basjes.nifi;
+package nl.basjes.parse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class ReadUTF8RecordStream implements Serializable {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ReadUTF8RecordStream.class);
 
     private Pattern endMatcher;
     private InputStream inputStream;
@@ -23,23 +29,15 @@ public class ReadUTF8RecordStream implements Serializable {
 
     // Returns null if end of stream
     public String read() throws IOException {
-        byte[] readBuffer = new byte[1024];
+        byte[] readBuffer = new byte[4];
         if (previousLastRecord == null) {
             return null;
         }
 
         // In case the previous read retrieved multiple records
-        String[] splits = endMatcher.split(previousLastRecord, 2);
-        if (splits.length == 2) {
-            Matcher matcher = endMatcher.matcher(previousLastRecord);
-            if (matcher.find()) {
-                String keepThis = matcher.group(1);
-                previousLastRecord = splits[1];
-                return splits[0] + keepThis;
-            }
-            // FIXME: What do we do if this happens? This should not be possible.
-            previousLastRecord = splits[1];
-            return splits[0];
+        String record = extractRecordFromBuffer();
+        if (record != null) {
+            return record;
         }
 
         // Keep reading until we have atleast one record in the buffer (sometimes we get multiple records)
@@ -53,19 +51,27 @@ public class ReadUTF8RecordStream implements Serializable {
 
             previousLastRecord += new String(readBuffer, 0, bytesRead, UTF_8);
 
-            // In case we now have (one or more) records return the first one.
-            splits = endMatcher.split(previousLastRecord, 2);
-            if (splits.length == 2) {
-                Matcher matcher = endMatcher.matcher(previousLastRecord);
-                if (matcher.find()) {
-                    String keepThis = matcher.group(1);
-                    previousLastRecord = splits[1];
-                    return splits[0] + keepThis;
-                }
-                // FIXME: What do we do if this happens? This should not be possible.
-                previousLastRecord = splits[1];
-                return splits[0];
+//            LOG.info("previousLastRecord = {}", previousLastRecord);
+            record = extractRecordFromBuffer();
+            if (record != null) {
+                return record;
             }
         }
     }
+
+
+    private String extractRecordFromBuffer() {
+        // In case we now have (one or more) records return the first one.
+//        String[] splits = endMatcher.split(previousLastRecord, 2);
+        Matcher matcher = endMatcher.matcher(previousLastRecord);
+        if (matcher.find()) {
+            MatchResult matchResult = matcher.toMatchResult();
+            int endOfPartIndex = matchResult.end(1);
+            String result = previousLastRecord.substring(0, endOfPartIndex);
+            previousLastRecord = previousLastRecord.substring(endOfPartIndex);
+            return result;
+        }
+        return null;
+    }
+
 }

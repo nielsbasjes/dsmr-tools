@@ -40,21 +40,21 @@
     <!--</dependency>-->
 
     <!--<dependency>-->
-    <!--<groupId>org.apache.nifi</groupId>-->
-    <!--<artifactId>nifi-api</artifactId>-->
-    <!--<version>${nifi.version}</version>-->
+    <!--<groupId>org.apache.parse</groupId>-->
+    <!--<artifactId>parse-api</artifactId>-->
+    <!--<version>${parse.version}</version>-->
     <!--</dependency>-->
 
     <!--<dependency>-->
-    <!--<groupId>org.apache.nifi</groupId>-->
-    <!--<artifactId>nifi-utils</artifactId>-->
-    <!--<version>${nifi.version}</version>-->
+    <!--<groupId>org.apache.parse</groupId>-->
+    <!--<artifactId>parse-utils</artifactId>-->
+    <!--<version>${parse.version}</version>-->
     <!--</dependency>-->
 
     <!--<dependency>-->
-    <!--<groupId>org.apache.nifi</groupId>-->
-    <!--<artifactId>nifi-mock</artifactId>-->
-    <!--<version>${nifi.version}</version>-->
+    <!--<groupId>org.apache.parse</groupId>-->
+    <!--<artifactId>parse-mock</artifactId>-->
+    <!--<version>${parse.version}</version>-->
     <!--<scope>test</scope>-->
     <!--</dependency>-->
 

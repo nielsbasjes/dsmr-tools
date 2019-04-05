@@ -56,7 +56,7 @@
     <!--<hive.version>3.1.1</hive.version>-->
 
     <!--&lt;!&ndash; Apache Nifi &ndash;&gt;-->
-    <!--<nifi.version>1.9.0</nifi.version>-->
+    <!--<parse.version>1.9.0</parse.version>-->
 
     <!--&lt;!&ndash; LogParser &ndash;&gt;-->
     <!--<logparser.version>5.2</logparser.version>-->
