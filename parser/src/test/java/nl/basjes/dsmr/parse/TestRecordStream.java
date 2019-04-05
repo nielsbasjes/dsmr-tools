@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 
 import static nl.basjes.dsmr.parse.CheckCRC.crcIsValid;
 import static org.junit.Assert.assertTrue;
@@ -46,6 +48,8 @@ public class TestRecordStream {
             LOG.info("---------------------- Done ----------------------");
         }
 
+// TODO       PipedInputStream
+// TODO       PipedOutputStream
     @Ignore
     @Test
     public void runTestWithSimulator() throws IOException, InterruptedException {
