@@ -108,8 +108,9 @@
   </properties>
 
   <modules>
-    <module>stream-record-splitter</module>
     <module>parser</module>
+    <module>stream-record-splitter</module>
+    <module>simulator</module>
   </modules>
 
   <dependencyManagement>

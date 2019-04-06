@@ -44,6 +44,40 @@ public class CheckCRC {
 
     private static Pattern extractPattern = Pattern.compile("(^/[^!]+!)([0-9A-Fa-f]{4})", Pattern.MULTILINE);
 
+    private static int calculatedCrc(byte[] telegramBytes ) {
+        int crc = 0x0000;
+        for (byte b : telegramBytes) {
+            crc = (crc >>> 8) ^ table[(crc ^ b) & 0xff];
+        }
+
+        return crc;
+    }
+
+    public static Integer calculatedCrc(String input) {
+        Matcher matcher = extractPattern.matcher(input);
+
+        if (!matcher.find()) {
+            return null;
+        }
+
+        String telegram = matcher.group(1);
+//        String expectedCrc = matcher.group(2);
+        return calculatedCrc(telegram.getBytes(UTF_8));
+    }
+
+    public static String fixCrc(String input) {
+        Matcher matcher = extractPattern.matcher(input);
+
+        if (!matcher.find()) {
+            return input;
+        }
+
+        String telegram = matcher.group(1);
+
+        String actualCrc = String.format("%04X", calculatedCrc(telegram.getBytes(UTF_8)));
+        return telegram + actualCrc + "\r\n";
+    }
+
     public static boolean crcIsValid(String input) {
         Matcher matcher = extractPattern.matcher(input);
 
@@ -53,14 +87,8 @@ public class CheckCRC {
 
         String telegram = matcher.group(1);
         String expectedCrc = matcher.group(2);
-        byte[] telegramBytes = telegram.getBytes(UTF_8);
 
-        int crc = 0x0000;
-        for (byte b : telegramBytes) {
-            crc = (crc >>> 8) ^ table[(crc ^ b) & 0xff];
-        }
-
-        String actualCrc = String.format("%04X", crc);
+        String actualCrc = String.format("%04X", calculatedCrc(telegram.getBytes(UTF_8)));
         return expectedCrc.equalsIgnoreCase(actualCrc);
     }
 }

@@ -46,8 +46,6 @@ public class TestRecordStream {
             LOG.info("---------------------- Done ----------------------");
         }
 
-// TODO       PipedInputStream
-// TODO       PipedOutputStream
     @Ignore
     @Test
     public void runTestWithSimulator() throws IOException, InterruptedException {
