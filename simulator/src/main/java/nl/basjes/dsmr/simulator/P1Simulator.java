@@ -28,7 +28,7 @@ public class P1Simulator {
 
         String electricEquipmentId = stringToHex("E1234567890");
         String gasEquipmentId = stringToHex("G1234567890");
-        String message = stringToHex("WARNING: This is FAKE data that should only be used for testing purposes.");
+        System.err.println("WARNING: This is FAKE data that should only be used for testing purposes.");
 
         while (running) {
 
@@ -89,6 +89,7 @@ public class P1Simulator {
 
             record =  CheckCRC.fixCrc(record);
             System.out.print(record);
+            System.err.println("Wrote record for timestamp: " + nowString);
         }
     }
 
