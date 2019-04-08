@@ -27,37 +27,13 @@
     <version>0.1-SNAPSHOT</version>
   </parent>
 
-  <groupId>nl.basjes.iot</groupId>
-  <artifactId>stream-record-splitter</artifactId>
+  <artifactId>dsmr-simulator</artifactId>
   <packaging>jar</packaging>
-  <name>DSMR : Stream record splitter</name>
+  <name>DSMR : P1 simulator</name>
 
 
   <dependencies>
-    <!--<dependency>-->
-    <!--<groupId>nl.basjes.parse.useragent</groupId>-->
-    <!--<artifactId>yauaa</artifactId>-->
-    <!--<version>${project.version}</version>-->
-    <!--</dependency>-->
 
-    <!--<dependency>-->
-    <!--<groupId>org.apache.parse</groupId>-->
-    <!--<artifactId>parse-api</artifactId>-->
-    <!--<version>${parse.version}</version>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-    <!--<groupId>org.apache.parse</groupId>-->
-    <!--<artifactId>parse-utils</artifactId>-->
-    <!--<version>${parse.version}</version>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-    <!--<groupId>org.apache.parse</groupId>-->
-    <!--<artifactId>parse-mock</artifactId>-->
-    <!--<version>${parse.version}</version>-->
-    <!--<scope>test</scope>-->
-    <!--</dependency>-->
 
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -65,21 +41,6 @@
       <version>${slf4j.version}</version>
       <scope>provided</scope>
     </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>${slf4j.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-
-    <!--<dependency>-->
-    <!--<groupId>commons-io</groupId>-->
-    <!--<artifactId>commons-io</artifactId>-->
-    <!--<version>2.6</version>-->
-    <!--<scope>compile</scope>-->
-    <!--</dependency>-->
 
     <!--<dependency>-->
       <!--<groupId>org.junit.jupiter</groupId>-->
@@ -98,6 +59,12 @@
     <version>4.12</version>
     <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>nl.basjes.dsmr</groupId>
+      <artifactId>dsmr-parser</artifactId>
+      <version>0.1-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
 
 
   </dependencies>
@@ -112,6 +79,27 @@
         <source>1.8</source>
         <target>1.8</target>
       </configuration>
+    </plugin>
+
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-shade-plugin</artifactId>
+      <version>3.2.1</version>
+      <executions>
+        <execution>
+          <phase>package</phase>
+          <goals>
+            <goal>shade</goal>
+          </goals>
+          <configuration>
+            <transformers>
+              <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                <mainClass>nl.basjes.dsmr.simulator.P1Simulator</mainClass>
+              </transformer>
+            </transformers>
+          </configuration>
+        </execution>
+      </executions>
     </plugin>
 
   <!--<plugin>-->
