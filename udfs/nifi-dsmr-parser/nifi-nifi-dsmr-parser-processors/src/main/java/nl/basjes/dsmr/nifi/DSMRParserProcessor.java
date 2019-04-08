@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package nl.basjes.iot.nifi;
+package nl.basjes.dsmr.nifi;
 
 import org.apache.nifi.annotation.behavior.ReadsAttribute;
 import org.apache.nifi.annotation.behavior.ReadsAttributes;
@@ -29,28 +29,35 @@ import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.flowfile.FlowFile;
 import org.apache.nifi.processor.*;
 import org.apache.nifi.processor.exception.ProcessException;
-import org.apache.nifi.processor.util.StandardValidators;
 
 import java.util.*;
 
-@Tags({"example"})
-@CapabilityDescription("Provide a description")
+@Tags({"iot", "dsmr"})
+@CapabilityDescription("Parses a DSMR record into attributes. Use this end-of-record regex for the sensor-stream-cutter:  \\r\\n![0-9A-F]{4}\\r\\n   ")
 @SeeAlso({})
 @ReadsAttributes({@ReadsAttribute(attribute = "", description = "")})
 @WritesAttributes({@WritesAttribute(attribute = "", description = "")})
-public class MyProcessor extends AbstractProcessor {
+public class DSMRParserProcessor extends AbstractProcessor {
 
-    public static final PropertyDescriptor MY_PROPERTY = new PropertyDescriptor
-        .Builder().name("MY_PROPERTY")
-        .displayName("My property")
-        .description("Example Property")
-        .required(true)
-        .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
+//    public static final PropertyDescriptor MY_PROPERTY = new PropertyDescriptor
+//        .Builder().name("MY_PROPERTY")
+//        .displayName("My property")
+//        .description("Example Property")
+//        .required(true)
+//        .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
+//        .build();
+
+    public static final Relationship Valid = new Relationship.Builder()
+        .name("Valid")
+        .description("Complete and valid records")
         .build();
-
-    public static final Relationship MY_RELATIONSHIP = new Relationship.Builder()
-        .name("MY_RELATIONSHIP")
-        .description("Example relationship")
+    public static final Relationship InvalidCRC = new Relationship.Builder()
+        .name("InvalidCRC")
+        .description("Complete records with invalid CRC")
+        .build();
+    public static final Relationship BadRecords = new Relationship.Builder()
+        .name("BadRecords")
+        .description("Incomplete records / Parsing failed")
         .build();
 
     private List<PropertyDescriptor> descriptors;
@@ -60,11 +67,13 @@ public class MyProcessor extends AbstractProcessor {
     @Override
     protected void init(final ProcessorInitializationContext context) {
         final List<PropertyDescriptor> descriptors = new ArrayList<PropertyDescriptor>();
-        descriptors.add(MY_PROPERTY);
+//        descriptors.add(MY_PROPERTY);
         this.descriptors = Collections.unmodifiableList(descriptors);
 
         final Set<Relationship> relationships = new HashSet<Relationship>();
-        relationships.add(MY_RELATIONSHIP);
+        relationships.add(Valid);
+        relationships.add(InvalidCRC);
+        relationships.add(BadRecords);
         this.relationships = Collections.unmodifiableSet(relationships);
     }
 

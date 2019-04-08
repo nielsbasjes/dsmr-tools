@@ -34,20 +34,23 @@ public class ReadUTF8RecordStream implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReadUTF8RecordStream.class);
 
-    private Pattern endMatcher;
     private InputStream inputStream;
+    private Pattern endMatcher;
+    private long maxRecordSize;
 
-    public ReadUTF8RecordStream(String recordEndRegex, InputStream input) {
-        endMatcher = Pattern.compile("(" + recordEndRegex + ")");
-
+    public ReadUTF8RecordStream(InputStream input, String recordEndRegex, long newMaxRecordSize) {
         inputStream = input;
+        endMatcher = Pattern.compile("(" + recordEndRegex + ")");
+        // The max record limit MUST be between 10 KiB and 100 MiB
+        maxRecordSize = Math.max(newMaxRecordSize, 10 * 1024);
+        maxRecordSize = Math.min(maxRecordSize, 100 * 1024 * 1024);
     }
 
     private String previousLastRecord = "";
 
     // Returns null if end of stream
     public String read() throws IOException {
-        byte[] readBuffer = new byte[4];
+        byte[] readBuffer = new byte[4096];
         if (previousLastRecord == null) {
             return null;
         }
@@ -74,9 +77,13 @@ public class ReadUTF8RecordStream implements Serializable {
             if (record != null) {
                 return record;
             }
+
+            if (previousLastRecord.length() > maxRecordSize) {
+                LOG.error("After {} bytes the end-of-record pattern     {}     has not been found.", previousLastRecord.length(), endMatcher.pattern());
+                return null;
+            }
         }
     }
-
 
     private String extractRecordFromBuffer() {
         // In case we now have (one or more) records return the first one.

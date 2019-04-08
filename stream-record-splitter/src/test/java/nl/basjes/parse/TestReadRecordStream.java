@@ -105,6 +105,7 @@ public class TestReadRecordStream {
             "eleven\n" +
             "====\n"
         };
+        // Use  ====\n  as the separator at the end of the record.
         testRecordReassemblyInBurstyStream(recordFragments, records, "====\n");
     }
 
@@ -130,8 +131,7 @@ public class TestReadRecordStream {
             }
         });
 
-        // Use  ====\n  as the separator at the end of the record.
-        ReadUTF8RecordStream reader = new ReadUTF8RecordStream(endPattern, pipedInputStream);
+        ReadUTF8RecordStream reader = new ReadUTF8RecordStream(pipedInputStream, endPattern, 10000);
 
         pipeWriter.start();
 

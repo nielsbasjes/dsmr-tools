@@ -23,13 +23,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-public class MyProcessorTest {
+public class DSMRParserProcessorTest {
 
     private TestRunner testRunner;
 
     @Before
     public void init() {
-        testRunner = TestRunners.newTestRunner(MyProcessor.class);
+        testRunner = TestRunners.newTestRunner(DSMRParserProcessor.class);
     }
 
     @Test
