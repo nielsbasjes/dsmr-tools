@@ -38,7 +38,7 @@ public class TestRecordStream {
         public void runTest() throws IOException, InterruptedException {
             FileInputStream inputStream = new FileInputStream("../ttyUSB0-raw.txt");
 
-            ReadUTF8RecordStream reader = new ReadUTF8RecordStream("\r\n![0-9A-F]{4}\r\n", inputStream);
+            ReadUTF8RecordStream reader = new ReadUTF8RecordStream(inputStream, "\r\n![0-9A-F]{4}\r\n");
 
             String value;
             int count = 0;
@@ -69,7 +69,7 @@ public class TestRecordStream {
     public void runTestWithSimulator() throws IOException, InterruptedException {
         FileInputStream inputStream = new FileInputStream("../simulator/ttyUSB0");
 
-        ReadUTF8RecordStream reader = new ReadUTF8RecordStream("\r\n![0-9A-F]{4}\r\n", inputStream);
+        ReadUTF8RecordStream reader = new ReadUTF8RecordStream(inputStream, "\r\n![0-9A-F]{4}\r\n");
 
         String value;
         int count = 0;

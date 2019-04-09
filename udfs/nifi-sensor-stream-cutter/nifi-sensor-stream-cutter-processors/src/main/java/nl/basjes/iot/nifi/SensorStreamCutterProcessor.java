@@ -126,7 +126,6 @@ public class SensorStreamCutterProcessor extends AbstractProcessor {
 
     @OnScheduled
     public void onScheduled(final ProcessContext context) throws FileNotFoundException {
-
         String fileName= context.getProperty(FILE_NAME).getValue();
         String endOfRecordRegex = context.getProperty(END_OF_RECORD_REGEX).getValue();
         Long maxCharactersPerRecord = context.getProperty(MAX_CHARACTERS_PER_RECORD).asLong();

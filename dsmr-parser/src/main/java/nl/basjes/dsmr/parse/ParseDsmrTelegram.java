@@ -79,71 +79,94 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
         public DSMRTelegramValue(String cosemId) {
             this.cosemId = cosemId;
             switch (cosemId) {
-                case "0-0:1.0.0":   description = "Timestamp"; break;
-                case "0-0:96.1.1":  description = "Equipment identifier"; break;
-                case "1-0:1.8.1":   description = "Meter Reading electricity delivered to client (low tariff) in 0,001 kWh"; break;
-                case "1-0:1.8.2":   description = "Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh"; break;
-                case "1-0:2.8.1":   description = "Meter Reading electricity delivered by client (low tariff) in 0,001 kWh"; break;
-                case "1-0:2.8.2":   description = "Meter Reading electricity delivered by client (normal tariff) in 0,001 kWh"; break;
-                case "0-0:96.14.0": description = "Tariff indicator electricity"; break;
-                case "1-0:1.7.0":   description = "Actual electricity power delivered (+P) in 1 Watt resolution"; break;
-                case "1-0:2.7.0":   description = "Actual electricity power received (-P) in 1 Watt resolution"; break;
-                case "0-0:96.7.21": description = "Number of power failures in any phases"; break;
-                case "0-0:96.7.9":  description = "Number of long power failures in any phases"; break;
-                case "1-0:99:97.0": description = "Power failure event log"; break;
-                case "1-0:32.32.0": description = "Number of voltage sags in phase L1"; break;
-                case "1-0:52.32.0": description = "Number of voltage sags in phase L2"; break;
-                case "1-0:72.32.0": description = "Number of voltage sags in phase L3"; break;
-                case "1-0:32.36.0": description = "Number of voltage swells in phase L1"; break;
-                case "1-0:52.36.0": description = "Number of voltage swells in phase L2"; break;
-                case "1-0:72.36.0": description = "Number of voltage swells in phase L3"; break;
-                case "1-0:32.7.0":  description = "Instantaneous voltage L1"; break;
-                case "1-0:52.7.0":  description = "Instantaneous voltage L2"; break;
-                case "1-0:72.7.0":  description = "Instantaneous voltage L3"; break;
-                case "1-0:31.7.0":  description = "Instantaneous current L1"; break;
-                case "1-0:51.7.0":  description = "Instantaneous current L2"; break;
-                case "1-0:71.7.0":  description = "Instantaneous current L3"; break;
-                case "1-0:21.7.0":  description = "Instantaneous active power L1 (+P)"; break;
-                case "1-0:41.7.0":  description = "Instantaneous active power L2 (+P)"; break;
-                case "1-0:61.7.0":  description = "Instantaneous active power L3 (+P)"; break;
-                case "1-0:22.7.0":  description = "Instantaneous active power L1 (-P)"; break;
-                case "1-0:42.7.0":  description = "Instantaneous active power L2 (-P)"; break;
-                case "1-0:62.7.0":  description = "Instantaneous active power L3 (-P)"; break;
-                case "0-0:96.13.0": description = "Text message max 1024 characters."; break;
-                default:            description = "?";
+                case "1-3:0.2.8":   attributeName = "P1Version";                        description = "P1 Version information"; break;
+                case "0-0:1.0.0":   attributeName = "Timestamp";                        description = "Timestamp"; break;
+                case "0-0:96.1.1":  attributeName = "EquipmentId";                      description = "Equipment identifier"; break;
+
+                case "1-0:1.8.1":   attributeName = "ElectricityReceivedLowTariff";     description = "Meter Reading electricity delivered to client (low tariff) in 0,001 kWh"; break;
+                case "1-0:1.8.2":   attributeName = "ElectricityReceivedNormalTariff";  description = "Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh"; break;
+                case "1-0:2.8.1":   attributeName = "ElectricityReturnedLowTariff";     description = "Meter Reading electricity delivered by client (low tariff) in 0,001 kWh"; break;
+                case "1-0:2.8.2":   attributeName = "ElectricityReturnedNormalTariff";  description = "Meter Reading electricity delivered by client (normal tariff) in 0,001 kWh"; break;
+                case "0-0:96.14.0": attributeName = "ElectricityTariffIndicator";       description = "Tariff indicator electricity"; break;
+
+                case "1-0:1.7.0":   attributeName = "ElectricityPowerReceived";         description = "Actual electricity power delivered (+P) in 1 Watt resolution"; break;
+                case "1-0:2.7.0":   attributeName = "ElectricityPowerReturned";         description = "Actual electricity power received (-P) in 1 Watt resolution"; break;
+
+                case "0-0:96.7.21": attributeName = "PowerFailures";                    description = "Number of power failures in any phases"; break;
+                case "0-0:96.7.9":  attributeName = "LongPowerFailures";                description = "Number of long power failures in any phases"; break;
+                case "1-0:99:97.0": attributeName = "PowerFailureEventLog";             description = "Power failure event log"; break;
+                case "1-0:32.32.0": attributeName = "VoltageSagsPhaseL1";               description = "Number of voltage sags in phase L1"; break;
+                case "1-0:52.32.0": attributeName = "VoltageSagsPhaseL2";               description = "Number of voltage sags in phase L2"; break;
+                case "1-0:72.32.0": attributeName = "VoltageSagsPhaseL3";               description = "Number of voltage sags in phase L3"; break;
+                case "1-0:32.36.0": attributeName = "VoltageSwellsPhaseL1";             description = "Number of voltage swells in phase L1"; break;
+                case "1-0:52.36.0": attributeName = "VoltageSwellsPhaseL2";             description = "Number of voltage swells in phase L2"; break;
+                case "1-0:72.36.0": attributeName = "VoltageSwellsPhaseL3";             description = "Number of voltage swells in phase L3"; break;
+
+                case "1-0:32.7.0":  attributeName = "VoltageL1";                        description = "Instantaneous voltage L1"; break;
+                case "1-0:52.7.0":  attributeName = "VoltageL2";                        description = "Instantaneous voltage L2"; break;
+                case "1-0:72.7.0":  attributeName = "VoltageL3";                        description = "Instantaneous voltage L3"; break;
+                case "1-0:31.7.0":  attributeName = "CurrentL1";                        description = "Instantaneous current L1"; break;
+                case "1-0:51.7.0":  attributeName = "CurrentL2";                        description = "Instantaneous current L2"; break;
+                case "1-0:71.7.0":  attributeName = "CurrentL3";                        description = "Instantaneous current L3"; break;
+                case "1-0:21.7.0":  attributeName = "PowerReceivedL1";                  description = "Instantaneous active power L1 (+P)"; break;
+                case "1-0:41.7.0":  attributeName = "PowerReceivedL2";                  description = "Instantaneous active power L2 (+P)"; break;
+                case "1-0:61.7.0":  attributeName = "PowerReceivedL3";                  description = "Instantaneous active power L3 (+P)"; break;
+                case "1-0:22.7.0":  attributeName = "PowerReturnedL1";                  description = "Instantaneous active power L1 (-P)"; break;
+                case "1-0:42.7.0":  attributeName = "PowerReturnedL2";                  description = "Instantaneous active power L2 (-P)"; break;
+                case "1-0:62.7.0":  attributeName = "PowerReturnedL3";                  description = "Instantaneous active power L3 (-P)"; break;
+
+                case "0-0:96.13.0": attributeName = "Message";                          description = "Text message max 1024 characters."; break;
+
+                default:            attributeName = "Unknown:" + cosemId;               description = "?";
             }
+
+
         }
         String cosemId;
+        String attributeName;
         BigDecimal numericValue;
         String numericUnit;
         String textValue;
-        String description; // FIXME: Should make this optional
+        String description;
 
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            sb.append("Value{  Id='").append(cosemId).append('\'');
+            sb
+                .append("Value { ")
+                .append(attributeName)
+                .append(" (").append(cosemId).append(')')
+                .append(" = ");
 
             if (numericValue != null) {
-                sb.append("  value = ").append(numericValue).append(" ").append(numericUnit);
+                sb.append(numericValue);
+                if (numericUnit != null) {
+                    sb.append(" ").append(numericUnit);
+                }
             }
             if (textValue != null) {
-                sb.append("  text = ").append(textValue);
+                sb.append("\"").append(textValue).append("\"");
             }
-                sb.append("  description = ").append(description);
-            sb.append(" }\n");
+            sb
+//                .append(",  description = \"").append(description).append("\"")
+                .append(" }\n");
             return sb.toString();
         }
 
     }
 
     public static class DSMRTelegram {
-        private String telegram;
+//        private String telegram;
+        private boolean isValidCRC = false;
         private String ident;
 
-        public String getTelegram() {
-            return telegram;
+        public DSMRTelegram(String telegram) {
+            isValidCRC = CheckCRC.crcIsValid(telegram);
         }
+
+//        public String getTelegram() {
+//            return telegram;
+//        }
 
         public String getIdent() {
             return ident;
@@ -167,17 +190,18 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
         private List<DSMRTelegramValue> values = new ArrayList<>();
 
         public boolean isValid() {
-            return CheckCRC.crcIsValid(telegram);
+            return isValidCRC;
+//            return CheckCRC.crcIsValid(telegram);
         }
 
         @Override
         public String toString() {
-            return "DSMRTelegram{" +
-                "telegram='" + telegram + '\'' +
-                ", ident='" + ident + '\'' +
-                ", timestamp=" + timestamp +
-                ", " + (isValid() ? "Valid " : "INVALID ") + "crc=" + crc +
-                ", values=" + values +
+            return "DSMR Telegram { \n" +
+//                "telegram='" + telegram + '\'' +
+                "ident='" + ident + '\'' + ", \n" +
+                "timestamp=" + timestamp + ", \n" +
+                (isValid() ? "Valid " : "INVALID ") + "crc=" + crc +", \n" +
+                "values= [\n" + values + "\n]\n" +
                 '}';
         }
     }
@@ -186,16 +210,16 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
         return new ParseDsmrTelegram(telegram).parse();
     }
 
+    private String telegramString;
     private DSMRTelegram dsmrTelegram;
 
-
     private ParseDsmrTelegram(String telegram) {
-        dsmrTelegram = new DSMRTelegram();
-        dsmrTelegram.telegram = telegram;
+        dsmrTelegram = new DSMRTelegram(telegram);
+        telegramString = telegram;
     }
 
     private DSMRTelegram parse() {
-        CodePointCharStream input = CharStreams.fromString(dsmrTelegram.telegram);
+        CodePointCharStream input = CharStreams.fromString(telegramString);
         DsmrLexer lexer = new DsmrLexer(input);
 
         CommonTokenStream tokens = new CommonTokenStream(lexer);
