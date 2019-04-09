@@ -139,8 +139,8 @@ public class TestReadRecordStream {
         for(String expectedRecord: records) {
             try {
                 String record = reader.read();
-                while (record == null) {
-                    record = reader.read();
+                if (record == null) {
+                    break;
                 }
                 LOG.info("Record received: \n{}", record);
                 assertEquals("Got the wrong record back", expectedRecord, record);
@@ -149,6 +149,7 @@ public class TestReadRecordStream {
             }
         }
 
+        pipeWriter.interrupt();
         pipeWriter.join();
 
         /*Close stream*/

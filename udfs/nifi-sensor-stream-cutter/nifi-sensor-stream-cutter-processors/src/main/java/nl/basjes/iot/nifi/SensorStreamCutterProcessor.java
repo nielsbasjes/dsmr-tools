@@ -17,6 +17,9 @@
  */
 package nl.basjes.iot.nifi;
 
+import org.apache.nifi.annotation.behavior.InputRequirement;
+import org.apache.nifi.annotation.behavior.PrimaryNodeOnly;
+import org.apache.nifi.annotation.behavior.TriggerSerially;
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.SeeAlso;
 import org.apache.nifi.annotation.documentation.Tags;
@@ -29,6 +32,9 @@ import org.apache.nifi.processor.util.StandardValidators;
 
 import java.util.*;
 
+import static nl.basjes.parse.ReadUTF8RecordStream.MAX_MAX_RECORD_SIZE;
+import static nl.basjes.parse.ReadUTF8RecordStream.MIN_MAX_RECORD_SIZE;
+import static org.apache.nifi.annotation.behavior.InputRequirement.Requirement.INPUT_FORBIDDEN;
 import static org.apache.nifi.processor.util.StandardValidators.createLongValidator;
 import static org.apache.nifi.processor.util.StandardValidators.createRegexValidator;
 
@@ -36,6 +42,9 @@ import static org.apache.nifi.processor.util.StandardValidators.createRegexValid
 @CapabilityDescription("Reads an infinite UTF-8 text stream from a character device (or file) and " +
     "creates a flowfile each time the end of a record is seen. The end of a record is detected by the provided pattern.")
 @SeeAlso({})
+@TriggerSerially
+@PrimaryNodeOnly // This may ONLY be read single threaded
+@InputRequirement(INPUT_FORBIDDEN) // ONLY read data from the configured character device
 //@ReadsAttributes({@ReadsAttribute(attribute = "", description = "")})
 //@WritesAttributes({@WritesAttribute(attribute = "", description = "")})
 public class SensorStreamCutterProcessor extends AbstractProcessor {
@@ -67,32 +76,17 @@ public class SensorStreamCutterProcessor extends AbstractProcessor {
         .name("Max characters per record")
         .displayName("Max characters per record")
         .description("The maximum number of characters that can occur in a normal record. " +
-            "This limit is used to force cut the stream if no end-of-record markers are found (to avoid memory overflow failures)")
+            "This limit is used to force terminate the stream if no end-of-record markers are found (to avoid memory overflow failures). " +
+            "Must be between " + MIN_MAX_RECORD_SIZE + " and " + MAX_MAX_RECORD_SIZE + " bytes")
         .required(true)
         .defaultValue("10240")
-        .addValidator(createLongValidator(1024, 10 * 1024 * 1024, true)) // Anything from 1KiB to 10 MiB is allowed.
+        .addValidator(createLongValidator(MIN_MAX_RECORD_SIZE, MAX_MAX_RECORD_SIZE, true))
         .build();
 
-    static final Relationship SUCCESS = new Relationship.Builder()
+    public static final Relationship SUCCESS = new Relationship.Builder()
         .name("success")
         .description("Here we route all FlowFiles that have been successfully extracted from the stream.")
         .build();
-
-    static final Relationship TOOLONG = new Relationship.Builder()
-        .name("too long")
-        .description("Here we route the text of the stream cut by \"\"all FlowFiles that have been analyzed.")
-        .build();
-
-//    static final Relationship MISSING = new Relationship.Builder()
-//        .name("missing")
-//        .description("Here we route the FlowFiles that did not have the " + USERAGENTSTRING_ATTRIBUTENAME + " attribute set.")
-//        .build();
-//
-//
-//    public static final Relationship MY_RELATIONSHIP = new Relationship.Builder()
-//        .name("MY_RELATIONSHIP")
-//        .description("Example relationship")
-//        .build();
 
     private List<PropertyDescriptor> descriptors;
 
@@ -107,7 +101,6 @@ public class SensorStreamCutterProcessor extends AbstractProcessor {
 
         final Set<Relationship> relationships = new HashSet<Relationship>();
         relationships.add(SUCCESS);
-        relationships.add(TOOLONG);
         this.relationships = Collections.unmodifiableSet(relationships);
     }
 

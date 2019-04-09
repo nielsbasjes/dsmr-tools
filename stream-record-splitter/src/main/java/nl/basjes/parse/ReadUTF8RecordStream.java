@@ -34,16 +34,22 @@ public class ReadUTF8RecordStream implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReadUTF8RecordStream.class);
 
+    public static final long MIN_MAX_RECORD_SIZE =         10 * 1024; //  10 KiB
+    public static final long MAX_MAX_RECORD_SIZE = 100 * 1024 * 1024; // 100 MiB
+
     private InputStream inputStream;
     private Pattern endMatcher;
     private long maxRecordSize;
 
+    public ReadUTF8RecordStream(InputStream input, String recordEndRegex) {
+        this(input, recordEndRegex, MIN_MAX_RECORD_SIZE);
+    }
+
     public ReadUTF8RecordStream(InputStream input, String recordEndRegex, long newMaxRecordSize) {
         inputStream = input;
         endMatcher = Pattern.compile("(" + recordEndRegex + ")");
-        // The max record limit MUST be between 10 KiB and 100 MiB
-        maxRecordSize = Math.max(newMaxRecordSize, 10 * 1024);
-        maxRecordSize = Math.min(maxRecordSize, 100 * 1024 * 1024);
+        maxRecordSize = Math.max(newMaxRecordSize, MIN_MAX_RECORD_SIZE);
+        maxRecordSize = Math.min(maxRecordSize,    MAX_MAX_RECORD_SIZE);
     }
 
     private String previousLastRecord = "";

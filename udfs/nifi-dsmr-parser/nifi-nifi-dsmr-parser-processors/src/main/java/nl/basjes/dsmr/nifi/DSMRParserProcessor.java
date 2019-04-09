@@ -17,10 +17,7 @@
  */
 package nl.basjes.dsmr.nifi;
 
-import org.apache.nifi.annotation.behavior.ReadsAttribute;
-import org.apache.nifi.annotation.behavior.ReadsAttributes;
-import org.apache.nifi.annotation.behavior.WritesAttribute;
-import org.apache.nifi.annotation.behavior.WritesAttributes;
+import org.apache.nifi.annotation.behavior.*;
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.SeeAlso;
 import org.apache.nifi.annotation.documentation.Tags;
@@ -35,17 +32,10 @@ import java.util.*;
 @Tags({"iot", "dsmr"})
 @CapabilityDescription("Parses a DSMR record into attributes. Use this end-of-record regex for the sensor-stream-cutter:  \\r\\n![0-9A-F]{4}\\r\\n   ")
 @SeeAlso({})
+@SideEffectFree
 @ReadsAttributes({@ReadsAttribute(attribute = "", description = "")})
 @WritesAttributes({@WritesAttribute(attribute = "", description = "")})
 public class DSMRParserProcessor extends AbstractProcessor {
-
-//    public static final PropertyDescriptor MY_PROPERTY = new PropertyDescriptor
-//        .Builder().name("MY_PROPERTY")
-//        .displayName("My property")
-//        .description("Example Property")
-//        .required(true)
-//        .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
-//        .build();
 
     public static final Relationship Valid = new Relationship.Builder()
         .name("Valid")
