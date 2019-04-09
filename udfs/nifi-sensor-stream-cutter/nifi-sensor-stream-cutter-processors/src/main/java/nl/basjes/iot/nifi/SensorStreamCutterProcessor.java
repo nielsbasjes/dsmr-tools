@@ -17,6 +17,7 @@
  */
 package nl.basjes.iot.nifi;
 
+import nl.basjes.parse.ReadUTF8RecordStream;
 import org.apache.nifi.annotation.behavior.InputRequirement;
 import org.apache.nifi.annotation.behavior.PrimaryNodeOnly;
 import org.apache.nifi.annotation.behavior.TriggerSerially;
@@ -28,10 +29,16 @@ import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.flowfile.FlowFile;
 import org.apache.nifi.processor.*;
 import org.apache.nifi.processor.exception.ProcessException;
+import org.apache.nifi.processor.io.OutputStreamCallback;
 import org.apache.nifi.processor.util.StandardValidators;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static nl.basjes.parse.ReadUTF8RecordStream.MAX_MAX_RECORD_SIZE;
 import static nl.basjes.parse.ReadUTF8RecordStream.MIN_MAX_RECORD_SIZE;
 import static org.apache.nifi.annotation.behavior.InputRequirement.Requirement.INPUT_FORBIDDEN;
@@ -97,6 +104,7 @@ public class SensorStreamCutterProcessor extends AbstractProcessor {
         final List<PropertyDescriptor> descriptors = new ArrayList<PropertyDescriptor>();
         descriptors.add(FILE_NAME);
         descriptors.add(END_OF_RECORD_REGEX);
+        descriptors.add(MAX_CHARACTERS_PER_RECORD);
         this.descriptors = Collections.unmodifiableList(descriptors);
 
         final Set<Relationship> relationships = new HashSet<Relationship>();
@@ -114,17 +122,40 @@ public class SensorStreamCutterProcessor extends AbstractProcessor {
         return descriptors;
     }
 
-    @OnScheduled
-    public void onScheduled(final ProcessContext context) {
+    private transient ReadUTF8RecordStream reader;
 
+    @OnScheduled
+    public void onScheduled(final ProcessContext context) throws FileNotFoundException {
+
+        String fileName= context.getProperty(FILE_NAME).getValue();
+        String endOfRecordRegex = context.getProperty(END_OF_RECORD_REGEX).getValue();
+        Long maxCharactersPerRecord = context.getProperty(MAX_CHARACTERS_PER_RECORD).asLong();
+
+        FileInputStream inputStream = new FileInputStream(fileName);
+
+        reader = new ReadUTF8RecordStream(inputStream, endOfRecordRegex, maxCharactersPerRecord);
     }
 
     @Override
     public void onTrigger(final ProcessContext context, final ProcessSession session) throws ProcessException {
-        FlowFile flowFile = session.get();
-        if (flowFile == null) {
-            return;
+        String content;
+        try {
+            content = reader.read();
+        } catch (IOException e) {
+            throw new ProcessException(e);
         }
-        // TODO implement
+
+        FlowFile flowFile = session.create();
+        flowFile = session.write(flowFile, new OutputStreamCallback() {
+            @Override
+            public void process(final OutputStream out) throws IOException {
+                out.write(content.getBytes(UTF_8));
+            }
+        });
+
+//        flowFile = session.putAllAttributes(flowFile, generatedAttributes);
+
+        session.getProvenanceReporter().create(flowFile);
+        session.transfer(flowFile, SUCCESS);
     }
 }
