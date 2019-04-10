@@ -22,6 +22,11 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.ZonedDateTime;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 
 public class TestDsmrParser {
 
@@ -140,7 +145,14 @@ public class TestDsmrParser {
             "1-0:62.7.0(00.000*kW)\r\n" +
             "!9DF0\r\n");
 
-        LOG.info("{}", dsmrTelegram);
+        assertEquals(ZonedDateTime.parse("2019-03-24T15:05:41+01:00"), dsmrTelegram.getTimestamp());
+        assertTrue(dsmrTelegram.isValidCRC());
+//        ident=/ISK5\2M550T-1012,
+//        p1Version=50, timestamp=2019-03-24T15:05:41+01:00, equipmentId=E0044007131650618, electricityReceivedLowTariff=3432.829, electricityReceivedNormalTariff=3224.632, electricityReturnedLowTariff=0.0, electricityReturnedNormalTariff=0.0, electricityTariffIndicator=1.0, electricityPowerReceived=0.433, electricityPowerReturned=0.0, powerFailures=5, longPowerFailures=3, voltageSagsPhaseL1=1, voltageSagsPhaseL2=1, voltageSagsPhaseL3=1, voltageSwellsPhaseL1=1, voltageSwellsPhaseL2=1, voltageSwellsPhaseL3=1, voltageL1=236.7, voltageL2=234.5, voltageL3=236.0, currentL1=0.0, currentL2=0.0, currentL3=2.0, powerReceivedL1=0.045, powerReceivedL2=0.01, powerReceivedL3=0.379, powerReturnedL1=0.0, powerReturnedL2=0.0, powerReturnedL3=0.0, message=, mBusEvents={})
+//
+//        crc=9DF0,
+//
+            LOG.info("{}", dsmrTelegram);
     }
 
     @Test

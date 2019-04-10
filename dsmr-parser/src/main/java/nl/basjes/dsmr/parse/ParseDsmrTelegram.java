@@ -24,8 +24,13 @@ import nl.basjes.dsmr.parse.DsmrParser.*;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CodePointCharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Token;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static nl.basjes.dsmr.parse.DsmrParser.*;
@@ -36,7 +41,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
     @ToString
     public static class MBusEvent {
         private String deviceType;        // MBus event: Device type.
-        private Double equipmentId;       // MBus event: Equipment Identifier.
+        private String equipmentId;       // MBus event: Equipment Identifier.
         private Double value;             // MBus event: Last 5 minute reading (the value).
         private String unit;              // MBus event: Last 5 minute reading (the unit: m3 or GJ).
         private ZonedDateTime timestamp;  // MBus event: Timestamp of last 5 minute reading.
@@ -83,11 +88,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
         private Double powerReturnedL3;                  // Instantaneous active power L3 (-P)
         private String message;                          // Text message max 1024 characters.
 
-        // TODO: Make array ?
-        private MBusEvent mBusEvent1;
-        private MBusEvent mBusEvent2;
-        private MBusEvent mBusEvent3;
-        private MBusEvent mBusEvent4;
+        private Map<Integer, MBusEvent> mBusEvents = new TreeMap<>();
     }
 
     public static synchronized DSMRTelegram parse(String telegram) {
@@ -161,7 +162,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
 
     @Override
     public Void visitEquipmentId (EquipmentIdContext ctx) {
-        dsmrTelegram.equipmentId = ctx.id.getText();
+        dsmrTelegram.equipmentId = hexStringToString(ctx.id.getText());
         return null;
     }
     @Override
@@ -203,4 +204,40 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
     @Override public Void visitPowerReturnedL2                  (PowerReturnedL2Context                  ctx) { dsmrTelegram.powerReturnedL2                 = Double.valueOf(ctx.value.getText()); return null; } // Instantaneous active power L2 (-P)
     @Override public Void visitPowerReturnedL3                  (PowerReturnedL3Context                  ctx) { dsmrTelegram.powerReturnedL3                 = Double.valueOf(ctx.value.getText()); return null; } // Instantaneous active power L3 (-P)
 
+
+    private MBusEvent getMBusEvent(int index) {
+        return dsmrTelegram.mBusEvents.computeIfAbsent(index, i -> new MBusEvent());
+    }
+
+    private void setMBusType(int index, String type) {
+        MBusEvent mBusEvent = getMBusEvent(index);
+        mBusEvent.deviceType = type;
+    }
+
+    @Override public Void visitMBus1Type(MBus1TypeContext ctx) { setMBusType(1, ctx.type.getText()); return null; }
+    @Override public Void visitMBus2Type(MBus2TypeContext ctx) { setMBusType(2, ctx.type.getText()); return null; }
+    @Override public Void visitMBus3Type(MBus3TypeContext ctx) { setMBusType(3, ctx.type.getText()); return null; }
+    @Override public Void visitMBus4Type(MBus4TypeContext ctx) { setMBusType(4, ctx.type.getText()); return null; }
+
+    private void setMBusEquipmentId(int index, String equipmentId) {
+        MBusEvent mBusEvent = getMBusEvent(index);
+        mBusEvent.equipmentId = hexStringToString(equipmentId);
+    }
+
+    @Override public Void visitMBus1EquipmentId(MBus1EquipmentIdContext ctx) { setMBusEquipmentId(1, ctx.id.getText()); return null; }
+    @Override public Void visitMBus2EquipmentId(MBus2EquipmentIdContext ctx) { setMBusEquipmentId(2, ctx.id.getText()); return null; }
+    @Override public Void visitMBus3EquipmentId(MBus3EquipmentIdContext ctx) { setMBusEquipmentId(3, ctx.id.getText()); return null; }
+    @Override public Void visitMBus4EquipmentId(MBus4EquipmentIdContext ctx) { setMBusEquipmentId(4, ctx.id.getText()); return null; }
+
+    private void setMBusUsage(int index, String timestampText, String value, String unit) {
+        MBusEvent mBusEvent = getMBusEvent(index);
+        mBusEvent.timestamp = timestampParser.parse(timestampText);
+        mBusEvent.value = Double.valueOf(value);
+        mBusEvent.unit = unit;
+    }
+
+    @Override public Void visitMBus1Usage(MBus1UsageContext ctx) { setMBusUsage(1, ctx.timestamp.getText(), ctx.value.getText(), ctx.unit.getText()); return null; }
+    @Override public Void visitMBus2Usage(MBus2UsageContext ctx) { setMBusUsage(2, ctx.timestamp.getText(), ctx.value.getText(), ctx.unit.getText()); return null; }
+    @Override public Void visitMBus3Usage(MBus3UsageContext ctx) { setMBusUsage(3, ctx.timestamp.getText(), ctx.value.getText(), ctx.unit.getText()); return null; }
+    @Override public Void visitMBus4Usage(MBus4UsageContext ctx) { setMBusUsage(4, ctx.timestamp.getText(), ctx.value.getText(), ctx.unit.getText()); return null; }
 }
