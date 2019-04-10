@@ -86,7 +86,7 @@ public class TestRecordStream {
                 count,
                 dsmrTelegram.getTimestamp(),
                 value.substring(value.length()-7, value.length()-2),
-                dsmrTelegram.isValid() ? "Ok" : "BAD");
+                dsmrTelegram.isValidCRC() ? "Ok" : "BAD");
             if (value.startsWith("/")) {
                 if (!valid) {
                     crcIsValid(value);

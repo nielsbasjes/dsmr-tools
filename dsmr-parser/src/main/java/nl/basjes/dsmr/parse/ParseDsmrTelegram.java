@@ -18,192 +18,76 @@
 
 package nl.basjes.dsmr.parse;
 
-import nl.basjes.dsmr.parse.DsmrBaseVisitor;
-import nl.basjes.dsmr.parse.DsmrLexer;
-import nl.basjes.dsmr.parse.DsmrParser;
-import nl.basjes.dsmr.parse.DsmrParser.EmptyContext;
-import nl.basjes.dsmr.parse.DsmrParser.TelegramContext;
+import lombok.Getter;
+import lombok.ToString;
+import nl.basjes.dsmr.parse.DsmrParser.*;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CodePointCharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static nl.basjes.dsmr.parse.DsmrParser.*;
 
 public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
 
-// Basic form of a telegram
-
-//      /XXXZ Ident CR LF CR LF Data ! CRC CR LF
-
-// From the documentation about Electricity data (section 7.1)
-//    Electricity –P1 transfers every second
-//    OBIS reference      Value
-//    0-0:96.1.1.255      Equipment identifier
-//    1-0:1.8.1.255       Meter Reading electricity delivered to client (low tariff) in 0,001 kWh
-//    1-0:1.8.2.255       Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh
-//    1-0:2.8.1.255       Meter Reading electricity delivered by client (low tariff) in 0,001 kWh
-//    1-0:2.8.2.255       Meter Reading electricity delivered by client (normal tariff) in 0,001 kWh
-//    0-0:96.14.0.255     Tariff indicator electricity. The tariff indicator can be used to switch tariff dependent loads e.g boilers. This is responsibility of the P1 user
-//    1-0:1.7.0.255       Actual electricity power delivered (+P) in 1 Watt resolution
-//    1-0:2.7.0.255       Actual electricity power received (-P) in 1 Watt resolution
-//    0-0:96.7.21.255     Number of power failures in any phases
-//    0-0:96.7.9.255      Number of long power failures in any phases
-//    1-0:99:97.0.255     Power failure event log
-//    1-0:32.32.0.255     Number of voltage sags in phase L1
-//    1-0:52.32.0.255     Number of voltage sags in phase L2
-//    1-0:72.32.0.255     Number of voltage sags in phase L3
-//    1-0:32.36.0.255     Number of voltage swells in phase L1
-//    1-0:52.36.0.255     Number of voltage swells in phase L2
-//    1-0:72.36.0.255     Number of voltage swells in phase L3
-//    1-0:32.7.0.255      Instantaneous voltage L1
-//    1-0:52.7.0.255      Instantaneous voltage L2
-//    1-0:72.7.0.255      Instantaneous voltage L3
-//    1-0:31.7.0.255      Instantaneous current L1
-//    1-0:51.7.0.255      Instantaneous current L2
-//    1-0:71.7.0.255      Instantaneous current L3
-//    1-0:21.7.0.255      Instantaneous active power L1 (+P)
-//    1-0:41.7.0.255      Instantaneous active power L2 (+P)
-//    1-0:61.7.0.255      Instantaneous active power L3 (+P)
-//    1-0:22.7.0.255      Instantaneous active power L1 (-P)
-//    1-0:42.7.0.255      Instantaneous active power L2 (-P)
-//    1-0:62.7.0.255      Instantaneous active power L3 (-P)
-
-    public static class DSMRTelegramValue {
-
-        public DSMRTelegramValue(String cosemId) {
-            this.cosemId = cosemId;
-            switch (cosemId) {
-                case "1-3:0.2.8":   attributeName = "P1Version";                        description = "P1 Version information"; break;
-                case "0-0:1.0.0":   attributeName = "Timestamp";                        description = "Timestamp"; break;
-                case "0-0:96.1.1":  attributeName = "EquipmentId";                      description = "Equipment identifier"; break;
-
-                case "1-0:1.8.1":   attributeName = "ElectricityReceivedLowTariff";     description = "Meter Reading electricity delivered to client (low tariff) in 0,001 kWh"; break;
-                case "1-0:1.8.2":   attributeName = "ElectricityReceivedNormalTariff";  description = "Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh"; break;
-                case "1-0:2.8.1":   attributeName = "ElectricityReturnedLowTariff";     description = "Meter Reading electricity delivered by client (low tariff) in 0,001 kWh"; break;
-                case "1-0:2.8.2":   attributeName = "ElectricityReturnedNormalTariff";  description = "Meter Reading electricity delivered by client (normal tariff) in 0,001 kWh"; break;
-                case "0-0:96.14.0": attributeName = "ElectricityTariffIndicator";       description = "Tariff indicator electricity"; break;
-
-                case "1-0:1.7.0":   attributeName = "ElectricityPowerReceived";         description = "Actual electricity power delivered (+P) in 1 Watt resolution"; break;
-                case "1-0:2.7.0":   attributeName = "ElectricityPowerReturned";         description = "Actual electricity power received (-P) in 1 Watt resolution"; break;
-
-                case "0-0:96.7.21": attributeName = "PowerFailures";                    description = "Number of power failures in any phases"; break;
-                case "0-0:96.7.9":  attributeName = "LongPowerFailures";                description = "Number of long power failures in any phases"; break;
-                case "1-0:99:97.0": attributeName = "PowerFailureEventLog";             description = "Power failure event log"; break;
-                case "1-0:32.32.0": attributeName = "VoltageSagsPhaseL1";               description = "Number of voltage sags in phase L1"; break;
-                case "1-0:52.32.0": attributeName = "VoltageSagsPhaseL2";               description = "Number of voltage sags in phase L2"; break;
-                case "1-0:72.32.0": attributeName = "VoltageSagsPhaseL3";               description = "Number of voltage sags in phase L3"; break;
-                case "1-0:32.36.0": attributeName = "VoltageSwellsPhaseL1";             description = "Number of voltage swells in phase L1"; break;
-                case "1-0:52.36.0": attributeName = "VoltageSwellsPhaseL2";             description = "Number of voltage swells in phase L2"; break;
-                case "1-0:72.36.0": attributeName = "VoltageSwellsPhaseL3";             description = "Number of voltage swells in phase L3"; break;
-
-                case "1-0:32.7.0":  attributeName = "VoltageL1";                        description = "Instantaneous voltage L1"; break;
-                case "1-0:52.7.0":  attributeName = "VoltageL2";                        description = "Instantaneous voltage L2"; break;
-                case "1-0:72.7.0":  attributeName = "VoltageL3";                        description = "Instantaneous voltage L3"; break;
-                case "1-0:31.7.0":  attributeName = "CurrentL1";                        description = "Instantaneous current L1"; break;
-                case "1-0:51.7.0":  attributeName = "CurrentL2";                        description = "Instantaneous current L2"; break;
-                case "1-0:71.7.0":  attributeName = "CurrentL3";                        description = "Instantaneous current L3"; break;
-                case "1-0:21.7.0":  attributeName = "PowerReceivedL1";                  description = "Instantaneous active power L1 (+P)"; break;
-                case "1-0:41.7.0":  attributeName = "PowerReceivedL2";                  description = "Instantaneous active power L2 (+P)"; break;
-                case "1-0:61.7.0":  attributeName = "PowerReceivedL3";                  description = "Instantaneous active power L3 (+P)"; break;
-                case "1-0:22.7.0":  attributeName = "PowerReturnedL1";                  description = "Instantaneous active power L1 (-P)"; break;
-                case "1-0:42.7.0":  attributeName = "PowerReturnedL2";                  description = "Instantaneous active power L2 (-P)"; break;
-                case "1-0:62.7.0":  attributeName = "PowerReturnedL3";                  description = "Instantaneous active power L3 (-P)"; break;
-
-                case "0-0:96.13.0": attributeName = "Message";                          description = "Text message max 1024 characters."; break;
-
-                default:            attributeName = "Unknown:" + cosemId;               description = "?";
-            }
-
-
-        }
-        String cosemId;
-        String attributeName;
-        BigDecimal numericValue;
-        String numericUnit;
-        String textValue;
-        String description;
-
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            sb
-                .append("Value { ")
-                .append(attributeName)
-                .append(" (").append(cosemId).append(')')
-                .append(" = ");
-
-            if (numericValue != null) {
-                sb.append(numericValue);
-                if (numericUnit != null) {
-                    sb.append(" ").append(numericUnit);
-                }
-            }
-            if (textValue != null) {
-                sb.append("\"").append(textValue).append("\"");
-            }
-            sb
-//                .append(",  description = \"").append(description).append("\"")
-                .append(" }\n");
-            return sb.toString();
-        }
-
+    @Getter
+    @ToString
+    public static class MBusEvent {
+        private String deviceType;        // MBus event: Device type.
+        private Double equipmentId;       // MBus event: Equipment Identifier.
+        private Double value;             // MBus event: Last 5 minute reading (the value).
+        private String unit;              // MBus event: Last 5 minute reading (the unit: m3 or GJ).
+        private ZonedDateTime timestamp;  // MBus event: Timestamp of last 5 minute reading.
     }
 
+    @Getter
+    @ToString
     public static class DSMRTelegram {
-//        private String telegram;
+        //        private String telegram;
         private boolean isValidCRC = false;
         private String ident;
-
-        public DSMRTelegram(String telegram) {
-            isValidCRC = CheckCRC.crcIsValid(telegram);
-        }
-
-//        public String getTelegram() {
-//            return telegram;
-//        }
-
-        public String getIdent() {
-            return ident;
-        }
-
-        public ZonedDateTime getTimestamp() {
-            return timestamp;
-        }
-
-        public String getCrc() {
-            return crc;
-        }
-
-        public List<DSMRTelegramValue> getValues() {
-            return values;
-        }
-
-        private ZonedDateTime timestamp;
-
         private String crc;
-        private List<DSMRTelegramValue> values = new ArrayList<>();
 
-        public boolean isValid() {
-            return isValidCRC;
-//            return CheckCRC.crcIsValid(telegram);
-        }
+        private String p1Version;                        // P1 Version information
+        private ZonedDateTime timestamp;                        // Timestamp
+        private String equipmentId;                      // Equipment identifier
+        private Double electricityReceivedLowTariff;     // Meter Reading electricity delivered to client (low tariff) in 0,001 kWh
+        private Double electricityReceivedNormalTariff;  // Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh
+        private Double electricityReturnedLowTariff;     // Meter Reading electricity delivered by client (low tariff) in 0,001 kWh
+        private Double electricityReturnedNormalTariff;  // Meter Reading electricity delivered by client (normal tariff) in 0,001 kWh
+        private Double electricityTariffIndicator;       // Tariff indicator electricity
+        private Double electricityPowerReceived;         // Actual electricity power delivered (+P) in 1 Watt resolution
+        private Double electricityPowerReturned;         // Actual electricity power received (-P) in 1 Watt resolution
+        private Long powerFailures;                    // Number of power failures in any phases
+        private Long longPowerFailures;                // Number of long power failures in any phases
+//        private double powerFailureEventLog;             // Power failure event log
+        private Long voltageSagsPhaseL1;               // Number of voltage sags in phase L1
+        private Long voltageSagsPhaseL2;               // Number of voltage sags in phase L2
+        private Long voltageSagsPhaseL3;               // Number of voltage sags in phase L3
+        private Long voltageSwellsPhaseL1;             // Number of voltage swells in phase L1
+        private Long voltageSwellsPhaseL2;             // Number of voltage swells in phase L2
+        private Long voltageSwellsPhaseL3;             // Number of voltage swells in phase L3
+        private Double voltageL1;                        // Instantaneous voltage L1
+        private Double voltageL2;                        // Instantaneous voltage L2
+        private Double voltageL3;                        // Instantaneous voltage L3
+        private Double currentL1;                        // Instantaneous current L1
+        private Double currentL2;                        // Instantaneous current L2
+        private Double currentL3;                        // Instantaneous current L3
+        private Double powerReceivedL1;                  // Instantaneous active power L1 (+P)
+        private Double powerReceivedL2;                  // Instantaneous active power L2 (+P)
+        private Double powerReceivedL3;                  // Instantaneous active power L3 (+P)
+        private Double powerReturnedL1;                  // Instantaneous active power L1 (-P)
+        private Double powerReturnedL2;                  // Instantaneous active power L2 (-P)
+        private Double powerReturnedL3;                  // Instantaneous active power L3 (-P)
+        private String message;                          // Text message max 1024 characters.
 
-        @Override
-        public String toString() {
-            return "DSMR Telegram { \n" +
-//                "telegram='" + telegram + '\'' +
-                "ident='" + ident + '\'' + ", \n" +
-                "timestamp=" + timestamp + ", \n" +
-                (isValid() ? "Valid " : "INVALID ") + "crc=" + crc +", \n" +
-                "values= [\n" + values + "\n]\n" +
-                '}';
-        }
+        // TODO: Make array ?
+        private MBusEvent mBusEvent1;
+        private MBusEvent mBusEvent2;
+        private MBusEvent mBusEvent3;
+        private MBusEvent mBusEvent4;
     }
 
     public static synchronized DSMRTelegram parse(String telegram) {
@@ -212,10 +96,12 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
 
     private String telegramString;
     private DSMRTelegram dsmrTelegram;
+    private TimestampParser timestampParser = new TimestampParser();
 
     private ParseDsmrTelegram(String telegram) {
-        dsmrTelegram = new DSMRTelegram(telegram);
         telegramString = telegram;
+        dsmrTelegram = new DSMRTelegram();
+        dsmrTelegram.isValidCRC = CheckCRC.crcIsValid(telegramString);
     }
 
     private DSMRTelegram parse() {
@@ -240,34 +126,6 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
         return dsmrTelegram;
     }
 
-    @Override
-    public Void visitTelegram(TelegramContext ctx) {
-        dsmrTelegram.ident = ctx.ident.getText();
-        dsmrTelegram.crc = ctx.crc.getText();
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public Void visitEmpty(EmptyContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
-        value.textValue = "";
-        dsmrTelegram.values.add(value);
-        return null;
-    }
-
-    TimestampParser timestampParser = new TimestampParser();
-    @Override
-    public Void visitTimestamp(TimestampContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
-        value.textValue = ctx.timestamp.getText();
-        if ("0-0:1.0.0".equals(value.cosemId)) {
-            dsmrTelegram.timestamp = timestampParser.parse(value.textValue);
-        }
-
-        dsmrTelegram.values.add(value);
-        return null;
-    }
-
     // https://stackoverflow.com/questions/50712987/hex-string-to-byte-array-conversion-java
     public byte[] hexStringToByteArray(String s) {
         byte[] data = new byte[s.length()/2];
@@ -278,74 +136,71 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
         return data;
     }
 
+    private String hexStringToString(String hexString) {
+        return new String(hexStringToByteArray(hexString), UTF_8);
+    }
+
     @Override
-    public Void visitHexstring(HexstringContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
-        value.textValue = new String(hexStringToByteArray(ctx.value.getText()), UTF_8);
-        dsmrTelegram.values.add(value);
+    public Void visitTelegram(TelegramContext ctx) {
+        dsmrTelegram.ident = ctx.ident.getText();
+        dsmrTelegram.crc = ctx.crc.getText().substring(1); // Skip the '!' at the start
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Void visitP1Version   (P1VersionContext   ctx) {
+        dsmrTelegram.p1Version   = ctx.version.getText();
         return null;
     }
 
     @Override
-    public Void visitNumber(NumberContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
-        value.numericValue = new BigDecimal(ctx.value.getText());
-        dsmrTelegram.values.add(value);
+    public Void visitTimestamp   (TimestampContext   ctx) {
+        dsmrTelegram.timestamp   = timestampParser.parse(ctx.timestamp.getText());
         return null;
     }
 
     @Override
-    public Void visitElectricityKiloWattHour(ElectricityKiloWattHourContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
-        value.numericValue = new BigDecimal(ctx.value.getText());
-        value.numericUnit= ctx.unit.getText();
-        dsmrTelegram.values.add(value);
+    public Void visitEquipmentId (EquipmentIdContext ctx) {
+        dsmrTelegram.equipmentId = ctx.id.getText();
         return null;
     }
-
     @Override
-    public Void visitElectricityKiloWatt(ElectricityKiloWattContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
-        value.numericValue = new BigDecimal(ctx.value.getText());
-        value.numericUnit= ctx.unit.getText();
-        dsmrTelegram.values.add(value);
+    public Void visitMessage     (MessageContext     ctx) {
+        // Text message max 1024 characters.
+        dsmrTelegram.message     = (ctx.text == null) ? "" : hexStringToString(ctx.text.getText());
         return null;
     }
 
-    @Override
-    public Void visitElectricityVolt(ElectricityVoltContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
-        value.numericValue = new BigDecimal(ctx.value.getText());
-        value.numericUnit= ctx.unit.getText();
-        dsmrTelegram.values.add(value);
-        return null;
-    }
+    @Override public Void visitElectricityReceivedLowTariff     (ElectricityReceivedLowTariffContext     ctx) { dsmrTelegram.electricityReceivedLowTariff    = Double.valueOf(ctx.value.getText()); return null; } // Meter Reading electricity delivered to client (low tariff) in 0,001 kWh
+    @Override public Void visitElectricityReceivedNormalTariff  (ElectricityReceivedNormalTariffContext  ctx) { dsmrTelegram.electricityReceivedNormalTariff = Double.valueOf(ctx.value.getText()); return null; } // Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh
+    @Override public Void visitElectricityReturnedLowTariff     (ElectricityReturnedLowTariffContext     ctx) { dsmrTelegram.electricityReturnedLowTariff    = Double.valueOf(ctx.value.getText()); return null; } // Meter Reading electricity delivered by client (low tariff) in 0,001 kWh
+    @Override public Void visitElectricityReturnedNormalTariff  (ElectricityReturnedNormalTariffContext  ctx) { dsmrTelegram.electricityReturnedNormalTariff = Double.valueOf(ctx.value.getText()); return null; } // Meter Reading electricity delivered by client (normal tariff) in 0,001 kWh
+    @Override public Void visitElectricityTariffIndicator       (ElectricityTariffIndicatorContext       ctx) { dsmrTelegram.electricityTariffIndicator      = Double.valueOf(ctx.value.getText()); return null; } // Tariff indicator electricity
+    @Override public Void visitElectricityPowerReceived         (ElectricityPowerReceivedContext         ctx) { dsmrTelegram.electricityPowerReceived        = Double.valueOf(ctx.value.getText()); return null; } // Actual electricity power delivered (+P) in 1 Watt resolution
+    @Override public Void visitElectricityPowerReturned         (ElectricityPowerReturnedContext         ctx) { dsmrTelegram.electricityPowerReturned        = Double.valueOf(ctx.value.getText()); return null; } // Actual electricity power received (-P) in 1 Watt resolution
 
-    @Override
-    public Void visitElectricityAmpere(ElectricityAmpereContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
-        value.numericValue = new BigDecimal(ctx.value.getText());
-        value.numericUnit= ctx.unit.getText();
-        dsmrTelegram.values.add(value);
-        return null;
-    }
+    @Override public Void visitPowerFailures                    (PowerFailuresContext                    ctx) { dsmrTelegram.powerFailures                   = Long.valueOf(ctx.count.getText());   return null; } // Number of power failures in any phases
+    @Override public Void visitLongPowerFailures                (LongPowerFailuresContext                ctx) { dsmrTelegram.longPowerFailures               = Long.valueOf(ctx.count.getText());   return null; } // Number of long power failures in any phases
 
-    @Override
-    public Void visitGasCubicMeter(GasCubicMeterContext ctx) {
-        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
-        value.numericValue = new BigDecimal(ctx.value.getText());
-        value.numericUnit= ctx.unit.getText();
-        dsmrTelegram.values.add(value);
-        return null;
-    }
+    // TODO: Implement @Override public Void visitPowerFailureEventLog             (PowerFailureEventLogContext             ctx) { return null ; } // Power failure event log
 
-// TODO: Implement the nested list
-//    @Override
-//    public Void visitEventList(EventListContext ctx) {
-//        DSMRTelegramValue value = new DSMRTelegramValue(ctx.id.getText());
-//        value.numericValue = new BigDecimal(ctx.value.getText());
-//        value.numericUnit= ctx.unit.getText();
-//        dsmrTelegram.values.add(value);
-//        return null;
-//    }
+    @Override public Void visitVoltageSagsPhaseL1               (VoltageSagsPhaseL1Context               ctx) { dsmrTelegram.voltageSagsPhaseL1              = Long.valueOf(ctx.count.getText());   return null; } // Number of voltage sags in phase L1
+    @Override public Void visitVoltageSagsPhaseL2               (VoltageSagsPhaseL2Context               ctx) { dsmrTelegram.voltageSagsPhaseL2              = Long.valueOf(ctx.count.getText());   return null; } // Number of voltage sags in phase L2
+    @Override public Void visitVoltageSagsPhaseL3               (VoltageSagsPhaseL3Context               ctx) { dsmrTelegram.voltageSagsPhaseL3              = Long.valueOf(ctx.count.getText());   return null; } // Number of voltage sags in phase L3
+    @Override public Void visitVoltageSwellsPhaseL1             (VoltageSwellsPhaseL1Context             ctx) { dsmrTelegram.voltageSwellsPhaseL1            = Long.valueOf(ctx.count.getText());   return null; } // Number of voltage swells in phase L1
+    @Override public Void visitVoltageSwellsPhaseL2             (VoltageSwellsPhaseL2Context             ctx) { dsmrTelegram.voltageSwellsPhaseL2            = Long.valueOf(ctx.count.getText());   return null; } // Number of voltage swells in phase L2
+    @Override public Void visitVoltageSwellsPhaseL3             (VoltageSwellsPhaseL3Context             ctx) { dsmrTelegram.voltageSwellsPhaseL3            = Long.valueOf(ctx.count.getText());   return null; } // Number of voltage swells in phase L3
+    @Override public Void visitVoltageL1                        (VoltageL1Context                        ctx) { dsmrTelegram.voltageL1                       = Double.valueOf(ctx.value.getText()); return null; } // Instantaneous voltage L1
+    @Override public Void visitVoltageL2                        (VoltageL2Context                        ctx) { dsmrTelegram.voltageL2                       = Double.valueOf(ctx.value.getText()); return null; } // Instantaneous voltage L2
+    @Override public Void visitVoltageL3                        (VoltageL3Context                        ctx) { dsmrTelegram.voltageL3                       = Double.valueOf(ctx.value.getText()); return null; } // Instantaneous voltage L3
+    @Override public Void visitCurrentL1                        (CurrentL1Context                        ctx) { dsmrTelegram.currentL1                       = Double.valueOf(ctx.value.getText()); return null; } // Instantaneous current L1
+    @Override public Void visitCurrentL2                        (CurrentL2Context                        ctx) { dsmrTelegram.currentL2                       = Double.valueOf(ctx.value.getText()); return null; } // Instantaneous current L2
+    @Override public Void visitCurrentL3                        (CurrentL3Context                        ctx) { dsmrTelegram.currentL3                       = Double.valueOf(ctx.value.getText()); return null; } // Instantaneous current L3
+    @Override public Void visitPowerReceivedL1                  (PowerReceivedL1Context                  ctx) { dsmrTelegram.powerReceivedL1                 = Double.valueOf(ctx.value.getText()); return null; } // Instantaneous active power L1 (+P)
+    @Override public Void visitPowerReceivedL2                  (PowerReceivedL2Context                  ctx) { dsmrTelegram.powerReceivedL2                 = Double.valueOf(ctx.value.getText()); return null; } // Instantaneous active power L2 (+P)
+    @Override public Void visitPowerReceivedL3                  (PowerReceivedL3Context                  ctx) { dsmrTelegram.powerReceivedL3                 = Double.valueOf(ctx.value.getText()); return null; } // Instantaneous active power L3 (+P)
+    @Override public Void visitPowerReturnedL1                  (PowerReturnedL1Context                  ctx) { dsmrTelegram.powerReturnedL1                 = Double.valueOf(ctx.value.getText()); return null; } // Instantaneous active power L1 (-P)
+    @Override public Void visitPowerReturnedL2                  (PowerReturnedL2Context                  ctx) { dsmrTelegram.powerReturnedL2                 = Double.valueOf(ctx.value.getText()); return null; } // Instantaneous active power L2 (-P)
+    @Override public Void visitPowerReturnedL3                  (PowerReturnedL3Context                  ctx) { dsmrTelegram.powerReturnedL3                 = Double.valueOf(ctx.value.getText()); return null; } // Instantaneous active power L3 (-P)
+
 }
