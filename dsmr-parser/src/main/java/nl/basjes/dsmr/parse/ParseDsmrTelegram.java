@@ -40,24 +40,24 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
     @Getter
     @ToString
     public static class MBusEvent {
-        private String deviceType;        // MBus event: Device type.
-        private String equipmentId;       // MBus event: Equipment Identifier.
-        private Double value;             // MBus event: Last 5 minute reading (the value).
-        private String unit;              // MBus event: Last 5 minute reading (the unit: m3 or GJ).
-        private ZonedDateTime timestamp;  // MBus event: Timestamp of last 5 minute reading.
+        private String deviceType;                       // MBus event: Device type.
+        private String equipmentId;                      // MBus event: Equipment Identifier.
+        private Double value;                            // MBus event: Last 5 minute reading (the value).
+        private String unit;                             // MBus event: Last 5 minute reading (the unit: m3 or GJ).
+        private ZonedDateTime timestamp;                 // MBus event: Timestamp of last 5 minute reading.
     }
 
     @Getter
     @ToString
     public static class DSMRTelegram {
-        //        private String telegram;
-        private boolean isValidCRC = false;
+        private boolean validCRC = false;
         private String ident;
         private String crc;
 
         private String p1Version;                        // P1 Version information
-        private ZonedDateTime timestamp;                        // Timestamp
+        private ZonedDateTime timestamp;                 // Timestamp
         private String equipmentId;                      // Equipment identifier
+
         private Double electricityReceivedLowTariff;     // Meter Reading electricity delivered to client (low tariff) in 0,001 kWh
         private Double electricityReceivedNormalTariff;  // Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh
         private Double electricityReturnedLowTariff;     // Meter Reading electricity delivered by client (low tariff) in 0,001 kWh
@@ -65,15 +65,17 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
         private Double electricityTariffIndicator;       // Tariff indicator electricity
         private Double electricityPowerReceived;         // Actual electricity power delivered (+P) in 1 Watt resolution
         private Double electricityPowerReturned;         // Actual electricity power received (-P) in 1 Watt resolution
-        private Long powerFailures;                    // Number of power failures in any phases
-        private Long longPowerFailures;                // Number of long power failures in any phases
-//        private double powerFailureEventLog;             // Power failure event log
-        private Long voltageSagsPhaseL1;               // Number of voltage sags in phase L1
-        private Long voltageSagsPhaseL2;               // Number of voltage sags in phase L2
-        private Long voltageSagsPhaseL3;               // Number of voltage sags in phase L3
-        private Long voltageSwellsPhaseL1;             // Number of voltage swells in phase L1
-        private Long voltageSwellsPhaseL2;             // Number of voltage swells in phase L2
-        private Long voltageSwellsPhaseL3;             // Number of voltage swells in phase L3
+
+        private Long powerFailures;                      // Number of power failures in any phases
+        private Long longPowerFailures;                  // Number of long power failures in any phases
+// TODO: private double powerFailureEventLog;             // Power failure event log
+        private Long voltageSagsPhaseL1;                 // Number of voltage sags in phase L1
+        private Long voltageSagsPhaseL2;                 // Number of voltage sags in phase L2
+        private Long voltageSagsPhaseL3;                 // Number of voltage sags in phase L3
+        private Long voltageSwellsPhaseL1;               // Number of voltage swells in phase L1
+        private Long voltageSwellsPhaseL2;               // Number of voltage swells in phase L2
+        private Long voltageSwellsPhaseL3;               // Number of voltage swells in phase L3
+    
         private Double voltageL1;                        // Instantaneous voltage L1
         private Double voltageL2;                        // Instantaneous voltage L2
         private Double voltageL3;                        // Instantaneous voltage L3
@@ -89,6 +91,33 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
         private String message;                          // Text message max 1024 characters.
 
         private Map<Integer, MBusEvent> mBusEvents = new TreeMap<>();
+
+        // NOTE: This assumes only AT MOST ONE attached thing per type of meter.
+        // Doing two 'gas meters' will only map the first one (i.e. with the lowest MBus id)!!!
+
+        // Water
+        private String        waterEquipmentId;
+        private ZonedDateTime waterTimestamp;    // Water measurement timestamp
+        private Double        waterM3;           // Water consumption in cubic meters
+
+        // Gas
+        private String        gasEquipmentId;
+        private ZonedDateTime gasTimestamp;      // Gas measurement timestamp
+        private Double        gasM3;             // Gas consumption in cubic meters
+
+        // Thermal: Heat or Cold
+        private String        thermalHeatEquipmentId;
+        private ZonedDateTime thermalHeatTimestamp;  // Thermal Timestamp
+        private Double        thermalHeatGJ;         // Thermal GigaJoule
+
+        private String        thermalColdEquipmentId;
+        private ZonedDateTime thermalColdTimestamp;  // Thermal Timestamp
+        private Double        thermalColdGJ;         // Thermal GigaJoule
+
+        // Electricity via a slave
+        private String        slaveEMeterEquipmentId;
+        private ZonedDateTime slaveEMeterTimestamp;  // Slave e-meter measurement timestamp
+        private Double        slaveEMeterkWh;        // Slave e-meter consumption in kWh
     }
 
     public static synchronized DSMRTelegram parse(String telegram) {
@@ -124,11 +153,79 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
 
         this.visitTelegram(telegramContext);
 
+        // Final step cross map the MBus events into usable attributes.
+        for (Map.Entry<Integer, MBusEvent> mBusEventEntry: dsmrTelegram.mBusEvents.entrySet()) {
+            MBusEvent mBusEvent = mBusEventEntry.getValue();
+
+            // This mapping is based on the documentation found on http://www.m-bus.com/
+            switch (Integer.valueOf(mBusEvent.deviceType)) {
+//                case 0x00: // Other                                                               0000 0000  00
+//                case 0x01: // Oil                                                                 0000 0001  01
+                case 0x02: // Electricity via a slave                                               0000 0010  02
+                    if (dsmrTelegram.slaveEMeterEquipmentId == null) {
+                        dsmrTelegram.slaveEMeterEquipmentId         = mBusEvent.equipmentId;
+                        dsmrTelegram.slaveEMeterTimestamp           = mBusEvent.timestamp;
+                        dsmrTelegram.slaveEMeterkWh                 = mBusEvent.value;
+                    }
+                    break;
+
+                case 0x03: // Gas                                                                   0000 0011  03
+                    if (dsmrTelegram.gasEquipmentId== null) {
+                        dsmrTelegram.gasEquipmentId                 = mBusEvent.equipmentId;
+                        dsmrTelegram.gasTimestamp                   = mBusEvent.timestamp;
+                        dsmrTelegram.gasM3                          = mBusEvent.value;
+                    }
+                    break;
+
+                case 0x06: // Warm Water (30-90 Celcius)                                            0000 0110  06
+                case 0x07: // Water                                                                 0000 0111  07
+                    if (dsmrTelegram.waterEquipmentId== null) {
+                        dsmrTelegram.waterEquipmentId               = mBusEvent.equipmentId;
+                        dsmrTelegram.waterTimestamp                 = mBusEvent.timestamp;
+                        dsmrTelegram.waterM3                        = mBusEvent.value;
+                    }
+                    break;
+
+                case 0x04: // Heat (Volume measured at return temperature: outlet)                  0000 0100  04
+                case 0x0C: // Heat (Volume measured at flow temperature: inlet)                     0000 1100  0C
+                    if (dsmrTelegram.thermalHeatEquipmentId== null) {
+                        dsmrTelegram.thermalHeatEquipmentId         = mBusEvent.equipmentId;
+                        dsmrTelegram.thermalHeatTimestamp           = mBusEvent.timestamp;
+                        dsmrTelegram.thermalHeatGJ                  = mBusEvent.value;
+                    }
+                    break;
+
+                case 0x0A: // Cooling load meter (Volume measured at return temperature: outlet)    0000 1010  0A
+                case 0x0B: // Cooling load meter (Volume measured at flow temperature: inlet)       0000 1011  0B
+                    if (dsmrTelegram.thermalColdEquipmentId == null) {
+                        dsmrTelegram.thermalColdEquipmentId         = mBusEvent.equipmentId;
+                        dsmrTelegram.thermalColdTimestamp           = mBusEvent.timestamp;
+                        dsmrTelegram.thermalColdGJ                  = mBusEvent.value;
+                    }break;
+
+//                case 0x05: // Steam                                                               0000 0101  05
+
+//                case 0x08: // Heat Cost Allocator                                                 0000 1000  08
+//                case 0x09: // Compressed Air                                                      0000 1001  09
+//                case 0xOD: // Heat / Cooling load meter                                           0000 1101  OD
+//                case 0x0E: // Bus / System                                                        0000 1110  0E
+//                case 0x0F: // Unknown Medium                                                      0000 1111  0F
+//                case 0x10: // Reserve                                                             .......... 10 - 14
+//                case 0x15: // Hot Water (>90 Celsius)                                             0001 0101  15
+//                case 0x16: // Cold Water                                                          0001 0110  16
+//                case 0x17: // Dual register (hot/cold) Water                                      0001 0111  17
+//                case 0x18: // Pressure                                                            0001 1000  18
+//                case 0x19: // A/D Converter                                                       0001 1001  19
+//                case 0x20: // Reserve                                                             .......... 20 - FF
+                default: // We simply do not map the ones we do not understand
+            }
+        }
+
         return dsmrTelegram;
     }
 
     // https://stackoverflow.com/questions/50712987/hex-string-to-byte-array-conversion-java
-    public byte[] hexStringToByteArray(String s) {
+    private byte[] hexStringToByteArray(String s) {
         byte[] data = new byte[s.length()/2];
         for (int i = 0; i < data.length; i ++) {
             data[i] = (byte) ((Character.digit(s.charAt(i*2), 16) << 4)
