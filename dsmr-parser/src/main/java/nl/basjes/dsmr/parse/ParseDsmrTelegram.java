@@ -75,7 +75,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
         private Long voltageSwellsPhaseL1;               // Number of voltage swells in phase L1
         private Long voltageSwellsPhaseL2;               // Number of voltage swells in phase L2
         private Long voltageSwellsPhaseL3;               // Number of voltage swells in phase L3
-    
+
         private Double voltageL1;                        // Instantaneous voltage L1
         private Double voltageL2;                        // Instantaneous voltage L2
         private Double voltageL3;                        // Instantaneous voltage L3
@@ -131,7 +131,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
     private ParseDsmrTelegram(String telegram) {
         telegramString = telegram;
         dsmrTelegram = new DSMRTelegram();
-        dsmrTelegram.isValidCRC = CheckCRC.crcIsValid(telegramString);
+        dsmrTelegram.validCRC = CheckCRC.crcIsValid(telegramString);
     }
 
     private DSMRTelegram parse() {
