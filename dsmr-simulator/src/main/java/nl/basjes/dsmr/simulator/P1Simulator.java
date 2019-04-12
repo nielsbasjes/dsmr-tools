@@ -19,17 +19,13 @@
 package nl.basjes.dsmr.simulator;
 
 import nl.basjes.dsmr.parse.CheckCRC;
-import nl.basjes.dsmr.parse.DsmrParser;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.TemporalAccessor;
 
 import static java.lang.Math.PI;
-import static java.lang.Math.sin;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class P1Simulator {

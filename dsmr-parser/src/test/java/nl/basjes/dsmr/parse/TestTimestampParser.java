@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-
 import static org.junit.Assert.assertEquals;
 
 public class TestTimestampParser {

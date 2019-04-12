@@ -18,106 +18,38 @@
 
 package nl.basjes.dsmr.parse;
 
-import lombok.Getter;
-import lombok.ToString;
+import nl.basjes.dsmr.DSMRTelegram;
+import nl.basjes.dsmr.MBusEvent;
 import nl.basjes.dsmr.parse.DsmrParser.*;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CodePointCharStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.atn.ATNConfigSet;
+import org.antlr.v4.runtime.dfa.DFA;
 
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.BitSet;
 import java.util.Map;
-import java.util.TreeMap;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static nl.basjes.dsmr.parse.DsmrParser.*;
 
-public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> {
+public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements ANTLRErrorListener {
 
-    @Getter
-    @ToString
-    public static class MBusEvent {
-        private String deviceType;                       // MBus event: Device type.
-        private String equipmentId;                      // MBus event: Equipment Identifier.
-        private Double value;                            // MBus event: Last 5 minute reading (the value).
-        private String unit;                             // MBus event: Last 5 minute reading (the unit: m3 or GJ).
-        private ZonedDateTime timestamp;                 // MBus event: Timestamp of last 5 minute reading.
+    @Override
+    public void syntaxError(Recognizer<?, ?> recognizer, Object o, int i, int i1, String s, RecognitionException e) {
+
     }
 
-    @Getter
-    @ToString
-    public static class DSMRTelegram {
-        private boolean validCRC = false;
-        private String ident;
-        private String crc;
+    @Override
+    public void reportAmbiguity(Parser parser, DFA dfa, int i, int i1, boolean b, BitSet bitSet, ATNConfigSet atnConfigSet) {
 
-        private String p1Version;                        // P1 Version information
-        private ZonedDateTime timestamp;                 // Timestamp
-        private String equipmentId;                      // Equipment identifier
+    }
 
-        private Double electricityReceivedLowTariff;     // Meter Reading electricity delivered to client (low tariff) in 0,001 kWh
-        private Double electricityReceivedNormalTariff;  // Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh
-        private Double electricityReturnedLowTariff;     // Meter Reading electricity delivered by client (low tariff) in 0,001 kWh
-        private Double electricityReturnedNormalTariff;  // Meter Reading electricity delivered by client (normal tariff) in 0,001 kWh
-        private Double electricityTariffIndicator;       // Tariff indicator electricity
-        private Double electricityPowerReceived;         // Actual electricity power delivered (+P) in 1 Watt resolution
-        private Double electricityPowerReturned;         // Actual electricity power received (-P) in 1 Watt resolution
+    @Override
+    public void reportAttemptingFullContext(Parser parser, DFA dfa, int i, int i1, BitSet bitSet, ATNConfigSet atnConfigSet) {
 
-        private Long powerFailures;                      // Number of power failures in any phases
-        private Long longPowerFailures;                  // Number of long power failures in any phases
-// TODO: private double powerFailureEventLog;             // Power failure event log
-        private Long voltageSagsPhaseL1;                 // Number of voltage sags in phase L1
-        private Long voltageSagsPhaseL2;                 // Number of voltage sags in phase L2
-        private Long voltageSagsPhaseL3;                 // Number of voltage sags in phase L3
-        private Long voltageSwellsPhaseL1;               // Number of voltage swells in phase L1
-        private Long voltageSwellsPhaseL2;               // Number of voltage swells in phase L2
-        private Long voltageSwellsPhaseL3;               // Number of voltage swells in phase L3
+    }
 
-        private Double voltageL1;                        // Instantaneous voltage L1
-        private Double voltageL2;                        // Instantaneous voltage L2
-        private Double voltageL3;                        // Instantaneous voltage L3
-        private Double currentL1;                        // Instantaneous current L1
-        private Double currentL2;                        // Instantaneous current L2
-        private Double currentL3;                        // Instantaneous current L3
-        private Double powerReceivedL1;                  // Instantaneous active power L1 (+P)
-        private Double powerReceivedL2;                  // Instantaneous active power L2 (+P)
-        private Double powerReceivedL3;                  // Instantaneous active power L3 (+P)
-        private Double powerReturnedL1;                  // Instantaneous active power L1 (-P)
-        private Double powerReturnedL2;                  // Instantaneous active power L2 (-P)
-        private Double powerReturnedL3;                  // Instantaneous active power L3 (-P)
-        private String message;                          // Text message max 1024 characters.
+    @Override
+    public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atnConfigSet) {
 
-        private Map<Integer, MBusEvent> mBusEvents = new TreeMap<>();
-
-        // NOTE: This assumes only AT MOST ONE attached thing per type of meter.
-        // Doing two 'gas meters' will only map the first one (i.e. with the lowest MBus id)!!!
-
-        // Water
-        private String        waterEquipmentId;
-        private ZonedDateTime waterTimestamp;    // Water measurement timestamp
-        private Double        waterM3;           // Water consumption in cubic meters
-
-        // Gas
-        private String        gasEquipmentId;
-        private ZonedDateTime gasTimestamp;      // Gas measurement timestamp
-        private Double        gasM3;             // Gas consumption in cubic meters
-
-        // Thermal: Heat or Cold
-        private String        thermalHeatEquipmentId;
-        private ZonedDateTime thermalHeatTimestamp;  // Thermal Timestamp
-        private Double        thermalHeatGJ;         // Thermal GigaJoule
-
-        private String        thermalColdEquipmentId;
-        private ZonedDateTime thermalColdTimestamp;  // Thermal Timestamp
-        private Double        thermalColdGJ;         // Thermal GigaJoule
-
-        // Electricity via a slave
-        private String        slaveEMeterEquipmentId;
-        private ZonedDateTime slaveEMeterTimestamp;  // Slave e-meter measurement timestamp
-        private Double        slaveEMeterkWh;        // Slave e-meter consumption in kWh
     }
 
     public static synchronized DSMRTelegram parse(String telegram) {

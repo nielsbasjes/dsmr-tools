@@ -28,7 +28,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import static nl.basjes.dsmr.parse.CheckCRC.crcIsValid;
-import static org.junit.Assert.assertTrue;
 
 public class TestRecordStream {
 
