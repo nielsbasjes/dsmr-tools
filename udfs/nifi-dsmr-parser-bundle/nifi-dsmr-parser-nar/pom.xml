@@ -26,7 +26,7 @@
     <version>0.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>nifi-nifi-dsmr-parser-nar</artifactId>
+  <artifactId>nifi-dsmr-parser-nar</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>nar</packaging>
   <name>DSMR : UDF : Nifi : DSMR Parser : Nar</name>
@@ -39,7 +39,7 @@
   <dependencies>
     <dependency>
       <groupId>nl.basjes.dsmr</groupId>
-      <artifactId>nifi-nifi-dsmr-parser-processors</artifactId>
+      <artifactId>nifi-dsmr-parser-processors</artifactId>
       <version>0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>

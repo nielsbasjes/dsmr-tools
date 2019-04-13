@@ -88,7 +88,7 @@ public class DSMRParserProcessor extends AbstractProcessor {
     }
 
     private static final String attributePrefix = "dsmr.";
-    
+
     private void put(Map<String,String> map, String name, String value) {
         if (value != null) {
             map.put(attributePrefix + name, value);
@@ -116,6 +116,10 @@ public class DSMRParserProcessor extends AbstractProcessor {
     private void put(Map<String,String> map, String name, ZonedDateTime value) {
         if (value != null) {
             map.put(attributePrefix + name, ISO_OFFSET_DATE_TIME.format(value));
+
+            // In DSMR the are no times more accurate than a second.
+            // If you need milli/micro or even nano seconds just append some zeros.
+            map.put(attributePrefix + name + ".epochSecond", String.valueOf(value.toEpochSecond()));
         }
     }
 
@@ -207,22 +211,22 @@ public class DSMRParserProcessor extends AbstractProcessor {
         put(parseResults, "waterEquipmentId",                 record.getWaterEquipmentId());                 // Water measuring equipment id
         put(parseResults, "waterTimestamp",                   record.getWaterTimestamp());                   // Water measurement timestamp
         put(parseResults, "waterM3",                          record.getWaterM3());                          // Measured Water quantity in M3
-                                                                                                             
-        // Gas                                                                                               
+
+        // Gas
         put(parseResults, "gasEquipmentId",                   record.getGasEquipmentId());                   // Gas measuring equipment id
         put(parseResults, "gasTimestamp",                     record.getGasTimestamp());                     // Gas measurement timestamp
         put(parseResults, "gasM3",                            record.getGasM3());                            // Measured Gas quantity in M3
-                                                                                                             
-        // Thermal: Heat or Cold                                                                             
+
+        // Thermal: Heat or Cold
         put(parseResults, "thermalHeatEquipmentId",           record.getThermalHeatEquipmentId());           // Heat measuring equipment id
         put(parseResults, "thermalHeatTimestamp",             record.getThermalHeatTimestamp());             // Heat measurement timestamp
         put(parseResults, "thermalHeatGJ",                    record.getThermalHeatGJ());                    // Measured Heat quantity in GigaJoule
-                                                                                                             
+
         put(parseResults, "thermalColdEquipmentId",           record.getThermalColdEquipmentId());           // Cold measuring equipment id
         put(parseResults, "thermalColdTimestamp",             record.getThermalColdTimestamp());             // Cold measurement timestamp
         put(parseResults, "thermalColdGJ",                    record.getThermalColdGJ());                    // Measured Cold quantity in GigaJoule
-                                                                                                             
-        // Electricity via a slave                                                                           
+
+        // Electricity via a slave
         put(parseResults, "slaveEMeterEquipmentId",           record.getSlaveEMeterEquipmentId());           // Slave e-meter equipment id
         put(parseResults, "slaveEMeterTimestamp",             record.getSlaveEMeterTimestamp());             // Slave e-meter measurement timestamp
         put(parseResults, "slaveEMeterkWh",                   record.getSlaveEMeterkWh());                   // Slave e-meter consumption in kWh

@@ -43,3 +43,5 @@ rm-appsummary.log
 # Docker
 docker/_m2/
 docker/_gnupg/
+
+__*

@@ -32,8 +32,8 @@
   <name>DSMR : UDF :</name>
 
   <modules>
-    <module>nifi-sensor-stream-cutter</module>
-    <module>nifi-dsmr-parser</module>
+    <module>nifi-sensor-stream-cutter-bundle</module>
+    <module>nifi-dsmr-parser-bundle</module>
   </modules>
 
   <build>

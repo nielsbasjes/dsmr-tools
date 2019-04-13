@@ -22,56 +22,51 @@
 
   <parent>
     <groupId>nl.basjes.dsmr</groupId>
-    <artifactId>nifi-dsmr-parser</artifactId>
+    <artifactId>dsmr-udf-parent</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>nifi-nifi-dsmr-parser-processors</artifactId>
-  <packaging>jar</packaging>
-  <name>DSMR : UDF : Nifi : DSMR Parser : Processor</name>
-
+  <artifactId>nifi-dsmr-parser</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>DSMR : UDF : Nifi : DSMR Parser :</name>
 
   <dependencies>
-    <dependency>
-      <groupId>nl.basjes.dsmr</groupId>
-      <artifactId>dsmr-parser</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>org.apache.nifi</groupId>
       <artifactId>nifi-api</artifactId>
       <version>${nifi.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.nifi</groupId>
-      <artifactId>nifi-utils</artifactId>
+      <artifactId>nifi-framework-api</artifactId>
       <version>${nifi.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.nifi</groupId>
-      <artifactId>nifi-mock</artifactId>
+      <artifactId>nifi-runtime</artifactId>
       <version>${nifi.version}</version>
-      <scope>test</scope>
+      <scope>provided</scope>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>org.slf4j</groupId>-->
-<!--      <artifactId>slf4j-api</artifactId>-->
-<!--      <version>${slf4j.version}</version>-->
-<!--&lt;!&ndash;      <scope>provided</scope>&ndash;&gt;-->
-<!--    </dependency>-->
-<!--    <dependency>-->
-<!--      <groupId>org.slf4j</groupId>-->
-<!--      <artifactId>slf4j-log4j12</artifactId>-->
-<!--      <version>${slf4j.version}</version>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>org.slf4j</groupId>-->
-<!--      <artifactId>slf4j-simple</artifactId>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
-
+    <dependency>
+      <groupId>org.apache.nifi</groupId>
+      <artifactId>nifi-nar-utils</artifactId>
+      <version>${nifi.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.nifi</groupId>
+      <artifactId>nifi-properties</artifactId>
+      <version>${nifi.version}</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
+
+  <modules>
+    <module>nifi-dsmr-parser-processors</module>
+    <module>nifi-dsmr-parser-nar</module>
+  </modules>
+
 </project>
