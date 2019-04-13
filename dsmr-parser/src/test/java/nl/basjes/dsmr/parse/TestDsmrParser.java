@@ -18,12 +18,14 @@
 
 package nl.basjes.dsmr.parse;
 
+import nl.basjes.dsmr.DSMRTelegram;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.ZonedDateTime;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
@@ -100,7 +102,7 @@ public class TestDsmrParser {
 
     @Test
     public void testParse(){
-        ParseDsmrTelegram.DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(testcase);
+        DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(testcase);
 
         LOG.info("{}", dsmrTelegram);
     }
@@ -108,7 +110,7 @@ public class TestDsmrParser {
 
     @Test
     public void testParseRealTelegram(){
-        ParseDsmrTelegram.DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(
+        DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(
             "/ISK5\\2M550T-1012\r\n" +
             "\r\n" +
             "1-3:0.2.8(50)\r\n" +
@@ -191,7 +193,7 @@ public class TestDsmrParser {
 
     @Test
     public void testParseRealTelegram2(){
-        ParseDsmrTelegram.DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(
+        DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(
             "/Ene5\\XS210 ESMR 5.0\r\n" +
             "\r\n" +
             "1-3:0.2.8(50)\r\n" +

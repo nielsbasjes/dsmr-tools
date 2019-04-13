@@ -18,6 +18,7 @@
 
 package nl.basjes.dsmr.parse;
 
+import nl.basjes.dsmr.DSMRTelegram;
 import nl.basjes.parse.ReadUTF8RecordStream;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -77,7 +78,7 @@ public class TestRecordStream {
                 continue;
             }
 
-            ParseDsmrTelegram.DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(value);
+            DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(value);
 
             count++;
             boolean valid = crcIsValid(value);
