@@ -44,27 +44,8 @@
     <!--&lt;!&ndash; Apache Beam &ndash;&gt;-->
     <!--<beam.version>2.11.0</beam.version>-->
 
-    <!--&lt;!&ndash; Apache Drill &ndash;&gt;-->
-    <!--<drill.version>1.15.0</drill.version>-->
-    <!--<netty.version>4.1.32.Final</netty.version>-->
-
-    <!--&lt;!&ndash; Apache Hadoop &ndash;&gt;-->
-    <!--<hadoop.version>3.2.0</hadoop.version>-->
-
-    <!--&lt;!&ndash; Apache Pig&ndash;&gt;-->
-    <!--<pig.version>0.17.0</pig.version>-->
-
-    <!--&lt;!&ndash; Apache Hive &ndash;&gt;-->
-    <!--<hive.version>3.1.1</hive.version>-->
-
-    <!--&lt;!&ndash; Apache Nifi &ndash;&gt;-->
-    <!--<parse.version>1.9.0</parse.version>-->
-
-    <!--&lt;!&ndash; LogParser &ndash;&gt;-->
-    <!--<logparser.version>5.2</logparser.version>-->
-
-    <!--&lt;!&ndash; LogStash &ndash;&gt;-->
-    <!--<logstash.version>6.6.1</logstash.version>-->
+    <!-- Apache Nifi -->
+    <nifi.version>1.9.1</nifi.version>
 
     <!-- ============================================== -->
 
@@ -144,24 +125,19 @@
     </dependency>
 
     <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <scope>test</scope>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-engine</artifactId>
+    <scope>test</scope>
     </dependency>
 
     <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-      <scope>test</scope>
+    <groupId>org.junit.vintage</groupId>
+    <artifactId>junit-vintage-engine</artifactId>
+    <scope>test</scope>
     </dependency>
-<!--    <dependency>-->
-<!--    <groupId>junit</groupId>-->
-<!--    <artifactId>junit</artifactId>-->
-<!--    <version>4.12</version>-->
-<!--    <scope>test</scope>-->
-<!--    </dependency>-->
 
   </dependencies>
+
 
   <build>
   <plugins>
@@ -217,8 +193,8 @@
   </developers>
 
   <scm>
-    <url>https://github.com/nielsbasjes/dsmr-parser</url>
-    <connection>scm:git:https://github.com/nielsbasjes/dsmr-parser.git</connection>
+    <url>https://github.com/nielsbasjes/dsmr-tools</url>
+    <connection>scm:git:https://github.com/nielsbasjes/dsmr-tools.git</connection>
     <developerConnection>scm:git:.</developerConnection>
   </scm>
 

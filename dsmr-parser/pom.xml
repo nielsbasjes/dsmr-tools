@@ -52,54 +52,35 @@
       <scope>provided</scope>
     </dependency>
 
-    <!--<dependency>-->
-      <!--<groupId>org.springframework</groupId>-->
-      <!--<artifactId>spring-core</artifactId>-->
-      <!--<version>${spring.version}</version>-->
-    <!--</dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>org.apache.commons</groupId>-->
+<!--      <artifactId>commons-text</artifactId>-->
+<!--      <version>1.6</version>-->
+<!--    </dependency>-->
 
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-text</artifactId>
-      <version>1.6</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.apache.commons</groupId>-->
+<!--      <artifactId>commons-collections4</artifactId>-->
+<!--      <version>4.3</version>-->
+<!--    </dependency>-->
 
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-collections4</artifactId>
-      <version>4.3</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>nl.basjes.collections</groupId>-->
+<!--      <artifactId>prefixmap</artifactId>-->
+<!--      <version>1.1</version>-->
+<!--    </dependency>-->
 
-    <dependency>
-      <groupId>nl.basjes.collections</groupId>
-      <artifactId>prefixmap</artifactId>
-      <version>1.1</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.yaml</groupId>-->
+<!--      <artifactId>snakeyaml</artifactId>-->
+<!--      <version>1.24</version>-->
+<!--    </dependency>-->
 
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>${slf4j.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>${slf4j.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.yaml</groupId>
-      <artifactId>snakeyaml</artifactId>
-      <version>1.24</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>27.0.1-jre</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.google.guava</groupId>-->
+<!--      <artifactId>guava</artifactId>-->
+<!--      <version>27.0.1-jre</version>-->
+<!--    </dependency>-->
 
     <dependency>
       <groupId>com.esotericsoftware.kryo</groupId>
@@ -117,31 +98,31 @@
 
   <build>
 
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <excludes>
-          <exclude>version/*</exclude>
-        </excludes>
-      </resource>
-    </resources>
+<!--    <resources>-->
+<!--      <resource>-->
+<!--        <directory>src/main/resources</directory>-->
+<!--        <excludes>-->
+<!--          <exclude>version/*</exclude>-->
+<!--        </excludes>-->
+<!--      </resource>-->
+<!--    </resources>-->
 
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.0.2</version>
-        <configuration>
-          <excludes>
-            <exclude>UserAgents/*.sh</exclude>
-            <exclude>UserAgents/**/*.sh</exclude>
-            <exclude>UserAgents/**/*.csv</exclude>
-            <exclude>UserAgents/**/*.txt</exclude>
-            <exclude>UserAgents/**/*.tab</exclude>
-            <exclude>UserAgents/**/*.md</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-jar-plugin</artifactId>-->
+<!--        <version>3.0.2</version>-->
+<!--        <configuration>-->
+<!--          <excludes>-->
+<!--            <exclude>UserAgents/*.sh</exclude>-->
+<!--            <exclude>UserAgents/**/*.sh</exclude>-->
+<!--            <exclude>UserAgents/**/*.csv</exclude>-->
+<!--            <exclude>UserAgents/**/*.txt</exclude>-->
+<!--            <exclude>UserAgents/**/*.tab</exclude>-->
+<!--            <exclude>UserAgents/**/*.md</exclude>-->
+<!--          </excludes>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
 
       <!-- Some of the dependencies (Antlr4, Spring and SnakeYaml) have proven to be problematic -->
       <!-- for downstream users who need different versions of these in the same application.    -->
@@ -154,22 +135,22 @@
         <configuration>
           <minimizeJar>true</minimizeJar>
           <relocations>
-            <relocation>
-              <pattern>org.springframework</pattern>
-              <shadedPattern>nl.basjes.shaded.org.springframework</shadedPattern>
-            </relocation>
+<!--            <relocation>-->
+<!--              <pattern>org.springframework</pattern>-->
+<!--              <shadedPattern>nl.basjes.shaded.org.springframework</shadedPattern>-->
+<!--            </relocation>-->
             <relocation>
               <pattern>org.antlr</pattern>
               <shadedPattern>nl.basjes.shaded.org.antlr</shadedPattern>
             </relocation>
-            <relocation>
-              <pattern>org.yaml.snakeyaml</pattern>
-              <shadedPattern>nl.basjes.shaded.org.yaml.snakeyaml</shadedPattern>
-            </relocation>
-            <relocation>
-              <pattern>com.google</pattern>
-              <shadedPattern>nl.basjes.shaded.com.google</shadedPattern>
-            </relocation>
+<!--            <relocation>-->
+<!--              <pattern>org.yaml.snakeyaml</pattern>-->
+<!--              <shadedPattern>nl.basjes.shaded.org.yaml.snakeyaml</shadedPattern>-->
+<!--            </relocation>-->
+<!--            <relocation>-->
+<!--              <pattern>com.google</pattern>-->
+<!--              <shadedPattern>nl.basjes.shaded.com.google</shadedPattern>-->
+<!--            </relocation>-->
           </relocations>
         </configuration>
 
@@ -184,9 +165,9 @@
               <artifactSet>
                 <includes>
                   <include>org.antlr:antlr4-runtime</include>
-                  <include>org.springframework:spring-core</include>
-                  <include>org.yaml:snakeyaml</include>
-                  <include>com.google.guava:guava</include>
+<!--                  <include>org.springframework:spring-core</include>-->
+<!--                  <include>org.yaml:snakeyaml</include>-->
+<!--                  <include>com.google.guava:guava</include>-->
                 </includes>
               </artifactSet>
             </configuration>
@@ -359,11 +340,11 @@
             <excludedMethod>toString</excludedMethod>
           </excludedMethods>
 
-          <excludedClasses>
-            <excludedClass>nl.basjes.parse.useragent.Version</excludedClass>
-            <excludedGroup>nl.basjes.parse.useragent.parser.*</excludedGroup> <!-- Generated antlr4 code -->
-            <excludedGroup>nl.basjes.parse.useragent.debug.*</excludedGroup>
-          </excludedClasses>
+<!--          <excludedClasses>-->
+<!--            <excludedClass>nl.basjes.parse.useragent.Version</excludedClass>-->
+<!--            <excludedGroup>nl.basjes.parse.useragent.parser.*</excludedGroup> &lt;!&ndash; Generated antlr4 code &ndash;&gt;-->
+<!--            <excludedGroup>nl.basjes.parse.useragent.debug.*</excludedGroup>-->
+<!--          </excludedClasses>-->
 
           <avoidCallsTo>
             <avoidCallsTo>java.util.logging</avoidCallsTo>
@@ -398,8 +379,8 @@
   </developers>
 
   <scm>
-    <url>https://yauaa.basjes.nl</url>
-    <connection>scm:git:https://github.com/nielsbasjes/yauaa.git</connection>
+    <url>https://github.com/nielsbasjes/dsmr-tools</url>
+    <connection>scm:git:https://github.com/nielsbasjes/dsmr-tools.git</connection>
     <developerConnection>scm:git:.</developerConnection>
   </scm>
 

@@ -21,16 +21,48 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.apache.nifi</groupId>
-    <artifactId>nifi-nar-bundles</artifactId>
-    <version>1.9.1</version>
+    <groupId>nl.basjes.dsmr</groupId>
+    <artifactId>dsmr-udf-parent</artifactId>
+    <version>0.1-SNAPSHOT</version>
   </parent>
 
-  <groupId>nl.basjes.dsmr</groupId>
   <artifactId>nifi-dsmr-parser</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>DSMR : UDF : Nifi : DSMR Parser :</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.nifi</groupId>
+      <artifactId>nifi-api</artifactId>
+      <version>${nifi.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.nifi</groupId>
+      <artifactId>nifi-framework-api</artifactId>
+      <version>${nifi.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.nifi</groupId>
+      <artifactId>nifi-runtime</artifactId>
+      <version>${nifi.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.nifi</groupId>
+      <artifactId>nifi-nar-utils</artifactId>
+      <version>${nifi.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.nifi</groupId>
+      <artifactId>nifi-properties</artifactId>
+      <version>${nifi.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 
   <modules>
     <module>nifi-nifi-dsmr-parser-processors</module>

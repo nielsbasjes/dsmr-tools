@@ -18,6 +18,7 @@
 package nl.basjes.dsmr.nifi;
 
 import nl.basjes.dsmr.DSMRTelegram;
+import nl.basjes.dsmr.MBusEvent;
 import nl.basjes.dsmr.parse.ParseDsmrTelegram;
 import org.apache.nifi.annotation.behavior.*;
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
@@ -187,6 +188,17 @@ public class DSMRParserProcessor extends AbstractProcessor {
         put(parseResults, "powerReturnedL3",                  record.getPowerReturnedL3());                  // Instantaneous active power L3 (-P)
         put(parseResults, "message",                          record.getMessage());                          // Text message max 1024 characters.
 
+
+        for(Map.Entry<Integer, MBusEvent> mBusEventEntry: record.getMBusEvents().entrySet()) {
+            MBusEvent mBusEvent = mBusEventEntry.getValue();
+            if (mBusEvent != null) {
+                put(parseResults, "mbus."+mBusEventEntry.getKey()+".deviceType",  mBusEvent.deviceType);
+                put(parseResults, "mbus."+mBusEventEntry.getKey()+".equipmentId", mBusEvent.equipmentId);
+                put(parseResults, "mbus."+mBusEventEntry.getKey()+".timestamp",   mBusEvent.timestamp);
+                put(parseResults, "mbus."+mBusEventEntry.getKey()+".value",       mBusEvent.value);
+                put(parseResults, "mbus."+mBusEventEntry.getKey()+".unit",        mBusEvent.unit);
+            }
+        }
 
         // NOTE: This assumes only AT MOST ONE attached thing per type of meter.
         // Doing two 'gas meters' will only map the first one (i.e. with the lowest MBus id)!!!

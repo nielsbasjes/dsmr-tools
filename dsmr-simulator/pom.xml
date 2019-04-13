@@ -33,40 +33,12 @@
 
 
   <dependencies>
-
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>${slf4j.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <!--<dependency>-->
-      <!--<groupId>org.junit.jupiter</groupId>-->
-      <!--<artifactId>junit-jupiter-engine</artifactId>-->
-      <!--<scope>test</scope>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-      <!--<groupId>org.junit.vintage</groupId>-->
-      <!--<artifactId>junit-vintage-engine</artifactId>-->
-      <!--<scope>test</scope>-->
-    <!--</dependency>-->
-    <dependency>
-    <groupId>junit</groupId>
-    <artifactId>junit</artifactId>
-    <version>4.12</version>
-    <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>nl.basjes.dsmr</groupId>
       <artifactId>dsmr-parser</artifactId>
       <version>0.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
-
-
   </dependencies>
 
   <build>
@@ -144,8 +116,8 @@
   </developers>
 
   <scm>
-    <url>https://github.com/nielsbasjes/nifi-recordstream</url>
-    <connection>scm:git:https://github.com/nielsbasjes/nifi-recordstream.git</connection>
+    <url>https://github.com/nielsbasjes/dsmr-tools</url>
+    <connection>scm:git:https://github.com/nielsbasjes/dsmr-tools.git</connection>
     <developerConnection>scm:git:.</developerConnection>
   </scm>
 
