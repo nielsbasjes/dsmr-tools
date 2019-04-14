@@ -1,0 +1,161 @@
+MiNiFi Config Version: 3
+Flow Controller:
+  name: DSMR Ingestion
+  comment: An example flow for ingesting DSMR data and inserting it into InfluxDB
+Core Properties:
+  flow controller graceful shutdown period: 10 sec
+  flow service write delay interval: 500 ms
+  administrative yield duration: 30 sec
+  bored yield duration: 10 millis
+  max concurrent threads: 1
+  variable registry properties: ''
+FlowFile Repository:
+  partitions: 256
+  checkpoint interval: 2 mins
+  always sync: false
+  Swap:
+    threshold: 20000
+    in period: 5 sec
+    in threads: 1
+    out period: 5 sec
+    out threads: 4
+Content Repository:
+  content claim max appendable size: 10 MB
+  content claim max flow files: 100
+  always sync: false
+Provenance Repository:
+  provenance rollover time: 1 min
+  implementation: org.apache.nifi.provenance.MiNiFiPersistentProvenanceRepository
+Component Status Repository:
+  buffer size: 1440
+  snapshot frequency: 1 min
+Security Properties:
+  keystore: ''
+  keystore type: ''
+  keystore password: ''
+  key password: ''
+  truststore: ''
+  truststore type: ''
+  truststore password: ''
+  ssl protocol: ''
+  Sensitive Props:
+    key:
+    algorithm: PBEWITHMD5AND256BITAES-CBC-OPENSSL
+    provider: BC
+Processors:
+- id: 8b771c52-124b-3ac3-0000-000000000000
+  name: Map DSMR to InfluxDB format
+  class: org.apache.nifi.processors.standard.ReplaceText
+  max concurrent tasks: 1
+  scheduling strategy: TIMER_DRIVEN
+  scheduling period: 0 sec
+  penalization period: 30 sec
+  yield period: 1 sec
+  run duration nanos: 0
+  auto-terminated relationships list:
+  - failure
+  Properties:
+    Character Set: UTF-8
+    Evaluation Mode: Entire text
+    Maximum Buffer Size: 1 MB
+    Regular Expression: Irrelevant
+    Replacement Strategy: Always Replace
+    Replacement Value: electricity,equipmentId=${dsmr.equipmentId},p1Version=${dsmr.p1Version} electricityReceivedLowTariff=${dsmr.electricityReceivedLowTariff},electricityReceivedNormalTariff=${dsmr.electricityReceivedNormalTariff},electricityReturnedLowTariff=${dsmr.electricityReturnedLowTariff},electricityReturnedNormalTariff=${dsmr.electricityReturnedNormalTariff},electricityTariffIndicator=${dsmr.electricityTariffIndicator},electricityPowerReceived=${dsmr.electricityPowerReceived},electricityPowerReturned=${dsmr.electricityPowerReturned},powerFailures=${dsmr.powerFailures}i,longPowerFailures=${dsmr.longPowerFailures}i,voltageSagsPhaseL1=${dsmr.voltageSagsPhaseL1}i,voltageSagsPhaseL2=${dsmr.voltageSagsPhaseL2}i,voltageSagsPhaseL3=${dsmr.voltageSagsPhaseL3}i,voltageSwellsPhaseL1=${dsmr.voltageSwellsPhaseL1}i,voltageSwellsPhaseL2=${dsmr.voltageSwellsPhaseL2}i,voltageSwellsPhaseL3=${dsmr.voltageSwellsPhaseL3}i,voltageL1=${dsmr.voltageL1},voltageL2=${dsmr.voltageL2},voltageL3=${dsmr.voltageL3},currentL1=${dsmr.currentL1},currentL2=${dsmr.currentL2},currentL3=${dsmr.currentL3},powerReceivedL1=${dsmr.powerReceivedL1},powerReceivedL2=${dsmr.powerReceivedL2},powerReceivedL3=${dsmr.powerReceivedL3},powerReturnedL1=${dsmr.powerReturnedL1},powerReturnedL2=${dsmr.powerReturnedL2},powerReturnedL3=${dsmr.powerReturnedL3} ${dsmr.timestamp.epochSecond}000000000
+- id: 727ec02c-6375-3631-0000-000000000000
+  name: Parse DSMR telegrams
+  class: nl.basjes.dsmr.nifi.DSMRParserProcessor
+  max concurrent tasks: 1
+  scheduling strategy: TIMER_DRIVEN
+  scheduling period: 0 sec
+  penalization period: 30 sec
+  yield period: 1 sec
+  run duration nanos: 0
+  auto-terminated relationships list:
+  - BadRecords
+  - InvalidCRC
+  Properties: {}
+- id: 1f24ac78-79ff-3f75-0000-000000000000
+  name: Read DSMR stream into telegrams
+  class: nl.basjes.iot.nifi.SensorStreamCutterProcessor
+  max concurrent tasks: 1
+  scheduling strategy: TIMER_DRIVEN
+  scheduling period: 0 sec
+  penalization period: 30 sec
+  yield period: 1 sec
+  run duration nanos: 0
+  auto-terminated relationships list: []
+  Properties:
+    End-of-record regex: "\r\n![0-9A-F]{4}\r\n"
+    Input filename/character device: /home/nbasjes/workspace/ReadUSB/dsmr-simulator/ttyDSMR
+    Max characters per record: '10240'
+- id: 12274daa-2e7b-36cc-0000-000000000000
+  name: Store DSMR into InfluxDB
+  class: org.apache.nifi.processors.influxdb.PutInfluxDB
+  max concurrent tasks: 1
+  scheduling strategy: TIMER_DRIVEN
+  scheduling period: 0 sec
+  penalization period: 30 sec
+  yield period: 1 sec
+  run duration nanos: 0
+  auto-terminated relationships list:
+  - failure
+  - failure-max-size
+  - success
+  Properties:
+    InfluxDB Max Connection Time Out (seconds): 0 seconds
+    influxdb-charset: UTF-8
+    influxdb-consistency-level: ONE
+    influxdb-dbname: energy
+    influxdb-max-records-size: 1 MB
+    influxdb-password:
+    influxdb-retention-policy: autogen
+    influxdb-url: http://localhost:8086
+    influxdb-username:
+Controller Services: []
+Process Groups: []
+Input Ports: []
+Output Ports: []
+Funnels: []
+Connections:
+- id: cbb28393-1dc9-3931-0000-000000000000
+  name: DSMR Telegram attributes
+  source id: 727ec02c-6375-3631-0000-000000000000
+  source relationship names:
+  - Valid
+  destination id: 8b771c52-124b-3ac3-0000-000000000000
+  max work queue size: 10000
+  max work queue data size: 1 GB
+  flowfile expiration: 0 sec
+  queue prioritizer class: ''
+- id: 863a3cfe-4cc9-33fd-0000-000000000000
+  name: DSMR Telegrams
+  source id: 1f24ac78-79ff-3f75-0000-000000000000
+  source relationship names:
+  - success
+  destination id: 727ec02c-6375-3631-0000-000000000000
+  max work queue size: 10000
+  max work queue data size: 1 GB
+  flowfile expiration: 0 sec
+  queue prioritizer class: ''
+- id: 168d43b9-bed5-30b3-0000-000000000000
+  name: DSMR as InfluxDB Line Protocol
+  source id: 8b771c52-124b-3ac3-0000-000000000000
+  source relationship names:
+  - success
+  destination id: 12274daa-2e7b-36cc-0000-000000000000
+  max work queue size: 10000
+  max work queue data size: 1 GB
+  flowfile expiration: 0 sec
+  queue prioritizer class: ''
+- id: 298c95e3-1893-337a-0000-000000000000
+  name: Store DSMR into InfluxDB/retry/Store DSMR into InfluxDB
+  source id: 12274daa-2e7b-36cc-0000-000000000000
+  source relationship names:
+  - retry
+  destination id: 12274daa-2e7b-36cc-0000-000000000000
+  max work queue size: 10000
+  max work queue data size: 1 GB
+  flowfile expiration: 0 sec
+  queue prioritizer class: ''
+Remote Process Groups: []
+NiFi Properties Overrides: {}
