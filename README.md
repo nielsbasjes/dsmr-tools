@@ -1,4 +1,4 @@
-Status: Unstable, work in progress, DO NOT USE ... (yet)
+Status: Unstable, DO NOT USE ... (yet)
 ===
 
 DSMR Toolkit
