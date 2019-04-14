@@ -149,6 +149,10 @@ public class DSMRParserProcessor extends AbstractProcessor {
 
         DSMRTelegram record = ParseDsmrTelegram.parse(contentString);
 
+        if (record == null) {
+            return;
+        }
+
         Map<String, String> parseResults = new HashMap<>();
 
         put(parseResults, "validCRC",                         record.isValidCRC());

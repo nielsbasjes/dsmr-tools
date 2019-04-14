@@ -24,6 +24,8 @@ import nl.basjes.dsmr.parse.DsmrParser.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.BitSet;
 import java.util.Map;
@@ -31,6 +33,8 @@ import java.util.Map;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements ANTLRErrorListener {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ParseDsmrTelegram.class);
 
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object o, int i, int i1, String s, RecognitionException e) {
@@ -53,7 +57,12 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements ANTLRErr
     }
 
     public static synchronized DSMRTelegram parse(String telegram) {
-        return new ParseDsmrTelegram(telegram).parse();
+        try {
+            return new ParseDsmrTelegram(telegram).parse();
+        } catch (NullPointerException npe) {
+            LOG.error("A Null pointer expection occurred for telegram: \n{}", telegram);
+        }
+        return null;
     }
 
     private String telegramString;

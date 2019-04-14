@@ -30,13 +30,27 @@ in /etc/fstab
 tmpfs /minifi tmpfs nodev,nosuid,size=10M 0 0      
 
 
+
+nifi.properties
+NoOpProvenanceRepository ??
+
+nifi.provenance.repository.buffer.size=1000
+
+
+FIRST: Run minifi from the ORIGINAL location. Many of the nar files will be unpacked (only once) and the ramdisk is by far not big enough for that.
+Once it is running stop it again.
+
+
 $ cat run.sh 
 THIS=${PWD}
+rm -rf /minifi/*
 cd /minifi
 cp -rs ${THIS}/* .
+rm /minifi/logs/*
+rm -rf /minifi/*_repository
 
 # The start scripts are able to follow the symlinks; which is exactly what we DONT want
-rm -rf bin
-cp -a ${THIS}/bin /minifi
+rm /minifi/bin/*
+cp -a ${THIS}/bin/*.sh /minifi/bin
 
 /minifi/bin/minifi.sh start 
