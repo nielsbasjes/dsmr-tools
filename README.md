@@ -165,6 +165,88 @@ I see this output in the nifi-app.log
 
 
 
+Running on a Raspberry Pi
+====
+I have an old Raspberry Pi on which I have this running using Minifi 0.5.0.
+
+Using Nifi I have created a template [DSRM_Ingestion.xml](DSRM_Ingestion.xml) that simply does this:
+
+1) Stream splitter: Read the records from the stream
+    - Read from /dev/ttyUSB0
+    - Split the records in using the 'DSMR CRC pattern': \r\n![0-9A-F]{4}\r\n
+2) DSMR Parser: Parse the records
+    - No config needed, this just parses the input
+3) ReplaceText: Convert into the InfluxDB "line protocol"
+    - Evaluation Mode: Entire text
+    - Replacement strategy: Always replace
+    - Replacement value: electricity,equipmentId=${dsmr.equipmentId},p1Version=${dsmr.p1Version} electricityReceivedLowTariff=${dsmr.electricityReceivedLowTariff},electricityReceivedNormalTariff=${dsmr.electricityReceivedNormalTariff},electricityReturnedLowTariff=${dsmr.electricityReturnedLowTariff},electricityReturnedNormalTariff=${dsmr.electricityReturnedNormalTariff},electricityTariffIndicator=${dsmr.electricityTariffIndicator},electricityPowerReceived=${dsmr.electricityPowerReceived},electricityPowerReturned=${dsmr.electricityPowerReturned},powerFailures=${dsmr.powerFailures}i,longPowerFailures=${dsmr.longPowerFailures}i,voltageSagsPhaseL1=${dsmr.voltageSagsPhaseL1}i,voltageSagsPhaseL2=${dsmr.voltageSagsPhaseL2}i,voltageSagsPhaseL3=${dsmr.voltageSagsPhaseL3}i,voltageSwellsPhaseL1=${dsmr.voltageSwellsPhaseL1}i,voltageSwellsPhaseL2=${dsmr.voltageSwellsPhaseL2}i,voltageSwellsPhaseL3=${dsmr.voltageSwellsPhaseL3}i,voltageL1=${dsmr.voltageL1},voltageL2=${dsmr.voltageL2},voltageL3=${dsmr.voltageL3},currentL1=${dsmr.currentL1},currentL2=${dsmr.currentL2},currentL3=${dsmr.currentL3},powerReceivedL1=${dsmr.powerReceivedL1},powerReceivedL2=${dsmr.powerReceivedL2},powerReceivedL3=${dsmr.powerReceivedL3},powerReturnedL1=${dsmr.powerReturnedL1},powerReturnedL2=${dsmr.powerReturnedL2},powerReturnedL3=${dsmr.powerReturnedL3} ${dsmr.timestamp.epochSecond}000000000
+4) PutInfluxDB: Store into InfluxDB
+    - Send the data to your local InfluxDB instance.
+
+
+After converting it into the MiNiFi yaml format I changed 
+
+    Provenance Repository:
+      provenance rollover time: 1 min
+      implementation: org.apache.nifi.provenance.MiNiFiPersistentProvenanceRepository
+
+into 
+
+    Provenance Repository:
+      provenance rollover time: 1 min
+      implementation: org.apache.nifi.provenance.NoOpProvenanceRepository
+
+We then copy this file as config.yml into the conf dir of our MiNiFi installation.
+
+Now MiNiFi is REALLY picky about versions of nar files.
+
+Because MiNiFi 0.5.0. is build against NiFi 1.7.0 you need to download that exact version because we need some additional libraries from it.
+
+- Copy these from nifi to the minifi lib folder:
+    - nifi-influxdb-nar-1.7.0.nar 
+    - nifi-standard-services-api-nar-1.7.0.nar
+- Copy the two nars from this project (also built against Nifi 1.7.0!!) to the minifi lib folder:
+    - nifi-sensor-stream-cutter-nar-0.1-SNAPSHOT.nar
+    - nifi-dsmr-parser-nar-0.1-SNAPSHOT.nar
+
+
+Making it work for a long time
+===
+The problem with Raspberry Pi systems is that they have an SD card as 'disk'.
+These suffer from wearing out quite fast.
+To avoid this problem as much as possible we create a RamDisk to run MiNiFi on.
+
+So in /etc/fstab you add this line:
+      
+    tmpfs /minifi tmpfs nodev,nosuid,size=10M 0 0      
+
+and run
+
+    mount -a
+
+
+Now we put our MiNiFi setup somewhere on the SD card and we add this script as `run.sh`
+
+    #/bin/bash
+    DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+    RUNDIR=/minifi
+    
+    RUNDIR=/home/nbasjes/workspace/Testing/TEST/run
+    
+    if [ ! -e ${RUNDIR}/bin/minifi.sh ];
+    then
+        mkdir ${RUNDIR}/bin
+        cp ${DIR}/bin/*.sh ${RUNDIR}/bin
+        chmod 755 ${RUNDIR}/bin/*.sh
+        cp -rs ${DIR}/lib   ${RUNDIR}
+        cp -rs ${DIR}/conf  ${RUNDIR}
+        mkdir ${DIR}/work
+        ln -s ${DIR}/work   ${RUNDIR}
+    fi
+    
+    ${RUNDIR}/bin/minifi.sh start
+
+This script will effectively make MiNiFi read the 'immutable' stuff from the SD card and write the fast changing stuff to the ramdisk.
 
 LICENSE
 ===
