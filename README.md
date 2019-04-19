@@ -231,7 +231,7 @@ Now we put our MiNiFi setup somewhere on the SD card and we add this script as `
     DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
     RUNDIR=/minifi
     
-    RUNDIR=/home/nbasjes/workspace/Testing/TEST/run
+
     
     if [ ! -e ${RUNDIR}/bin/minifi.sh ];
     then
