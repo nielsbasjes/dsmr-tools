@@ -16,10 +16,11 @@
  *
  */
 
-package nl.basjes.dsmr.parse;
+package nl.basjes.dsmr;
 
-import nl.basjes.dsmr.DSMRTelegram;
-import nl.basjes.dsmr.MBusEvent;
+import nl.basjes.dsmr.parse.DsmrBaseVisitor;
+import nl.basjes.dsmr.parse.DsmrLexer;
+import nl.basjes.dsmr.parse.DsmrParser;
 import nl.basjes.dsmr.parse.DsmrParser.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
@@ -36,24 +37,26 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements ANTLRErr
 
     private static final Logger LOG = LoggerFactory.getLogger(ParseDsmrTelegram.class);
 
+    private boolean hasSyntaxError = false;
+
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object o, int i, int i1, String s, RecognitionException e) {
-
+        hasSyntaxError = true;
     }
 
     @Override
     public void reportAmbiguity(Parser parser, DFA dfa, int i, int i1, boolean b, BitSet bitSet, ATNConfigSet atnConfigSet) {
-
+        // Ignore this type of problem
     }
 
     @Override
     public void reportAttemptingFullContext(Parser parser, DFA dfa, int i, int i1, BitSet bitSet, ATNConfigSet atnConfigSet) {
-
+        // Ignore this type of problem
     }
 
     @Override
     public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atnConfigSet) {
-
+        // Ignore this type of problem
     }
 
     public static synchronized DSMRTelegram parse(String telegram) {
@@ -65,19 +68,20 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements ANTLRErr
         return null;
     }
 
-    private String telegramString;
-    private DSMRTelegram dsmrTelegram;
+    private String          telegramString;
+    private DSMRTelegram    dsmrTelegram;
     private TimestampParser timestampParser = new TimestampParser();
 
     private ParseDsmrTelegram(String telegram) {
         telegramString = telegram;
         dsmrTelegram = new DSMRTelegram();
         dsmrTelegram.validCRC = CheckCRC.crcIsValid(telegramString);
+        dsmrTelegram.isValid = !hasSyntaxError && dsmrTelegram.validCRC;
     }
 
     private DSMRTelegram parse() {
         CodePointCharStream input = CharStreams.fromString(telegramString);
-        DsmrLexer lexer = new DsmrLexer(input);
+        DsmrLexer           lexer = new DsmrLexer(input);
 
         CommonTokenStream tokens = new CommonTokenStream(lexer);
 
@@ -221,7 +225,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements ANTLRErr
     @Override public Void visitPowerFailures                    (PowerFailuresContext                    ctx) { dsmrTelegram.powerFailures                   = Long.valueOf(ctx.count.getText());   return null; } // Number of power failures in any phases
     @Override public Void visitLongPowerFailures                (LongPowerFailuresContext                ctx) { dsmrTelegram.longPowerFailures               = Long.valueOf(ctx.count.getText());   return null; } // Number of long power failures in any phases
 
-    // TODO: Implement @Override public Void visitPowerFailureEventLog             (PowerFailureEventLogContext             ctx) { return null ; } // Power failure event log
+    @Override public Void visitPowerFailureEventLog             (PowerFailureEventLogContext             ctx) { /* TODO: Implement Power failure event log */                                       return null; } // Power failure event log
 
     @Override public Void visitVoltageSagsPhaseL1               (VoltageSagsPhaseL1Context               ctx) { dsmrTelegram.voltageSagsPhaseL1              = Long.valueOf(ctx.count.getText());   return null; } // Number of voltage sags in phase L1
     @Override public Void visitVoltageSagsPhaseL2               (VoltageSagsPhaseL2Context               ctx) { dsmrTelegram.voltageSagsPhaseL2              = Long.valueOf(ctx.count.getText());   return null; } // Number of voltage sags in phase L2

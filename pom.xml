@@ -95,6 +95,7 @@
     <module>dsmr-simulator</module>
     <module>stream-record-splitter</module>
     <module>udfs</module>
+    <module>dsmr-to-influxdb</module>
   </modules>
 
   <dependencyManagement>

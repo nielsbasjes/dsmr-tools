@@ -18,7 +18,7 @@
 
 package nl.basjes.dsmr.simulator;
 
-import nl.basjes.dsmr.parse.CheckCRC;
+import nl.basjes.dsmr.CheckCRC;
 
 import java.time.Instant;
 import java.time.ZoneId;

@@ -19,6 +19,7 @@
 package nl.basjes.dsmr.parse;
 
 import nl.basjes.dsmr.DSMRTelegram;
+import nl.basjes.dsmr.ParseDsmrTelegram;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

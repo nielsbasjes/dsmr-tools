@@ -34,8 +34,8 @@ public class ReadUTF8RecordStream implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReadUTF8RecordStream.class);
 
-    public static final long MIN_MAX_RECORD_SIZE =         10 * 1024; //  10 KiB
-    public static final long MAX_MAX_RECORD_SIZE = 100 * 1024 * 1024; // 100 MiB
+    public static final long MIN_MAX_RECORD_SIZE =         10 * 1024L; //  10 KiB
+    public static final long MAX_MAX_RECORD_SIZE = 100 * 1024 * 1024L; // 100 MiB
 
     private InputStream inputStream;
     private Pattern endMatcher;

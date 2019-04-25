@@ -16,7 +16,7 @@
  *
  */
 
-package nl.basjes.dsmr.parse;
+package nl.basjes.dsmr;
 
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -27,19 +27,20 @@ import java.util.regex.Pattern;
 public class TimestampParser {
     // YYMMDDhhmmssX ASCII presentation of Time stamp
     // Year, Month, Day, Hour, Minute, Second, and an indication whether
-    // DST is active (X=S) or DST is not active (X=W).
+    // DST is active (X=S ... SummerTime) or DST is not active (X=W ... WinterTime).
 
     // IMPORTANT ASSUMPTION:
     // This is for the DSMR = Dutch Smart Meter Requirements.
-    // Dutch ! means Netherlands means timezone "Europe/Amsterdam"
+    // Dutch ! means Netherlands which assumes timezone "Europe/Amsterdam"
+
+    // Format                                     Y    Y     M   M      D    D      h    h      m    m      s    s      S or W
+    private static final String TIME_FORMAT = "([0-9][0-9])([01][0-9])([0-3][0-9])([0-2][0-9])([0-5][0-9])([0-5][0-9])([SW])";
+
+    private static final Pattern DATE_TIME_PATTERN = Pattern.compile(TIME_FORMAT);
 
     public ZonedDateTime parse(String dsmrTimestamp) {
-        // Format       Y    Y     M   M     D    D     h    h     m    m     s    s      S or W
-        String timeFormat= "([0-9][0-9])([01][0-9])([0-3][0-9])([0-2][0-9])([0-5][0-9])([0-5][0-9])([SW])";
 
-        Pattern dateTimePattern = Pattern.compile(timeFormat);
-
-        Matcher matcher = dateTimePattern.matcher(dsmrTimestamp);
+        Matcher matcher = DATE_TIME_PATTERN.matcher(dsmrTimestamp);
 
         if (!matcher.find()) {
             return null;
@@ -54,15 +55,24 @@ public class TimestampParser {
             .withHour(        Integer.parseInt(matcher.group(4)) )
             .withMinute(      Integer.parseInt(matcher.group(5)) )
             .withSecond(      Integer.parseInt(matcher.group(6)) )
-//            .withZoneSameLocal(ZoneId.of("Europe/Amsterdam"))
             ;
 
-        if (matcher.group(7).equalsIgnoreCase("S")) {
-            zonedDateTime = zonedDateTime.withZoneSameLocal(ZoneOffset.of("+02:00"));
+        String zoneOffset = "+01:00"; // Default to the wintertime ...
+
+        switch(matcher.group(7)) {
+            case "S": // Summertime
+                zoneOffset = "+02:00";
+                break;
+
+            case "W": // Wintertime
+                zoneOffset = "+01:00";
+                break;
+
+            default:
+                // This cannot happen as the S or W is hardcoded in the regex.
+                return null;
         }
-        if (matcher.group(7).equalsIgnoreCase("W")) {
-            zonedDateTime = zonedDateTime.withZoneSameLocal(ZoneOffset.of("+01:00"));
-        }
+        zonedDateTime = zonedDateTime.withZoneSameLocal(ZoneOffset.of(zoneOffset));
 
         return zonedDateTime;
     }

@@ -18,6 +18,7 @@
 
 package nl.basjes.dsmr.parse;
 
+import nl.basjes.dsmr.TimestampParser;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

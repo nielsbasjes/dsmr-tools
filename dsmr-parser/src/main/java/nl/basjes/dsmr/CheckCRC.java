@@ -16,7 +16,7 @@
  *
  */
 
-package nl.basjes.dsmr.parse;
+package nl.basjes.dsmr;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,6 +24,8 @@ import java.util.regex.Pattern;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class CheckCRC {
+    private CheckCRC() {
+    }
 
     private static int[] table = {
         0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241,

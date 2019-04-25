@@ -19,7 +19,7 @@ package nl.basjes.dsmr.nifi;
 
 import nl.basjes.dsmr.DSMRTelegram;
 import nl.basjes.dsmr.MBusEvent;
-import nl.basjes.dsmr.parse.ParseDsmrTelegram;
+import nl.basjes.dsmr.ParseDsmrTelegram;
 import org.apache.nifi.annotation.behavior.*;
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.SeeAlso;
@@ -28,7 +28,6 @@ import org.apache.nifi.annotation.lifecycle.OnScheduled;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.flowfile.FlowFile;
 import org.apache.nifi.processor.*;
-import org.apache.nifi.processor.exception.ProcessException;
 import org.apache.nifi.processor.io.InputStreamCallback;
 import org.apache.nifi.stream.io.StreamUtils;
 
@@ -82,49 +81,48 @@ public class DSMRParserProcessor extends AbstractProcessor {
         return Collections.emptyList();
     }
 
-    @OnScheduled
-    public void onScheduled(final ProcessContext context) {
+//    @OnScheduled
+//    public void onScheduled(final ProcessContext context) {
+//    }
 
-    }
-
-    private static final String attributePrefix = "dsmr.";
+    private static final String ATTRIBUTE_PREFIX = "dsmr.";
 
     private void put(Map<String,String> map, String name, String value) {
         if (value != null) {
-            map.put(attributePrefix + name, value);
+            map.put(ATTRIBUTE_PREFIX + name, value);
         }
     }
 
     private void put(Map<String,String> map, String name, Double value) {
         if (value != null) {
-            map.put(attributePrefix + name, Double.toString(value));
+            map.put(ATTRIBUTE_PREFIX + name, Double.toString(value));
         }
     }
 
     private void put(Map<String,String> map, String name, Boolean value) {
         if (value != null) {
-            map.put(attributePrefix + name, value.toString());
+            map.put(ATTRIBUTE_PREFIX + name, value.toString());
         }
     }
 
     private void put(Map<String,String> map, String name, Long value) {
         if (value != null) {
-            map.put(attributePrefix + name, Long.toString(value));
+            map.put(ATTRIBUTE_PREFIX + name, Long.toString(value));
         }
     }
 
     private void put(Map<String,String> map, String name, ZonedDateTime value) {
         if (value != null) {
-            map.put(attributePrefix + name, ISO_OFFSET_DATE_TIME.format(value));
+            map.put(ATTRIBUTE_PREFIX + name, ISO_OFFSET_DATE_TIME.format(value));
 
             // In DSMR the are no times more accurate than a second.
             // If you need milli/micro or even nano seconds just append some zeros.
-            map.put(attributePrefix + name + ".epochSecond", String.valueOf(value.toEpochSecond()));
+            map.put(ATTRIBUTE_PREFIX + name + ".epochSecond", String.valueOf(value.toEpochSecond()));
         }
     }
 
     @Override
-    public void onTrigger(final ProcessContext context, final ProcessSession session) throws ProcessException {
+    public void onTrigger(final ProcessContext context, final ProcessSession session) {
         FlowFile flowFile = session.get();
         if (flowFile == null) {
             return;
@@ -200,11 +198,11 @@ public class DSMRParserProcessor extends AbstractProcessor {
         for(Map.Entry<Integer, MBusEvent> mBusEventEntry: record.getMBusEvents().entrySet()) {
             MBusEvent mBusEvent = mBusEventEntry.getValue();
             if (mBusEvent != null) {
-                put(parseResults, "mbus."+mBusEventEntry.getKey()+".deviceType",  mBusEvent.deviceType);
-                put(parseResults, "mbus."+mBusEventEntry.getKey()+".equipmentId", mBusEvent.equipmentId);
-                put(parseResults, "mbus."+mBusEventEntry.getKey()+".timestamp",   mBusEvent.timestamp);
-                put(parseResults, "mbus."+mBusEventEntry.getKey()+".value",       mBusEvent.value);
-                put(parseResults, "mbus."+mBusEventEntry.getKey()+".unit",        mBusEvent.unit);
+                put(parseResults, "mbus."+mBusEventEntry.getKey()+".deviceType",  mBusEvent.getDeviceType());
+                put(parseResults, "mbus."+mBusEventEntry.getKey()+".equipmentId", mBusEvent.getEquipmentId());
+                put(parseResults, "mbus."+mBusEventEntry.getKey()+".timestamp",   mBusEvent.getTimestamp());
+                put(parseResults, "mbus."+mBusEventEntry.getKey()+".value",       mBusEvent.getValue());
+                put(parseResults, "mbus."+mBusEventEntry.getKey()+".unit",        mBusEvent.getUnit());
             }
         }
 
