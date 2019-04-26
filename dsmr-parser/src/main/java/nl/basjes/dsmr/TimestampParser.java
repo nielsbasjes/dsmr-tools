@@ -34,11 +34,14 @@ public class TimestampParser {
     // Dutch ! means Netherlands which assumes timezone "Europe/Amsterdam"
 
     // Format                                     Y    Y     M   M      D    D      h    h      m    m      s    s      S or W
-    private static final String TIME_FORMAT = "([0-9][0-9])([01][0-9])([0-3][0-9])([0-2][0-9])([0-5][0-9])([0-5][0-9])([SW])";
+    private static final String TIME_FORMAT = "([0-9][0-9])([01][0-9])([0-3][0-9])([0-2][0-9])([0-5][0-9])([0-5][0-9])([SsWw])";
 
     private static final Pattern DATE_TIME_PATTERN = Pattern.compile(TIME_FORMAT);
 
     public ZonedDateTime parse(String dsmrTimestamp) {
+        if (dsmrTimestamp == null || dsmrTimestamp.isEmpty()) {
+            return null;
+        }
 
         Matcher matcher = DATE_TIME_PATTERN.matcher(dsmrTimestamp);
 
@@ -57,14 +60,16 @@ public class TimestampParser {
             .withSecond(      Integer.parseInt(matcher.group(6)) )
             ;
 
-        String zoneOffset = "+01:00"; // Default to the wintertime ...
+        String zoneOffset;
 
         switch(matcher.group(7)) {
             case "S": // Summertime
+            case "s":
                 zoneOffset = "+02:00";
                 break;
 
             case "W": // Wintertime
+            case "w":
                 zoneOffset = "+01:00";
                 break;
 

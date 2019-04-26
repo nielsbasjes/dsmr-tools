@@ -20,17 +20,14 @@ package nl.basjes.dsmr.parse;
 
 import nl.basjes.dsmr.TimestampParser;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TestTimestampParser {
-
-        private static final Logger LOG = LoggerFactory.getLogger(TestTimestampParser.class);
 
         @Test
         public void testReferenceExample() throws IOException, InterruptedException {
@@ -56,5 +53,24 @@ public class TestTimestampParser {
             assertEquals("2019-03-24T15:14:44+01:00", timestampParser.parse("190324151444W").format(ISO_OFFSET_DATE_TIME));
 
      }
+
+    @Test
+    public void testNull() {
+        TimestampParser timestampParser = new TimestampParser();
+        assertNull(timestampParser.parse(null));
+    }
+
+    @Test
+    public void testEmpty() {
+        TimestampParser timestampParser = new TimestampParser();
+        assertNull(timestampParser.parse(""));
+    }
+
+    @Test
+    public void testBad() {
+        TimestampParser timestampParser = new TimestampParser();
+        assertNull(timestampParser.parse("Not a date string at all"));
+    }
+
 
 }

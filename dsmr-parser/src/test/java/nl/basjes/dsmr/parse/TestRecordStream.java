@@ -59,8 +59,6 @@ public class TestRecordStream {
                         crcIsValid(value);
                     }
                 }
-//                LOG.info("\n=========== \n{}\n=========== \n", value);
-
             }
             LOG.info("---------------------- Done ----------------------");
         }
@@ -68,7 +66,7 @@ public class TestRecordStream {
     @Ignore
     @Test
     public void runTestWithSimulator() throws IOException, InterruptedException {
-        FileInputStream inputStream = new FileInputStream("../simulator/ttyUSB0");
+        FileInputStream inputStream = new FileInputStream("../simulator/ttyDSMR");
 
         ReadUTF8RecordStream reader = new ReadUTF8RecordStream(inputStream, "\r\n![0-9A-F]{4}\r\n");
 
@@ -93,8 +91,6 @@ public class TestRecordStream {
                     crcIsValid(value);
                 }
             }
-//                LOG.info("\n=========== \n{}\n=========== \n", value);
-
         }
         LOG.info("---------------------- Done ----------------------");
     }

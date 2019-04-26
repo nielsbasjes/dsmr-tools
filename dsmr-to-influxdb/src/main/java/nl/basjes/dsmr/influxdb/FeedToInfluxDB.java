@@ -57,9 +57,10 @@ public class FeedToInfluxDB {
 
         LOG.info("Opening stream {}", commandlineOptions.tty);
 
+        InfluxDB influxDB = null;
+
         try(FileInputStream inputStream = new FileInputStream(commandlineOptions.tty)) {
 
-            InfluxDB influxDB = null;
             if (commandlineOptions.databaseUrl == null) {
                 LOG.info("No database, outputting to console");
             } else {
@@ -138,6 +139,10 @@ public class FeedToInfluxDB {
                         influxDB.write(point);
                     }
                 }
+            }
+        } finally {
+            if (influxDB != null) {
+                influxDB.close();
             }
         }
     }

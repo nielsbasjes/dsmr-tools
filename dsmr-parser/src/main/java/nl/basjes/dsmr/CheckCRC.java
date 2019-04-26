@@ -74,6 +74,9 @@ public class CheckCRC {
     }
 
     public static Integer calculatedCrc(String input) {
+        if (input == null) {
+            return null;
+        }
         Matcher matcher = extractPattern.matcher(input);
 
         if (!matcher.find()) {
@@ -86,6 +89,9 @@ public class CheckCRC {
     }
 
     public static String fixCrc(String input) {
+        if (input == null) {
+            return null;
+        }
         Matcher matcher = extractPattern.matcher(input);
 
         if (!matcher.find()) {
@@ -99,6 +105,9 @@ public class CheckCRC {
     }
 
     public static boolean crcIsValid(String input) {
+        if (input == null) {
+            return false;
+        }
         Matcher matcher = extractPattern.matcher(input);
 
         if (!matcher.find()) {

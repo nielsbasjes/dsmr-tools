@@ -19,15 +19,12 @@
 package nl.basjes.dsmr.parse;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static nl.basjes.dsmr.CheckCRC.crcIsValid;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class TestCRCValidator {
-
-    private static final Logger LOG = LoggerFactory.getLogger(TestCRCValidator.class);
 
     @Test public void testCrc(){
         String record = "/ISK5\\2M550T-1012\r\n" +
@@ -68,5 +65,21 @@ public class TestCRCValidator {
 
         assertTrue("CRC is not valid", crcIsValid( record ));
     }
+
+    @Test
+    public void testNull(){
+        assertFalse(crcIsValid(null));
+    }
+
+    @Test
+    public void testEmpty(){
+        assertFalse(crcIsValid(""));
+    }
+
+    @Test
+    public void testSyntaxError(){
+        assertFalse(crcIsValid("Bla bla bla"));
+    }
+
 
 }

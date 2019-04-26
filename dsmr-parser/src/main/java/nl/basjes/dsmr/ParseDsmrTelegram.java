@@ -21,12 +21,60 @@ package nl.basjes.dsmr;
 import nl.basjes.dsmr.parse.DsmrBaseVisitor;
 import nl.basjes.dsmr.parse.DsmrLexer;
 import nl.basjes.dsmr.parse.DsmrParser;
-import nl.basjes.dsmr.parse.DsmrParser.*;
-import org.antlr.v4.runtime.*;
+import nl.basjes.dsmr.parse.DsmrParser.CurrentL1Context;
+import nl.basjes.dsmr.parse.DsmrParser.CurrentL2Context;
+import nl.basjes.dsmr.parse.DsmrParser.CurrentL3Context;
+import nl.basjes.dsmr.parse.DsmrParser.ElectricityPowerReceivedContext;
+import nl.basjes.dsmr.parse.DsmrParser.ElectricityPowerReturnedContext;
+import nl.basjes.dsmr.parse.DsmrParser.ElectricityReceivedLowTariffContext;
+import nl.basjes.dsmr.parse.DsmrParser.ElectricityReceivedNormalTariffContext;
+import nl.basjes.dsmr.parse.DsmrParser.ElectricityReturnedLowTariffContext;
+import nl.basjes.dsmr.parse.DsmrParser.ElectricityReturnedNormalTariffContext;
+import nl.basjes.dsmr.parse.DsmrParser.ElectricityTariffIndicatorContext;
+import nl.basjes.dsmr.parse.DsmrParser.EquipmentIdContext;
+import nl.basjes.dsmr.parse.DsmrParser.LongPowerFailuresContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus1EquipmentIdContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus1TypeContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus1UsageContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus2EquipmentIdContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus2TypeContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus2UsageContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus3EquipmentIdContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus3TypeContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus3UsageContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus4EquipmentIdContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus4TypeContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus4UsageContext;
+import nl.basjes.dsmr.parse.DsmrParser.MessageContext;
+import nl.basjes.dsmr.parse.DsmrParser.P1VersionContext;
+import nl.basjes.dsmr.parse.DsmrParser.PowerFailureEventLogContext;
+import nl.basjes.dsmr.parse.DsmrParser.PowerFailuresContext;
+import nl.basjes.dsmr.parse.DsmrParser.PowerReceivedL1Context;
+import nl.basjes.dsmr.parse.DsmrParser.PowerReceivedL2Context;
+import nl.basjes.dsmr.parse.DsmrParser.PowerReceivedL3Context;
+import nl.basjes.dsmr.parse.DsmrParser.PowerReturnedL1Context;
+import nl.basjes.dsmr.parse.DsmrParser.PowerReturnedL2Context;
+import nl.basjes.dsmr.parse.DsmrParser.PowerReturnedL3Context;
+import nl.basjes.dsmr.parse.DsmrParser.TelegramContext;
+import nl.basjes.dsmr.parse.DsmrParser.TimestampContext;
+import nl.basjes.dsmr.parse.DsmrParser.VoltageL1Context;
+import nl.basjes.dsmr.parse.DsmrParser.VoltageL2Context;
+import nl.basjes.dsmr.parse.DsmrParser.VoltageL3Context;
+import nl.basjes.dsmr.parse.DsmrParser.VoltageSagsPhaseL1Context;
+import nl.basjes.dsmr.parse.DsmrParser.VoltageSagsPhaseL2Context;
+import nl.basjes.dsmr.parse.DsmrParser.VoltageSagsPhaseL3Context;
+import nl.basjes.dsmr.parse.DsmrParser.VoltageSwellsPhaseL1Context;
+import nl.basjes.dsmr.parse.DsmrParser.VoltageSwellsPhaseL2Context;
+import nl.basjes.dsmr.parse.DsmrParser.VoltageSwellsPhaseL3Context;
+import org.antlr.v4.runtime.ANTLRErrorListener;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CodePointCharStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.BitSet;
 import java.util.Map;
@@ -35,13 +83,12 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements ANTLRErrorListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ParseDsmrTelegram.class);
-
     private boolean hasSyntaxError = false;
 
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object o, int i, int i1, String s, RecognitionException e) {
         hasSyntaxError = true;
+        dsmrTelegram.isValid = false;
     }
 
     @Override
@@ -60,12 +107,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements ANTLRErr
     }
 
     public static synchronized DSMRTelegram parse(String telegram) {
-        try {
-            return new ParseDsmrTelegram(telegram).parse();
-        } catch (NullPointerException npe) {
-            LOG.error("A Null pointer expection occurred for telegram: \n{}", telegram);
-        }
-        return null;
+        return new ParseDsmrTelegram(telegram).parse();
     }
 
     private String          telegramString;
@@ -76,10 +118,15 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements ANTLRErr
         telegramString = telegram;
         dsmrTelegram = new DSMRTelegram();
         dsmrTelegram.validCRC = CheckCRC.crcIsValid(telegramString);
-        dsmrTelegram.isValid = !hasSyntaxError && dsmrTelegram.validCRC;
+        dsmrTelegram.isValid = dsmrTelegram.validCRC;
     }
 
     private DSMRTelegram parse() {
+        if (telegramString == null || telegramString.isEmpty()) {
+            dsmrTelegram.isValid = false;
+            return null;
+        }
+
         CodePointCharStream input = CharStreams.fromString(telegramString);
         DsmrLexer           lexer = new DsmrLexer(input);
 
@@ -87,14 +134,14 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements ANTLRErr
 
         DsmrParser parser = new DsmrParser(tokens);
 
-//        if (!verbose) {
         lexer.removeErrorListeners();
         parser.removeErrorListeners();
-//        }
-//        lexer.addErrorListener(PARSER);
-//        parser.addErrorListener(PARSER);
 
         TelegramContext telegramContext = parser.telegram();
+
+        if (telegramContext == null || telegramContext.ident == null) {
+            return dsmrTelegram; // Unparsable
+        }
 
         this.visitTelegram(telegramContext);
 
@@ -166,6 +213,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements ANTLRErr
             }
         }
 
+        dsmrTelegram.isValid = !hasSyntaxError && dsmrTelegram.validCRC;
         return dsmrTelegram;
     }
 

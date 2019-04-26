@@ -28,11 +28,14 @@ import java.time.ZonedDateTime;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 
 public class TestDsmrParser {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TestRecordStream.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TestDsmrParser.class);
 
     // This is the example testcase documented in the specification.
     // https://www.netbeheernederland.nl/_upload/Files/Slimme_meter_15_a727fce1f1.pdf
@@ -228,5 +231,23 @@ public class TestDsmrParser {
         LOG.info("{}", dsmrTelegram);
     }
 
+    @Test
+    public void testNull(){
+        DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(null);
+        assertNull(dsmrTelegram);
+    }
+
+    @Test
+    public void testEmpty(){
+        DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse("");
+        assertNull(dsmrTelegram);
+    }
+
+    @Test
+    public void testSyntaxError(){
+        DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse("Bla bla");
+        assertNotNull(dsmrTelegram);
+        assertFalse(dsmrTelegram.isValid());
+    }
 
 }
