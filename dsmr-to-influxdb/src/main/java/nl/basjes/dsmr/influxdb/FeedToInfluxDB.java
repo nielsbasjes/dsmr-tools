@@ -55,10 +55,15 @@ public class FeedToInfluxDB {
             return;
         }
 
+        LOG.info("Opening stream {}", commandlineOptions.tty);
+
         try(FileInputStream inputStream = new FileInputStream(commandlineOptions.tty)) {
 
             InfluxDB influxDB = null;
-            if (commandlineOptions.databaseUrl != null) {
+            if (commandlineOptions.databaseUrl == null) {
+                LOG.info("No database, outputting to console");
+            } else {
+                LOG.info("Connecting to database {}", commandlineOptions.databaseUrl);
 
                 if (commandlineOptions.databaseUsername == null) {
                     influxDB = InfluxDBFactory.connect(commandlineOptions.databaseUrl);
@@ -76,6 +81,8 @@ public class FeedToInfluxDB {
             }
 
             ReadUTF8RecordStream reader = new ReadUTF8RecordStream(inputStream, "\r\n![0-9A-F]{4}\r\n");
+
+            LOG.info("Starting read loop");
 
             while (running) {
                 String       telegram = reader.read();
