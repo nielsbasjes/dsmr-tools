@@ -59,7 +59,10 @@ public class P1Simulator {
             final boolean       isDST       = zone.getRules().isDaylightSavings(now.toInstant());
             final String        nowString   = formatter.format(now) +  (isDST ? "S" : "W");
 
-            double sin = Math.sin(epochMillis / sinPeriodScaler);
+            double sin1 = Math.sin(epochMillis / sinPeriodScaler);
+            double sin2 = Math.sin(epochMillis / sinPeriodScaler * 1.1);
+            double sin3 = Math.sin(epochMillis / sinPeriodScaler * 1.2);
+            double sin4 = Math.sin(epochMillis / sinPeriodScaler * 1.3);
 
             String record =
                 "/ISk5\\2MT382-1000\r\n" +
@@ -67,13 +70,13 @@ public class P1Simulator {
                 "1-3:0.2.8(50)\r\n" +                 // DSMR Version
                 "0-0:1.0.0("+nowString+")\r\n" +      // Timestamp
                 "0-0:96.1.1("+electricEquipmentId+")\r\n" + // Equipment Id
-                "1-0:1.8.1("+ String.format("%09.3f",  800 + (100. * sin))+"*kWh)\r\n" +
-                "1-0:1.8.2("+ String.format("%09.3f",  800 - (100. * sin))+"*kWh)\r\n" +
-                "1-0:2.8.1("+ String.format("%09.3f", 1000 + (100. * sin))+"*kWh)\r\n" +
-                "1-0:2.8.2("+ String.format("%09.3f", 1000 - (100. * sin))+"*kWh)\r\n" +
+                "1-0:1.8.1("+ String.format("%09.3f",  800 + (100. * sin1))+"*kWh)\r\n" +
+                "1-0:1.8.2("+ String.format("%09.3f",  800 - (100. * sin2))+"*kWh)\r\n" +
+                "1-0:2.8.1("+ String.format("%09.3f", 1000 + (100. * sin3))+"*kWh)\r\n" +
+                "1-0:2.8.2("+ String.format("%09.3f", 1000 - (100. * sin4))+"*kWh)\r\n" +
                 "0-0:96.14.0(0002)\r\n" +
-                "1-0:1.7.0("+String.format("%05.3f", 1.0 + (0.400 * sin))+"*kW)\r\n" +
-                "1-0:2.7.0("+String.format("%05.3f", 1.0 - (0.400 * sin))+"*kW)\r\n" +
+                "1-0:1.7.0("+String.format("%05.3f", 1.0 + (0.400 * sin1))+"*kW)\r\n" +
+                "1-0:2.7.0("+String.format("%05.3f", 1.0 - (0.400 * sin2))+"*kW)\r\n" +
                 "0-0:96.7.21(00004)\r\n" +
                 "0-0:96.7.9(00002)\r\n" +
                 "1-0:99.97.0(2)(0-0:96.7.19)(101208152415W)(0000000240*s)(101208151004W)(0000000301*s)\r\n" +
@@ -84,18 +87,18 @@ public class P1Simulator {
                 "1-0:52.36.0(00003)\r\n" +
                 "1-0:72.36.0(00000)\r\n" +
                 "0-0:96.13.0(44534D522073696D756C61746F722063726561746564206279204E69656C73204261736A65732E205365652068747470733A2F2F64736D722E6261736A65732E6E6C20666F72206D6F726520696E666F726D6174696F6E2E)\r\n" +
-                "1-0:32.7.0("+String.format("%04.1f", 221. + (3 * sin))+"*V)\r\n" +
-                "1-0:52.7.0("+String.format("%04.1f", 222. - (3 * sin))+"*V)\r\n" +
-                "1-0:72.7.0("+String.format("%04.1f", 223. + (6 * sin))+"*V)\r\n" +
-                "1-0:31.7.0("+String.format("%03.0f",   5. + (2 * sin))+"*A)\r\n" +
-                "1-0:51.7.0("+String.format("%03.0f",   6. - (2 * sin))+"*A)\r\n" +
-                "1-0:71.7.0("+String.format("%03.0f",   7. + (3 * sin))+"*A)\r\n" +
-                "1-0:21.7.0("+String.format("%05.3f", 1.0 + (0.400 * sin))+"*kW)\r\n" +
-                "1-0:41.7.0("+String.format("%05.3f", 2.0 + (0.400 * sin))+"*kW)\r\n" +
-                "1-0:61.7.0("+String.format("%05.3f", 3.0 + (0.400 * sin))+"*kW)\r\n" +
-                "1-0:22.7.0("+String.format("%05.3f", 4.0 + (0.400 * sin))+"*kW)\r\n" +
-                "1-0:42.7.0("+String.format("%05.3f", 5.0 + (0.400 * sin))+"*kW)\r\n" +
-                "1-0:62.7.0("+String.format("%05.3f", 6.0 + (0.400 * sin))+"*kW)\r\n" +
+                "1-0:32.7.0("+String.format("%04.1f", 221. + (3 * sin1))+"*V)\r\n" +
+                "1-0:52.7.0("+String.format("%04.1f", 222. - (3 * sin2))+"*V)\r\n" +
+                "1-0:72.7.0("+String.format("%04.1f", 223. + (6 * sin3))+"*V)\r\n" +
+                "1-0:31.7.0("+String.format("%03.0f",   5. + (2 * sin1))+"*A)\r\n" +
+                "1-0:51.7.0("+String.format("%03.0f",   6. - (2 * sin2))+"*A)\r\n" +
+                "1-0:71.7.0("+String.format("%03.0f",   7. + (3 * sin3))+"*A)\r\n" +
+                "1-0:21.7.0("+String.format("%05.3f", 1.0 + (0.400 * sin1))+"*kW)\r\n" +
+                "1-0:41.7.0("+String.format("%05.3f", 2.0 + (0.400 * sin2))+"*kW)\r\n" +
+                "1-0:61.7.0("+String.format("%05.3f", 3.0 + (0.400 * sin3))+"*kW)\r\n" +
+                "1-0:22.7.0("+String.format("%05.3f", 4.0 + (0.400 * sin1))+"*kW)\r\n" +
+                "1-0:42.7.0("+String.format("%05.3f", 5.0 + (0.400 * sin2))+"*kW)\r\n" +
+                "1-0:62.7.0("+String.format("%05.3f", 6.0 + (0.400 * sin3))+"*kW)\r\n" +
                 "0-1:24.1.0(003)\r\n" +
                 "0-1:96.1.0("+gasEquipmentId+")\r\n" +
                 "0-1:24.2.1(101209112500W)(12785.123*m3)\r\n" +
