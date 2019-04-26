@@ -57,14 +57,22 @@ public class FeedToInfluxDB {
 
         try(FileInputStream inputStream = new FileInputStream(commandlineOptions.tty)) {
 
-            InfluxDB influxDB = InfluxDBFactory.connect(commandlineOptions.databaseUrl, commandlineOptions.databaseUsername, commandlineOptions.databasePassword);
+            InfluxDB influxDB = null;
+            if (commandlineOptions.databaseUrl != null) {
 
-            influxDB.disableBatch();
+                if (commandlineOptions.databaseUsername == null) {
+                    influxDB = InfluxDBFactory.connect(commandlineOptions.databaseUrl);
+                } else {
+                    influxDB = InfluxDBFactory.connect(commandlineOptions.databaseUrl, commandlineOptions.databaseUsername, commandlineOptions.databasePassword);
+                }
+                influxDB.setDatabase(commandlineOptions.databaseName);
+                influxDB.disableBatch();
 
-            Pong response = influxDB.ping();
-            if (response.getVersion().equalsIgnoreCase("unknown")) {
-                LOG.error("Error pinging server.");
-                return;
+                Pong response = influxDB.ping();
+                if (response.getVersion().equalsIgnoreCase("unknown")) {
+                    LOG.error("Error pinging server.");
+                    return;
+                }
             }
 
             ReadUTF8RecordStream reader = new ReadUTF8RecordStream(inputStream, "\r\n![0-9A-F]{4}\r\n");
@@ -112,7 +120,11 @@ public class FeedToInfluxDB {
 
                         .build();
 
-                    influxDB.write(point);
+                    if (influxDB == null) {
+                        LOG.info("{}", point.lineProtocol());
+                    } else {
+                        influxDB.write(point);
+                    }
                 }
             }
         }
@@ -122,13 +134,16 @@ public class FeedToInfluxDB {
         @Option(name = "-tty", usage = "The tty device from which to read")
         private String tty = "/dev/ttyUSB0";
 
-        @Option(name = "-databaseUrl", usage = "The URL of the InfluxDB database", required = true)
+        @Option(name = "-databaseUrl", usage = "The URL of the InfluxDB database")
         private String databaseUrl = null;
 
-        @Option(name = "-databaseUsername", usage = "The USERNAME of the InfluxDB database", required = true)
+        @Option(name = "-databaseName", usage = "The NAME of the InfluxDB database")
+        private String databaseName = null;
+
+        @Option(name = "-databaseUsername", usage = "The USERNAME of the InfluxDB database")
         private String databaseUsername = null;
 
-        @Option(name = "-databasePassword", usage = "The PASSWORD of the InfluxDB database", required = true)
+        @Option(name = "-databasePassword", usage = "The PASSWORD of the InfluxDB database")
         private String databasePassword = null;
     }
 
