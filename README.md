@@ -62,7 +62,7 @@ When I then hook Grafana to this Influx Db database and make a graph I get somet
 
 ![Graphs in Grafana](docs/Nifi-grafana.png)
 
-#Running on a Raspberry Pi
+# Running on a Raspberry Pi
 
 I have an old Raspberry Pi on which I have this running using Minifi 0.5.0.
 In order to make it work I had to jump through some hoops.
@@ -141,8 +141,7 @@ Now we put our MiNiFi setup somewhere on the SD card and we add this script as `
 
 This script will effectively make MiNiFi read the 'immutable' stuff from the SD card and write the fast changing stuff to the ramdisk.
 
-LICENSE
-===
+# LICENSE
 
    Copyright 2019 Niels Basjes
 
