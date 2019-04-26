@@ -64,7 +64,7 @@ When I then hook Grafana to this Influx Db database and make a graph I get somet
 
 # Running on a Raspberry Pi
 
-I have an old Raspberry Pi on which I have this running using Minifi 0.5.0.
+I have a Raspberry Pi Model B Plus Rev 1.2 on which I have this running using Minifi 0.5.0.
 In order to make it work I had to jump through some hoops.
 
 ## Dependencies
