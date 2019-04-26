@@ -86,6 +86,11 @@ public class FeedToInfluxDB {
 
             while (running) {
                 String       telegram = reader.read();
+                if (telegram == null) {
+                    running = false;
+                    LOG.info ("End of stream detected");
+                    break;
+                }
                 DSMRTelegram record   = ParseDsmrTelegram.parse(telegram);
 
                 if (record != null && record.isValid()) {
