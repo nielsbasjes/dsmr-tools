@@ -9,15 +9,15 @@ This is a set of Java based libraries and tools that should allow processing DSM
 
 Parts in this toolkit:
 
-- DSMR-Simulator: 
+- *DSMR-Simulator* 
   - A local application that creates a local "named pipe" which outputs data in the DSMR format. The data itself is totally fake (you get nice sine wave patterns) and is intended for tesing a pipeline on your development system.
-- Stream record splitter:
+- *Stream record splitter*
   - A library that can read an endless UTF8 string from a file/character device and output substrings that are cut by means of a regex that describes what the end of a record looks like.  
-- DSMR-Parser:
+- *DSMR-Parser*
   - A library that is able to parse a string that is in the DSMR telegram format.
-- Apache Nifi UDFs:
+- *Apache Nifi UDFs*
   - For the both the "Stream record splitter" and the "DSMR-Parser" a Nifi Processor has been created to allow using them inside Apache Nifi.
-- DSMR to InfluxDb:
+- *DSMR to InfluxDb*
   - MiNifi is great in terms of flexibility and bad in terms of startup time on a Raspberry Pi. So in addition I created a very simple Java application that ONLY does the DSMR to InfluxDb flow in a hard coded way (starts in 5 seconds instead of 3 minutes).
 
 # Important system config settings
@@ -78,11 +78,6 @@ Because MiNiFi 0.5.0. is build against NiFi 1.7.0 you need to download that exac
 - Copy the two nars from this project (also built against Nifi 1.7.0!!) to the minifi lib folder:
     - nifi-sensor-stream-cutter-nar-0.1-SNAPSHOT.nar
     - nifi-dsmr-parser-nar-0.1-SNAPSHOT.nar
-
-## Writing less 
-
-We then copy this file as config.yml into the conf dir of my MiNiFi installation.
-
 
 ## There is no "disk"
 The problem with Raspberry Pi systems is that they have an SD card as 'disk'.
