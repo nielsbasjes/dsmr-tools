@@ -1,4 +1,4 @@
-# Status: Works on my machine ...
+# Status: Works on my machine ... will probably melt yours ...
 
 # DSMR Toolkit
 DSMR are the Dutch Smart Meter Requirements; part of these requirements are the messages sent out via the P1 port that can be captured and processed on a computer.
@@ -20,7 +20,7 @@ Parts in this toolkit:
 - *DSMR to InfluxDb*
   - MiNifi is great in terms of flexibility and bad in terms of startup time on a Raspberry Pi. So in addition I created a very simple Java application that ONLY does the DSMR to InfluxDb flow in a hard coded way (starts in 5 seconds instead of 3 minutes).
 
-# Important system config settings
+## Important system config settings
 
 The USB serial MUST be set to the right speed (115200 in my case) and set to 'raw' or the crc checksum will NEVER match.
 
@@ -134,9 +134,9 @@ Now we put our MiNiFi setup somewhere on the SD card and we add this script as `
     
     ${RUNDIR}/bin/minifi.sh start
 
-This script will effectively make MiNiFi read the 'immutable' stuff from the SD card and write the fast changing stuff to the ramdisk.
+This script will effectively make MiNiFi read the 'immutable' stuff from the SD card and read/write the fast changing stuff to the ramdisk.
 
-# LICENSE
+# LICENSE: Apache 2.0
 
    Copyright 2019 Niels Basjes
 
