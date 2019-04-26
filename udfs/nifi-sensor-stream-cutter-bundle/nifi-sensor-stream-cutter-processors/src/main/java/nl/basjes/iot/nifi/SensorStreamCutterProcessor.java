@@ -37,6 +37,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static nl.basjes.parse.ReadUTF8RecordStream.MAX_MAX_RECORD_SIZE;
@@ -72,8 +73,8 @@ public class SensorStreamCutterProcessor extends AbstractProcessor {
         .displayName("End-of-record regex")
         .description("The regular expression that is the end of the record. NOTE: Grouping is NOT allowed!")
         .required(true)
-        .defaultValue("\n")
-        .allowableValues("\n", "\r\n![0-9A-F]{4}\r\n") // FIXME: Show these allowed values and still support a manual regex
+        .defaultValue("\\r?\\n")
+        .allowableValues("\\r?\\n", "\\r\\n![0-9A-F]{4}\\r\\n") // FIXME: Show these allowed values and still support a manual regex
         .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
         .addValidator(createRegexValidator(0, 0, false)) // It must be a regex without grouping
         .build();
@@ -148,7 +149,9 @@ public class SensorStreamCutterProcessor extends AbstractProcessor {
         flowFile = session.write(flowFile, new OutputStreamCallback() {
             @Override
             public void process(final OutputStream out) throws IOException {
-                out.write(content.getBytes(UTF_8));
+                if (content != null) {
+                    out.write(content.getBytes(UTF_8));
+                }
             }
         });
 

@@ -17,26 +17,53 @@
  */
 package nl.basjes.iot.nifi;
 
+import org.apache.nifi.util.MockFlowFile;
 import org.apache.nifi.util.TestRunner;
 import org.apache.nifi.util.TestRunners;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static nl.basjes.iot.nifi.SensorStreamCutterProcessor.END_OF_RECORD_REGEX;
+import static nl.basjes.iot.nifi.SensorStreamCutterProcessor.FILE_NAME;
+import static nl.basjes.iot.nifi.SensorStreamCutterProcessor.MAX_CHARACTERS_PER_RECORD;
+import static nl.basjes.iot.nifi.SensorStreamCutterProcessor.SUCCESS;
+import static org.junit.Assert.assertEquals;
+
 
 public class SensorStreamCutterProcessorTest {
 
-    private TestRunner testRunner;
+    private TestRunner runner;
 
     @Before
     public void init() {
-        testRunner = TestRunners.newTestRunner(SensorStreamCutterProcessor.class);
+        runner = TestRunners.newTestRunner(SensorStreamCutterProcessor.class);
     }
 
     @Test
     public void testProcessor() {
 
+        runner.setProperty(END_OF_RECORD_REGEX,       "\\r?\\n");
+        runner.setProperty(FILE_NAME,                 "src/test/data/testinput.txt");
+        runner.setProperty(MAX_CHARACTERS_PER_RECORD, "20000");
 
+        // Run the enqueued content, it also takes an int = number of contents queued
+        runner.run(5); // We have 4 lines in the file !!
 
+        // All results were processed with out failure
+        runner.assertQueueEmpty();
+
+        // If you need to read or do additional tests on results you can access the content
+        List<MockFlowFile> results = runner.getFlowFilesForRelationship(SUCCESS);
+        assertEquals("5 match", 5, results.size());
+        results.get(0).assertContentEquals("One\n");
+        results.get(1).assertContentEquals("Two\n");
+        results.get(2).assertContentEquals("Three\n");
+        results.get(3).assertContentEquals("\n"); // We have an empty line !!
+        results.get(4).assertContentEquals("");
     }
 
 }
