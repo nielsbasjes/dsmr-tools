@@ -105,6 +105,10 @@ To avoid writing the Provenance data (which I don't need).
 
 ### Create ramdisk
 
+First create the actual directory/mount point:
+
+    mkdir /minifi
+
 Then in /etc/fstab I added this line to define a new 10MiB Ramdisk:
       
     tmpfs /minifi tmpfs nodev,nosuid,size=10M 0 0      
