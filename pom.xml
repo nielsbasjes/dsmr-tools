@@ -47,12 +47,12 @@
     <checkstyle.version>8.20</checkstyle.version>
     <slf4j.version>1.7.26</slf4j.version>
     <rat.version>0.13</rat.version>
-    <jacoco.version>0.8.2</jacoco.version>
-    <junit5.version>5.4.0</junit5.version>
+<!--    <jacoco.version>0.8.2</jacoco.version>-->
+    <junit5.version>5.5.0</junit5.version>
 
     <!-- See http://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html-->
-    <jacoco.surefireArgLine/>
-    <argLine>@{jacoco.surefireArgLine} -Xmx2048m</argLine>
+<!--    <jacoco.surefireArgLine/>-->
+<!--    <argLine>@{jacoco.surefireArgLine} -Xmx2048m</argLine>-->
 
     <!--<sonar.language>java</sonar.language>-->
     <!--<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>-->
@@ -126,8 +126,8 @@
   </dependencies>
 
   <build>
-    <pluginManagement>
-      <plugins>
+<!--    <pluginManagement>-->
+<!--      <plugins>-->
 <!--        <plugin>-->
 <!--          <groupId>org.apache.maven.plugins</groupId>-->
 <!--          <artifactId>maven-checkstyle-plugin</artifactId>-->
@@ -164,51 +164,51 @@
 <!--          </executions>-->
 <!--        </plugin>-->
 
-        <!-- Coverage analysis for tests -->
-        <plugin>
-          <groupId>org.jacoco</groupId>
-          <artifactId>jacoco-maven-plugin</artifactId>
-          <version>${jacoco.version}</version>
-          <executions>
-            <!--
-                Prepares the property pointing to the JaCoCo runtime agent which
-                is passed as VM argument when Maven the Surefire plugin is executed.
-            -->
-            <execution>
-              <id>pre-unit-test</id>
-              <goals>
-                <goal>prepare-agent</goal>
-              </goals>
-              <configuration>
-                <!--
-                    Sets the name of the property containing the settings
-                    for JaCoCo runtime agent.
-                -->
-                <propertyName>jacoco.surefireArgLine</propertyName>
-              </configuration>
-            </execution>
-            <!--
-                Ensures that the code coverage report for unit tests is created after
-                unit tests have been run.
-            -->
-            <execution>
-              <id>post-unit-test</id>
-              <phase>test</phase>
-              <goals>
-                <goal>report</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
+<!--        &lt;!&ndash; Coverage analysis for tests &ndash;&gt;-->
+<!--        <plugin>-->
+<!--          <groupId>org.jacoco</groupId>-->
+<!--          <artifactId>jacoco-maven-plugin</artifactId>-->
+<!--          <version>${jacoco.version}</version>-->
+<!--          <executions>-->
+<!--            &lt;!&ndash;-->
+<!--                Prepares the property pointing to the JaCoCo runtime agent which-->
+<!--                is passed as VM argument when Maven the Surefire plugin is executed.-->
+<!--            &ndash;&gt;-->
+<!--            <execution>-->
+<!--              <id>pre-unit-test</id>-->
+<!--              <goals>-->
+<!--                <goal>prepare-agent</goal>-->
+<!--              </goals>-->
+<!--              <configuration>-->
+<!--                &lt;!&ndash;-->
+<!--                    Sets the name of the property containing the settings-->
+<!--                    for JaCoCo runtime agent.-->
+<!--                &ndash;&gt;-->
+<!--                <propertyName>jacoco.surefireArgLine</propertyName>-->
+<!--              </configuration>-->
+<!--            </execution>-->
+<!--            &lt;!&ndash;-->
+<!--                Ensures that the code coverage report for unit tests is created after-->
+<!--                unit tests have been run.-->
+<!--            &ndash;&gt;-->
+<!--            <execution>-->
+<!--              <id>post-unit-test</id>-->
+<!--              <phase>test</phase>-->
+<!--              <goals>-->
+<!--                <goal>report</goal>-->
+<!--              </goals>-->
+<!--            </execution>-->
+<!--          </executions>-->
+<!--        </plugin>-->
 
-        <plugin>
-          <groupId>org.sonarsource.scanner.maven</groupId>
-          <artifactId>sonar-maven-plugin</artifactId>
-          <version>3.5.0.1254</version>
-        </plugin>
+<!--        <plugin>-->
+<!--          <groupId>org.sonarsource.scanner.maven</groupId>-->
+<!--          <artifactId>sonar-maven-plugin</artifactId>-->
+<!--          <version>3.5.0.1254</version>-->
+<!--        </plugin>-->
 
-      </plugins>
-    </pluginManagement>
+<!--      </plugins>-->
+<!--    </pluginManagement>-->
 
     <plugins>
       <plugin>
@@ -230,15 +230,15 @@
         </configuration>
       </plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-checkstyle-plugin</artifactId>-->
+<!--      </plugin>-->
 
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>org.jacoco</groupId>-->
+<!--        <artifactId>jacoco-maven-plugin</artifactId>-->
+<!--      </plugin>-->
     </plugins>
   </build>
 
