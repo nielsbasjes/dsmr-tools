@@ -18,7 +18,7 @@
 
 package nl.basjes.parse;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +27,7 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TestMissingSeparator {
 
@@ -66,7 +66,7 @@ public class TestMissingSeparator {
         pipeWriter.start();
 
         String record = reader.read();
-        assertNull("We may not get ANY records from this", record);
+        assertNull(record, "We may not get ANY records from this");
         LOG.info("Test passed: It should fail about not finding 'the end-of-record pattern'. ");
         runWriter = false;
 

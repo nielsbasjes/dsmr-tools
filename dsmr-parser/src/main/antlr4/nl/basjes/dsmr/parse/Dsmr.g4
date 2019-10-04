@@ -1,3 +1,20 @@
+/*
+ * Dutch Smart Meter Requirements (DSMR) Toolkit
+ * Copyright (C) 2019-2019 Niels Basjes
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 grammar Dsmr;
 
 // Based on the specs from netbeheernederland.nl and observations from my own Dutch power meter
@@ -39,23 +56,11 @@ FLOAT       : DIGIT1_6 '.' DIGIT1_3 ;
 
 INT         : DIGIT1_10;
 
-telegram  : ident=IDENT field+ crc=CRC ;
+telegram
+    : ident=IDENT field+ crc=CRC
+    ;
 
 field
-//    :   id=COSEMID '('                                  ')' #empty
-//    |   id=COSEMID '(' timestamp=TIMESTAMP              ')' #timestamp
-//    |   id=COSEMID '(' value=HEXSTRING                  ')' #hexstring
-//    |   id=COSEMID '(' value=INT                        ')' #number
-//    |   id=COSEMID '(' value=(FLOAT|INT) '*' unit='kWh' ')' #electricityKiloWattHour
-//    |   id=COSEMID '(' value=(FLOAT|INT) '*' unit='kW'  ')' #electricityKiloWatt
-//    |   id=COSEMID '(' value=(FLOAT|INT) '*' unit='V'   ')' #electricityVolt
-//    |   id=COSEMID '(' value=(FLOAT|INT) '*' unit='A'   ')' #electricityAmpere
-//    |   id=COSEMID '(' timestamp=TIMESTAMP              ')' '(' value=(FLOAT|INT) '*' unit='m3'  ')' #cubicMeter
-//    |   id=COSEMID '(' count=INT ')' '(' eventTypeId=COSEMID ')'
-//                    ( '(' eventTime=TIMESTAMP ')'
-//                      '(' eventDuration=INT '*' eventDurationUnit='s' ')'
-//                    )+ #eventList
-
     : cosemid='1-3:0.2.8'    '(' version=INT                             ')' #p1Version                        // P1 Version information
     | cosemid='0-0:1.0.0'    '(' timestamp=TIMESTAMP                     ')' #timestamp                        // Timestamp
     | cosemid='0-0:96.1.1'   '(' id=HEXSTRING                            ')' #equipmentId                      // Equipment identifier

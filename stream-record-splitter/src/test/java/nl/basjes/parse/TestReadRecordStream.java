@@ -18,7 +18,7 @@
 
 package nl.basjes.parse;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,13 +27,13 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestReadRecordStream {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestReadRecordStream.class);
 
-@Test
+    @Test
     public void testSingleLineRecords() throws IOException, InterruptedException {
         String[] recordFragments = {
             "on", "e\n" +
@@ -142,7 +142,7 @@ public class TestReadRecordStream {
                     break;
                 }
                 LOG.info("Record received: \n{}", record);
-                assertEquals("Got the wrong record back", expectedRecord, record);
+                assertEquals(expectedRecord, record, "Got the wrong record back");
             } catch (IOException e) {
                 e.printStackTrace();
             }

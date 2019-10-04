@@ -20,21 +20,21 @@ package nl.basjes.dsmr.nifi;
 import org.apache.nifi.util.MockFlowFile;
 import org.apache.nifi.util.TestRunner;
 import org.apache.nifi.util.TestRunners;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DSMRParserProcessorTest {
 
     private TestRunner runner;
 
-    @Before
+    @BeforeEach
     public void init() {
         runner = TestRunners.newTestRunner(DSMRParserProcessor.class);
     }
@@ -78,9 +78,9 @@ public class DSMRParserProcessorTest {
             "1-0:22.7.0(00.000*kW)\r\n" +
             "1-0:42.7.0(00.000*kW)\r\n" +
             "1-0:62.7.0(00.000*kW)\r\n" +
-            "!9DF0\r\n" + 
+            "!9DF0\r\n" +
             "\r\n"; // Stray newline that should be ignored.
-        
+
         // Add the content to the runner (just because we 'should' have some content).
         MockFlowFile flowfile = runner.enqueue(content);
         Map<String, String> attributes = new HashMap<>();
@@ -95,7 +95,7 @@ public class DSMRParserProcessorTest {
 
         // If you need to read or do additional tests on results you can access the content
         List<MockFlowFile> results = runner.getFlowFilesForRelationship(DSMRParserProcessor.Valid);
-        assertEquals("Should be 1 match", 1, results.size());
+        assertEquals(1, results.size(), "Should be 1 match");
         MockFlowFile result = results.get(0);
 
         assertAttributeEquals(result, "dsmr.validCRC",       "true");
@@ -143,11 +143,8 @@ public class DSMRParserProcessorTest {
 
     }
 
-
     public void assertAttributeEquals(MockFlowFile flowFile, String attributeName, String expectedValue) {
-        Assert.assertEquals("Attribute \"" + attributeName + "\" has the wrong value.",
-            expectedValue, flowFile.getAttribute(attributeName));
+        assertEquals(expectedValue, flowFile.getAttribute(attributeName),
+            "Attribute \"" + attributeName + "\" has the wrong value.");
     }
-
-
 }

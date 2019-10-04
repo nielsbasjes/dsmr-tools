@@ -18,15 +18,17 @@
 
 package nl.basjes.dsmr.parse;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import static nl.basjes.dsmr.CheckCRC.crcIsValid;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestCRCValidator {
 
-    @Test public void testCrc(){
+    @Test
+    public void testCrc(){
         String record = "/ISK5\\2M550T-1012\r\n" +
             "\r\n" +
             "1-3:0.2.8(50)\r\n" +
@@ -63,7 +65,7 @@ public class TestCRCValidator {
             "1-0:62.7.0(00.000*kW)\r\n" +
             "!478B\r\n";
 
-        assertTrue("CRC is not valid", crcIsValid( record ));
+        assertTrue(crcIsValid( record ), "CRC is not valid");
     }
 
     @Test

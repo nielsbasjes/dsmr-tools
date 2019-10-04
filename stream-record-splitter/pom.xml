@@ -32,95 +32,24 @@
   <packaging>jar</packaging>
   <name>DSMR : Stream record splitter</name>
 
-
-<!--  <dependencies>-->
-    <!--<dependency>-->
-    <!--<groupId>nl.basjes.parse.useragent</groupId>-->
-    <!--<artifactId>yauaa</artifactId>-->
-    <!--<version>${project.version}</version>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-    <!--<groupId>org.apache.parse</groupId>-->
-    <!--<artifactId>parse-api</artifactId>-->
-    <!--<version>${parse.version}</version>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-    <!--<groupId>org.apache.parse</groupId>-->
-    <!--<artifactId>parse-utils</artifactId>-->
-    <!--<version>${parse.version}</version>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-    <!--<groupId>org.apache.parse</groupId>-->
-    <!--<artifactId>parse-mock</artifactId>-->
-    <!--<version>${parse.version}</version>-->
-    <!--<scope>test</scope>-->
-    <!--</dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>org.slf4j</groupId>-->
-<!--      <artifactId>slf4j-api</artifactId>-->
-<!--      <version>${slf4j.version}</version>-->
-<!--      <scope>provided</scope>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>org.slf4j</groupId>-->
-<!--      <artifactId>slf4j-log4j12</artifactId>-->
-<!--      <version>${slf4j.version}</version>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
-
-
-    <!--<dependency>-->
-    <!--<groupId>commons-io</groupId>-->
-    <!--<artifactId>commons-io</artifactId>-->
-    <!--<version>2.6</version>-->
-    <!--<scope>compile</scope>-->
-    <!--</dependency>-->
-
-<!--    <dependency>-->
-<!--    <groupId>junit</groupId>-->
-<!--    <artifactId>junit</artifactId>-->
-<!--    <version>4.12</version>-->
-<!--    <scope>test</scope>-->
-<!--    </dependency>-->
-
-
-<!--  </dependencies>-->
+  <dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+  </dependencies>
 
   <build>
   <plugins>
-    <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-compiler-plugin</artifactId>
-      <version>3.6.0</version>
-      <configuration>
-        <source>1.8</source>
-        <target>1.8</target>
-      </configuration>
-    </plugin>
+  <plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-checkstyle-plugin</artifactId>
+  </plugin>
 
-  <!--<plugin>-->
-  <!--<groupId>org.apache.maven.plugins</groupId>-->
-  <!--<artifactId>maven-deploy-plugin</artifactId>-->
-  <!--<version>2.8.2</version>-->
-  <!--<configuration>-->
-  <!--<skip>true</skip>-->
-  <!--</configuration>-->
-  <!--</plugin>-->
-
-  <!--<plugin>-->
-  <!--<groupId>org.apache.maven.plugins</groupId>-->
-  <!--<artifactId>maven-checkstyle-plugin</artifactId>-->
-  <!--</plugin>-->
-
-  <!--<plugin>-->
-  <!--<groupId>org.jacoco</groupId>-->
-  <!--<artifactId>jacoco-maven-plugin</artifactId>-->
-  <!--</plugin>-->
+  <plugin>
+  <groupId>org.jacoco</groupId>
+  <artifactId>jacoco-maven-plugin</artifactId>
+  </plugin>
   </plugins>
   </build>
 
@@ -145,7 +74,7 @@
   </developers>
 
   <scm>
-    <url>https://github.com/nielsbasjes/dsmr-tools</url>
+    <url>https://dsmr.basjes.nl</url>
     <connection>scm:git:https://github.com/nielsbasjes/dsmr-tools.git</connection>
     <developerConnection>scm:git:.</developerConnection>
   </scm>

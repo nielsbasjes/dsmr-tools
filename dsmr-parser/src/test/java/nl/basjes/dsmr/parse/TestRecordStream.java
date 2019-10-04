@@ -21,8 +21,8 @@ package nl.basjes.dsmr.parse;
 import nl.basjes.dsmr.DSMRTelegram;
 import nl.basjes.dsmr.ParseDsmrTelegram;
 import nl.basjes.parse.ReadUTF8RecordStream;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,37 +33,37 @@ import static nl.basjes.dsmr.CheckCRC.crcIsValid;
 
 public class TestRecordStream {
 
-        private static final Logger LOG = LoggerFactory.getLogger(TestRecordStream.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TestRecordStream.class);
 
-        @Test
-        public void runTest() throws IOException, InterruptedException {
-            FileInputStream inputStream = new FileInputStream("../ttyUSB0-raw.txt");
+    @Test
+    public void runTest() throws IOException, InterruptedException {
+        FileInputStream inputStream = new FileInputStream("../ttyUSB0-raw.txt");
 
-            ReadUTF8RecordStream reader = new ReadUTF8RecordStream(inputStream, "\r\n![0-9A-F]{4}\r\n");
+        ReadUTF8RecordStream reader = new ReadUTF8RecordStream(inputStream, "\r\n![0-9A-F]{4}\r\n");
 
-            String value;
-            int count = 0;
-            while ((value = reader.read() )!= null) {
-                if (value.length() < 8) {
-                    continue;
-                }
+        String value;
+        int count = 0;
+        while ((value = reader.read() )!= null) {
+            if (value.length() < 8) {
+                continue;
+            }
 
-                count++;
-                boolean valid = crcIsValid(value);
-                LOG.info("{}: {} --> {}",
-                    count,
-                    value.substring(value.length()-7, value.length()-2),
-                    valid ? "Ok" : "BAD");
-                if (value.startsWith("/")) {
-                    if (!valid) {
-                        crcIsValid(value);
-                    }
+            count++;
+            boolean valid = crcIsValid(value);
+            LOG.info("{}: {} --> {}",
+                count,
+                value.substring(value.length()-7, value.length()-2),
+                valid ? "Ok" : "BAD");
+            if (value.startsWith("/")) {
+                if (!valid) {
+                    crcIsValid(value);
                 }
             }
-            LOG.info("---------------------- Done ----------------------");
         }
+        LOG.info("---------------------- Done ----------------------");
+    }
 
-    @Ignore
+    @Disabled
     @Test
     public void runTestWithSimulator() throws IOException, InterruptedException {
         FileInputStream inputStream = new FileInputStream("../simulator/ttyDSMR");

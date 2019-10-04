@@ -20,25 +20,23 @@ package nl.basjes.iot.nifi;
 import org.apache.nifi.util.MockFlowFile;
 import org.apache.nifi.util.TestRunner;
 import org.apache.nifi.util.TestRunners;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static nl.basjes.iot.nifi.SensorStreamCutterProcessor.END_OF_RECORD_REGEX;
 import static nl.basjes.iot.nifi.SensorStreamCutterProcessor.FILE_NAME;
 import static nl.basjes.iot.nifi.SensorStreamCutterProcessor.MAX_CHARACTERS_PER_RECORD;
 import static nl.basjes.iot.nifi.SensorStreamCutterProcessor.SUCCESS;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class SensorStreamCutterProcessorTest {
 
     private TestRunner runner;
 
-    @Before
+    @BeforeEach
     public void init() {
         runner = TestRunners.newTestRunner(SensorStreamCutterProcessor.class);
     }
@@ -58,7 +56,7 @@ public class SensorStreamCutterProcessorTest {
 
         // If you need to read or do additional tests on results you can access the content
         List<MockFlowFile> results = runner.getFlowFilesForRelationship(SUCCESS);
-        assertEquals("5 match", 5, results.size());
+        assertEquals(5, results.size(), "5 match");
         results.get(0).assertContentEquals("One\n");
         results.get(1).assertContentEquals("Two\n");
         results.get(2).assertContentEquals("Three\n");

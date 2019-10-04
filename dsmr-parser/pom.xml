@@ -379,7 +379,7 @@
   </developers>
 
   <scm>
-    <url>https://github.com/nielsbasjes/dsmr-tools</url>
+    <url>https://dsmr.basjes.nl</url>
     <connection>scm:git:https://github.com/nielsbasjes/dsmr-tools.git</connection>
     <developerConnection>scm:git:.</developerConnection>
   </scm>

@@ -18,7 +18,7 @@
 
 package nl.basjes.dsmr.simulator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static java.lang.Math.PI;
 
