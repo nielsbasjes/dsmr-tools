@@ -1,4 +1,4 @@
-[![Travis Build status](https://api.travis-ci.org/nielsbasjes/dsmr-toolkit.png?branch=master)](https://travis-ci.org/nielsbasjes/dsmr-toolkit)
+[![Travis Build status](https://api.travis-ci.org/nielsbasjes/dsmr-tools.png?branch=master)](https://travis-ci.org/nielsbasjes/dsmr-tools)
 [![License](https://img.shields.io/:license-apache-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 # Status: Works on my machine ... will probably melt yours ...
