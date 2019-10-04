@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class CheckCRC {
+public final class CheckCRC {
     private CheckCRC() {
     }
 
@@ -64,7 +64,7 @@ public class CheckCRC {
 
     private static Pattern extractPattern = Pattern.compile("(^/[^!]+!)([0-9A-Fa-f]{4})", Pattern.MULTILINE);
 
-    private static int calculatedCrc(byte[] telegramBytes ) {
+    private static int calculatedCrc(byte[] telegramBytes) {
         int crc = 0x0000;
         for (byte b : telegramBytes) {
             crc = (crc >>> 8) ^ table[(crc ^ b) & 0xff];

@@ -48,7 +48,7 @@ public class TimestampParser {
         if (!matcher.find()) {
             return null;
         }
-
+        // CHECKSTYLE.OFF: ParenPad
         Instant baseInstant = Instant.ofEpochSecond(0);
         ZonedDateTime zonedDateTime = ZonedDateTime
             .ofInstant(baseInstant, ZoneOffset.UTC)
@@ -57,8 +57,7 @@ public class TimestampParser {
             .withDayOfMonth(  Integer.parseInt(matcher.group(3)) )
             .withHour(        Integer.parseInt(matcher.group(4)) )
             .withMinute(      Integer.parseInt(matcher.group(5)) )
-            .withSecond(      Integer.parseInt(matcher.group(6)) )
-            ;
+            .withSecond(      Integer.parseInt(matcher.group(6)) );
 
         String zoneOffset;
 

@@ -32,7 +32,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 public class TestDsmrParser {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestDsmrParser.class);
@@ -87,7 +86,8 @@ public class TestDsmrParser {
             "1-0:32.36.0(00000)\r\n" +
             "1-0:52.36.0(00003)\r\n" +
             "1-0:72.36.0(00000)\r\n" +
-            "0-0:96.13.0(303132333435363738393A3B3C3D3E3F303132333435363738393A3B3C3D3E3F303132333435363738393A3B3C3D3E3F303132333435363738393A3B3C3D3E3F303132333435363738393A3B3C3D3E3F)\r\n" +
+            "0-0:96.13.0(303132333435363738393A3B3C3D3E3F303132333435363738393A3B3C3D3E3F30313233343536373839" +
+                        "3A3B3C3D3E3F303132333435363738393A3B3C3D3E3F303132333435363738393A3B3C3D3E3F)\r\n" +
             "1-0:32.7.0(220.1*V)\r\n" +
             "1-0:52.7.0(220.2*V)\r\n" +
             "1-0:72.7.0(220.3*V)\r\n" +
@@ -150,6 +150,7 @@ public class TestDsmrParser {
             "1-0:62.7.0(00.000*kW)\r\n" +
             "!9DF0\r\n");
 
+        // CHECKSTYLE.OFF: ParenPad
         assertEquals("/ISK5\\2M550T-1012", dsmrTelegram.getIdent());
         assertEquals("50", dsmrTelegram.getP1Version());
 //        assertEquals("2019-03-24T15:05:41+01:00", dsmrTelegram.getTimestamp());
@@ -190,8 +191,7 @@ public class TestDsmrParser {
         assertTrue(dsmrTelegram.isValidCRC());
         assertEquals("9DF0", dsmrTelegram.getCrc());
 
-//
-            LOG.info("{}", dsmrTelegram);
+        LOG.info("{}", dsmrTelegram);
     }
 
     @Test

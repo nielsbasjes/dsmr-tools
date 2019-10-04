@@ -52,7 +52,7 @@ public class ReadUTF8RecordStream implements Serializable {
         maxRecordSize = Math.min(maxRecordSize,    MAX_MAX_RECORD_SIZE);
     }
 
-    private String previousLastRecord = "";
+    private StringBuilder previousLastRecord = new StringBuilder();
 
     // Returns null if end of stream
     public String read() throws IOException {
@@ -71,21 +71,21 @@ public class ReadUTF8RecordStream implements Serializable {
         while (true) {
             int bytesRead = inputStream.read(readBuffer);
             if (bytesRead == -1) { // -1 == End of stream
-                String returnValue = previousLastRecord;
+                String returnValue = previousLastRecord.toString();
                 previousLastRecord = null; // Next call will return null immediately
                 return returnValue;
             }
 
-            previousLastRecord += new String(readBuffer, 0, bytesRead, UTF_8);
+            previousLastRecord.append(new String(readBuffer, 0, bytesRead, UTF_8));
 
-//            LOG.info("previousLastRecord = {}", previousLastRecord);
             record = extractRecordFromBuffer();
             if (record != null) {
                 return record;
             }
 
             if (previousLastRecord.length() > maxRecordSize) {
-                LOG.error("After {} bytes the end-of-record pattern     {}     has not been found.", previousLastRecord.length(), endMatcher.pattern());
+                LOG.error("After {} bytes the end-of-record pattern     {}     has not been found.",
+                    previousLastRecord.length(), endMatcher.pattern());
                 return null;
             }
         }
@@ -93,13 +93,12 @@ public class ReadUTF8RecordStream implements Serializable {
 
     private String extractRecordFromBuffer() {
         // In case we now have (one or more) records return the first one.
-//        String[] splits = endMatcher.split(previousLastRecord, 2);
         Matcher matcher = endMatcher.matcher(previousLastRecord);
         if (matcher.find()) {
             MatchResult matchResult = matcher.toMatchResult();
             int endOfPartIndex = matchResult.end(1);
             String result = previousLastRecord.substring(0, endOfPartIndex);
-            previousLastRecord = previousLastRecord.substring(endOfPartIndex);
+            previousLastRecord = new StringBuilder(previousLastRecord.substring(endOfPartIndex));
             return result;
         }
         return null;

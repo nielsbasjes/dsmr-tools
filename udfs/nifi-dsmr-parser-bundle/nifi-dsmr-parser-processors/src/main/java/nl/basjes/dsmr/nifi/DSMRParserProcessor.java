@@ -52,22 +52,23 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
 @Tags({"iot", "dsmr"})
-@CapabilityDescription("Parses a DSMR record into attributes. Use this end-of-record regex for the sensor-stream-cutter:  \\r\\n![0-9A-F]{4}\\r\\n   ")
+@CapabilityDescription("Parses a DSMR record into attributes. " +
+    "Use this end-of-record regex for the sensor-stream-cutter:  \\r\\n![0-9A-F]{4}\\r\\n   ")
 @SeeAlso({})
 @SideEffectFree
 @ReadsAttributes({@ReadsAttribute(attribute = "", description = "")})
 @WritesAttributes({@WritesAttribute(attribute = "", description = "")})
 public class DSMRParserProcessor extends AbstractProcessor {
 
-    public static final Relationship Valid = new Relationship.Builder()
+    public static final Relationship VALID = new Relationship.Builder()
         .name("Valid")
         .description("Complete and valid records")
         .build();
-    public static final Relationship InvalidCRC = new Relationship.Builder()
+    public static final Relationship INVALID_CRC = new Relationship.Builder()
         .name("InvalidCRC")
         .description("Complete records with invalid CRC")
         .build();
-    public static final Relationship BadRecords = new Relationship.Builder()
+    public static final Relationship BAD_RECORDS = new Relationship.Builder()
         .name("BadRecords")
         .description("Incomplete records / Parsing failed")
         .build();
@@ -76,11 +77,11 @@ public class DSMRParserProcessor extends AbstractProcessor {
 
     @Override
     protected void init(final ProcessorInitializationContext context) {
-        final Set<Relationship> relationships = new HashSet<Relationship>();
-        relationships.add(Valid);
-        relationships.add(InvalidCRC);
-        relationships.add(BadRecords);
-        this.relationships = Collections.unmodifiableSet(relationships);
+        final Set<Relationship> relationshipSet = new HashSet<Relationship>();
+        relationshipSet.add(VALID);
+        relationshipSet.add(INVALID_CRC);
+        relationshipSet.add(BAD_RECORDS);
+        this.relationships = Collections.unmodifiableSet(relationshipSet);
     }
 
     @Override
@@ -99,31 +100,31 @@ public class DSMRParserProcessor extends AbstractProcessor {
 
     private static final String ATTRIBUTE_PREFIX = "dsmr.";
 
-    private void put(Map<String,String> map, String name, String value) {
+    private void put(Map<String, String> map, String name, String value) {
         if (value != null) {
             map.put(ATTRIBUTE_PREFIX + name, value);
         }
     }
 
-    private void put(Map<String,String> map, String name, Double value) {
+    private void put(Map<String, String> map, String name, Double value) {
         if (value != null) {
             map.put(ATTRIBUTE_PREFIX + name, Double.toString(value));
         }
     }
 
-    private void put(Map<String,String> map, String name, Boolean value) {
+    private void put(Map<String, String> map, String name, Boolean value) {
         if (value != null) {
             map.put(ATTRIBUTE_PREFIX + name, value.toString());
         }
     }
 
-    private void put(Map<String,String> map, String name, Long value) {
+    private void put(Map<String, String> map, String name, Long value) {
         if (value != null) {
             map.put(ATTRIBUTE_PREFIX + name, Long.toString(value));
         }
     }
 
-    private void put(Map<String,String> map, String name, ZonedDateTime value) {
+    private void put(Map<String, String> map, String name, ZonedDateTime value) {
         if (value != null) {
             map.put(ATTRIBUTE_PREFIX + name, ISO_OFFSET_DATE_TIME.format(value));
 
@@ -143,7 +144,7 @@ public class DSMRParserProcessor extends AbstractProcessor {
         long size = flowFile.getSize();
         if (size < 5 || size > 1024 * 1024) {
             getLogger().info("Received a flowfile with an invalid content size (it was {} bytes)", new Object[]{size});
-            session.transfer(flowFile, BadRecords);
+            session.transfer(flowFile, BAD_RECORDS);
             return;
         }
 
@@ -165,6 +166,7 @@ public class DSMRParserProcessor extends AbstractProcessor {
 
         Map<String, String> parseResults = new HashMap<>();
 
+        // CHECKSTYLE.OFF: LineLength
         put(parseResults, "validCRC",                         record.isValidCRC());
 
         put(parseResults, "ident",                            record.getIdent());
@@ -250,9 +252,9 @@ public class DSMRParserProcessor extends AbstractProcessor {
         session.getProvenanceReporter().modifyAttributes(flowFile);
 
         if (record.isValidCRC()) {
-            session.transfer(flowFile, Valid);
+            session.transfer(flowFile, VALID);
         } else {
-            session.transfer(flowFile, InvalidCRC);
+            session.transfer(flowFile, INVALID_CRC);
         }
     }
 }

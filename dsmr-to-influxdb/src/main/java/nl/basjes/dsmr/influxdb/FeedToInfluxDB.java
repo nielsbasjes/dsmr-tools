@@ -35,11 +35,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-public class FeedToInfluxDB {
+public final class FeedToInfluxDB {
+
+    private FeedToInfluxDB() {
+    }
 
     private static final Logger LOG = LoggerFactory.getLogger(FeedToInfluxDB.class);
 
-    public static volatile boolean running = true;
+    private static volatile boolean running = true;
 
     public static void main(String...  args) throws IOException {
         final CommandOptions commandlineOptions = new CommandOptions();
@@ -69,7 +72,10 @@ public class FeedToInfluxDB {
                 if (commandlineOptions.databaseUsername == null) {
                     influxDB = InfluxDBFactory.connect(commandlineOptions.databaseUrl);
                 } else {
-                    influxDB = InfluxDBFactory.connect(commandlineOptions.databaseUrl, commandlineOptions.databaseUsername, commandlineOptions.databasePassword);
+                    influxDB = InfluxDBFactory.connect(
+                        commandlineOptions.databaseUrl,
+                        commandlineOptions.databaseUsername,
+                        commandlineOptions.databasePassword);
                 }
                 influxDB.setDatabase(commandlineOptions.databaseName);
                 influxDB.disableBatch();
@@ -86,10 +92,10 @@ public class FeedToInfluxDB {
             LOG.info("Starting read loop");
 
             while (running) {
-                String       telegram = reader.read();
+                String telegram = reader.read();
                 if (telegram == null) {
                     running = false;
-                    LOG.info ("End of stream detected");
+                    LOG.info("End of stream detected");
                     break;
                 }
                 DSMRTelegram record   = ParseDsmrTelegram.parse(telegram);

@@ -43,7 +43,7 @@ public class TestRecordStream {
 
         String value;
         int count = 0;
-        while ((value = reader.read() )!= null) {
+        while ((value = reader.read())!= null) {
             if (value.length() < 8) {
                 continue;
             }
@@ -72,7 +72,7 @@ public class TestRecordStream {
 
         String value;
         int count = 0;
-        while ((value = reader.read() )!= null) {
+        while ((value = reader.read())!= null) {
             if (value.length() < 8) {
                 continue;
             }

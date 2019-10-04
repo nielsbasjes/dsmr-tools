@@ -36,20 +36,20 @@ public class TestReadRecordStream {
     @Test
     public void testSingleLineRecords() throws IOException, InterruptedException {
         String[] recordFragments = {
-            "on", "e\n" +
-            "t", "wo\n" +
-            "three", "\n" ,
-            "four\n" +
-            "five\n" +
-            "six\n"
+            "on",
+            "e\nt",
+            "wo\nthre",
+            "e\n",
+            "four\nfiv",
+            "e\nsix\n"
         };
 
         String[] records = {
-            "one\n" ,
-            "two\n" ,
-            "three\n" ,
-            "four\n" ,
-            "five\n" ,
+            "one\n",
+            "two\n",
+            "three\n",
+            "four\n",
+            "five\n",
             "six\n"
         };
         testRecordReassemblyInBurstyStream(recordFragments, records, "\n");
@@ -59,59 +59,30 @@ public class TestReadRecordStream {
     public void testMultiLineRecords() throws IOException, InterruptedException {
 
         String[] recordFragments = {
-            "one\n" ,
-
-            "two\n" +
-            "====\n" +
-            "three\n" ,
-
-            "four\n" +
-            "====\n" ,
-
-            "five\n" +
-            "six\n" +
-            "seven\n" ,
-
-            "====\n" +
-            "eight\n" +
-            "nine\n" +
-            "====\n" +
-            "ten\n" ,
-
-            "eleven\n" +
-            "====\n"
+            "one\n",
+            "two\n====\nthree\n",
+            "four\n====\n",
+            "five\nsix\nseven\n",
+            "====\neight\nnine\n====\nten\n",
+            "eleven\n====\n"
         };
 
         String[] records = {
-            "one\n" +
-            "two\n" +
-            "====\n" ,
-
-            "three\n" +
-            "four\n" +
-            "====\n" ,
-
-            "five\n" +
-            "six\n" +
-            "seven\n" +
-            "====\n" ,
-
-            "eight\n" +
-            "nine\n" +
-            "====\n" ,
-
-            "ten\n" +
-            "eleven\n" +
-            "====\n"
+            "one\ntwo\n====\n",
+            "three\nfour\n====\n",
+            "five\nsix\nseven\n====\n",
+            "eight\nnine\n====\n",
+            "ten\neleven\n====\n"
         };
         // Use  ====\n  as the separator at the end of the record.
         testRecordReassemblyInBurstyStream(recordFragments, records, "====\n");
     }
 
 
-    public void testRecordReassemblyInBurstyStream(String[] recordFragments, String[] records, String endPattern) throws IOException, InterruptedException {
+    public void testRecordReassemblyInBurstyStream(String[] recordFragments, String[] records, String endPattern)
+        throws IOException, InterruptedException {
 
-        final PipedInputStream pipedInputStream = new PipedInputStream();
+        final PipedInputStream  pipedInputStream  = new PipedInputStream();
         final PipedOutputStream pipedOutputStream = new PipedOutputStream();
 
         /*Connect pipe*/
@@ -120,10 +91,10 @@ public class TestReadRecordStream {
 
         /* Thread for writing data to pipe */
         Thread pipeWriter = new Thread(() -> {
-            for(String fragment: recordFragments) {
+            for (String fragment : recordFragments) {
                 try {
                     pipedOutputStream.write(fragment.getBytes(UTF_8));
-                    Thread.sleep(500); // We periodically wait
+                    Thread.sleep(100); // We periodically wait
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -135,7 +106,7 @@ public class TestReadRecordStream {
         pipeWriter.start();
 
         /*Thread for reading data from pipe*/
-        for(String expectedRecord: records) {
+        for (String expectedRecord : records) {
             try {
                 String record = reader.read();
                 if (record == null) {

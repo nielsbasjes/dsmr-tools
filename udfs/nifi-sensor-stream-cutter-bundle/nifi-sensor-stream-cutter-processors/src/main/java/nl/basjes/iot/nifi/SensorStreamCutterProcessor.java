@@ -109,15 +109,15 @@ public class SensorStreamCutterProcessor extends AbstractProcessor {
 
     @Override
     protected void init(final ProcessorInitializationContext context) {
-        final List<PropertyDescriptor> descriptors = new ArrayList<PropertyDescriptor>();
-        descriptors.add(FILE_NAME);
-        descriptors.add(END_OF_RECORD_REGEX);
-        descriptors.add(MAX_CHARACTERS_PER_RECORD);
-        this.descriptors = Collections.unmodifiableList(descriptors);
+        final List<PropertyDescriptor> descriptorList = new ArrayList<PropertyDescriptor>();
+        descriptorList.add(FILE_NAME);
+        descriptorList.add(END_OF_RECORD_REGEX);
+        descriptorList.add(MAX_CHARACTERS_PER_RECORD);
+        this.descriptors = Collections.unmodifiableList(descriptorList);
 
-        final Set<Relationship> relationships = new HashSet<Relationship>();
-        relationships.add(SUCCESS);
-        this.relationships = Collections.unmodifiableSet(relationships);
+        final Set<Relationship> relationshipSet = new HashSet<Relationship>();
+        relationshipSet.add(SUCCESS);
+        this.relationships = Collections.unmodifiableSet(relationshipSet);
     }
 
     @Override

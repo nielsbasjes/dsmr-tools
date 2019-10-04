@@ -28,9 +28,11 @@ import java.time.format.DateTimeFormatter;
 import static java.lang.Math.PI;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class P1Simulator {
+public final class P1Simulator {
 
-    public static volatile boolean running = true;
+    private P1Simulator(){}
+
+    private static volatile boolean running = true;
 
     public static void main(String...  args) throws InterruptedException {
 
@@ -47,10 +49,10 @@ public class P1Simulator {
         while (running) {
 
             // Now wait for the next second to occur.
-            long epochMillis = ( System.currentTimeMillis() / 1000 ) * 1000;
+            long epochMillis = (System.currentTimeMillis() / 1000) * 1000;
             while (epochMillis <= previousNow) {
                 Thread.sleep(10);
-                epochMillis = ( System.currentTimeMillis() / 1000 ) * 1000;
+                epochMillis = (System.currentTimeMillis() / 1000) * 1000;
             }
             previousNow = epochMillis;
 
@@ -86,7 +88,8 @@ public class P1Simulator {
                 "1-0:32.36.0(00000)\r\n" +
                 "1-0:52.36.0(00003)\r\n" +
                 "1-0:72.36.0(00000)\r\n" +
-                "0-0:96.13.0(44534D522073696D756C61746F722063726561746564206279204E69656C73204261736A65732E205365652068747470733A2F2F64736D722E6261736A65732E6E6C20666F72206D6F726520696E666F726D6174696F6E2E)\r\n" +
+                "0-0:96.13.0(44534D522073696D756C61746F722063726561746564206279204E69656C73204261736A65732E20536565" +
+                        "2068747470733A2F2F64736D722E6261736A65732E6E6C20666F72206D6F726520696E666F726D6174696F6E2E)\r\n" +
                 "1-0:32.7.0("+String.format("%04.1f", 221. + (3 * sin1))+"*V)\r\n" +
                 "1-0:52.7.0("+String.format("%04.1f", 222. - (3 * sin2))+"*V)\r\n" +
                 "1-0:72.7.0("+String.format("%04.1f", 223. + (6 * sin3))+"*V)\r\n" +

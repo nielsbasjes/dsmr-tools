@@ -29,10 +29,11 @@
   <name>DSMR :</name>
 
   <properties>
+    <jdkLevel>1.8</jdkLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>${jdkLevel}</maven.compiler.source>
+    <maven.compiler.target>${jdkLevel}</maven.compiler.target>
 
     <!-- ============================================== -->
     <!-- ================ UDF Versions ================ -->
@@ -47,17 +48,17 @@
     <checkstyle.version>8.20</checkstyle.version>
     <slf4j.version>1.7.26</slf4j.version>
     <rat.version>0.13</rat.version>
-<!--    <jacoco.version>0.8.2</jacoco.version>-->
+    <jacoco.version>0.8.2</jacoco.version>
     <junit5.version>5.5.0</junit5.version>
 
     <!-- See http://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html-->
-<!--    <jacoco.surefireArgLine/>-->
-<!--    <argLine>@{jacoco.surefireArgLine} -Xmx2048m</argLine>-->
+    <jacoco.surefireArgLine/>
+    <argLine>@{jacoco.surefireArgLine} -Xmx2048m</argLine>
 
-    <!--<sonar.language>java</sonar.language>-->
-    <!--<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>-->
-    <!--<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>-->
-    <!--<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>-->
+    <sonar.language>java</sonar.language>
+    <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+    <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+    <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 
     <!--&lt;!&ndash; For some parts the code coverage has been disabled because it is &ndash;&gt;-->
     <!--&lt;!&ndash; either debugging or demonstration code. &ndash;&gt;-->
@@ -106,15 +107,115 @@
         <version>${slf4j.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.6.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+        </plugin>
 
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>${checkstyle-plugin.version}</version>
+          <dependencies>
+            <dependency>
+              <groupId>nl.basjes.iot</groupId>
+              <artifactId>devtools</artifactId>
+              <version>${project.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>${checkstyle.version}</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <consoleOutput>true</consoleOutput>
+            <configLocation>checkstyle/checkstyle.xml</configLocation>
+            <suppressionsLocation>checkstyle/suppressions.xml</suppressionsLocation>
+            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+          </configuration>
+          <!-- Runs by default in the verify phase  (mvn verify or later in the build cycle)
+               the 'check' goal will fail the build if it does not pass.  "mvn checkstyle:check"
+               will do this alone, or "mvn checkstyle:checkstyle" will report but not break  -->
+          <executions>
+            <execution>
+              <id>checkstyle-check</id>
+              <phase>test</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- Coverage analysis for tests -->
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${jacoco.version}</version>
+          <executions>
+            <!--
+                Prepares the property pointing to the JaCoCo runtime agent which
+                is passed as VM argument when Maven the Surefire plugin is executed.
+            -->
+            <execution>
+              <id>pre-unit-test</id>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+              <configuration>
+                <!--
+                    Sets the name of the property containing the settings
+                    for JaCoCo runtime agent.
+                -->
+                <propertyName>jacoco.surefireArgLine</propertyName>
+              </configuration>
+            </execution>
+            <!--
+                Ensures that the code coverage report for unit tests is created after
+                unit tests have been run.
+            -->
+            <execution>
+              <id>post-unit-test</id>
+              <phase>test</phase>
+              <goals>
+                <goal>report</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.sonarsource.scanner.maven</groupId>
+          <artifactId>sonar-maven-plugin</artifactId>
+          <version>3.5.0.1254</version>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+  </build>
   <dependencies>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>${slf4j.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -125,122 +226,280 @@
     </dependency>
   </dependencies>
 
-  <build>
-<!--    <pluginManagement>-->
-<!--      <plugins>-->
-<!--        <plugin>-->
-<!--          <groupId>org.apache.maven.plugins</groupId>-->
-<!--          <artifactId>maven-checkstyle-plugin</artifactId>-->
-<!--          <version>${checkstyle-plugin.version}</version>-->
-<!--          <dependencies>-->
-<!--            <dependency>-->
-<!--              <groupId>nl.basjes.iot</groupId>-->
-<!--              <artifactId>devtools</artifactId>-->
-<!--              <version>${project.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--              <groupId>com.puppycrawl.tools</groupId>-->
-<!--              <artifactId>checkstyle</artifactId>-->
-<!--              <version>${checkstyle.version}</version>-->
-<!--            </dependency>-->
-<!--          </dependencies>-->
-<!--          <configuration>-->
-<!--            <consoleOutput>true</consoleOutput>-->
-<!--            <configLocation>checkstyle/checkstyle.xml</configLocation>-->
-<!--            <suppressionsLocation>checkstyle/suppressions.xml</suppressionsLocation>-->
-<!--            <includeTestSourceDirectory>true</includeTestSourceDirectory>-->
-<!--          </configuration>-->
-<!--          &lt;!&ndash; Runs by default in the verify phase  (mvn verify or later in the build cycle)-->
-<!--               the 'check' goal will fail the build if it does not pass.  "mvn checkstyle:check"-->
-<!--               will do this alone, or "mvn checkstyle:checkstyle" will report but not break  &ndash;&gt;-->
-<!--          <executions>-->
-<!--            <execution>-->
-<!--              <id>checkstyle-check</id>-->
-<!--              <phase>test</phase>-->
-<!--              <goals>-->
-<!--                <goal>check</goal>-->
-<!--              </goals>-->
-<!--            </execution>-->
-<!--          </executions>-->
-<!--        </plugin>-->
+  <profiles>
+    <profile>
+      <id>packageForRelease</id>
+      <build>
+        <plugins>
 
-<!--        &lt;!&ndash; Coverage analysis for tests &ndash;&gt;-->
-<!--        <plugin>-->
-<!--          <groupId>org.jacoco</groupId>-->
-<!--          <artifactId>jacoco-maven-plugin</artifactId>-->
-<!--          <version>${jacoco.version}</version>-->
-<!--          <executions>-->
-<!--            &lt;!&ndash;-->
-<!--                Prepares the property pointing to the JaCoCo runtime agent which-->
-<!--                is passed as VM argument when Maven the Surefire plugin is executed.-->
-<!--            &ndash;&gt;-->
-<!--            <execution>-->
-<!--              <id>pre-unit-test</id>-->
-<!--              <goals>-->
-<!--                <goal>prepare-agent</goal>-->
-<!--              </goals>-->
-<!--              <configuration>-->
-<!--                &lt;!&ndash;-->
-<!--                    Sets the name of the property containing the settings-->
-<!--                    for JaCoCo runtime agent.-->
-<!--                &ndash;&gt;-->
-<!--                <propertyName>jacoco.surefireArgLine</propertyName>-->
-<!--              </configuration>-->
-<!--            </execution>-->
-<!--            &lt;!&ndash;-->
-<!--                Ensures that the code coverage report for unit tests is created after-->
-<!--                unit tests have been run.-->
-<!--            &ndash;&gt;-->
-<!--            <execution>-->
-<!--              <id>post-unit-test</id>-->
-<!--              <phase>test</phase>-->
-<!--              <goals>-->
-<!--                <goal>report</goal>-->
-<!--              </goals>-->
-<!--            </execution>-->
-<!--          </executions>-->
-<!--        </plugin>-->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>dependency-convergence</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <dependencyConvergence/>
+                  </rules>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
 
-<!--        <plugin>-->
-<!--          <groupId>org.sonarsource.scanner.maven</groupId>-->
-<!--          <artifactId>sonar-maven-plugin</artifactId>-->
-<!--          <version>3.5.0.1254</version>-->
-<!--        </plugin>-->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
 
-<!--      </plugins>-->
-<!--    </pluginManagement>-->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
 
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.6.0</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>2.8.2</version>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
+          <plugin>
+            <!-- explicitly define maven-deploy-plugin after other to force exec order -->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>deploy</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>deploy</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
 
-<!--      <plugin>-->
-<!--        <groupId>org.apache.maven.plugins</groupId>-->
-<!--        <artifactId>maven-checkstyle-plugin</artifactId>-->
-<!--      </plugin>-->
+          <plugin>
+            <!-- Description: https://github.com/ktoso/maven-git-commit-id-plugin -->
+            <groupId>pl.project13.maven</groupId>
+            <artifactId>git-commit-id-plugin</artifactId>
+            <version>${git-commit-id-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>Validate-Revision-Information</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>validateRevision</goal>
+                </goals>
+                <configuration>
+                  <validationProperties>
+                    <!-- verify that the current repository is not dirty -->
+                    <validationProperty>
+                      <name>Don't try to release if something has not yet been committed.</name>
+                      <value>${git.dirty}</value>
+                      <shouldMatchTo>false</shouldMatchTo>
+                    </validationProperty>
+                  </validationProperties>
+                  <validationShouldFailIfNoMatch>true</validationShouldFailIfNoMatch>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
 
-<!--      <plugin>-->
-<!--        <groupId>org.jacoco</groupId>-->
-<!--        <artifactId>jacoco-maven-plugin</artifactId>-->
-<!--      </plugin>-->
-    </plugins>
-  </build>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <!-- Description: https://github.com/ktoso/maven-git-commit-id-plugin -->
+            <groupId>pl.project13.maven</groupId>
+            <artifactId>git-commit-id-plugin</artifactId>
+            <version>${git-commit-id-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>Validate-Revision-Information</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>validateRevision</goal>
+                </goals>
+                <configuration>
+                  <validationProperties>
+                    <!-- verify that the current repository is not dirty -->
+                    <validationProperty>
+                      <name>Don't try to release if something has not yet been committed.</name>
+                      <value>${git.dirty}</value>
+                      <shouldMatchTo>false</shouldMatchTo>
+                    </validationProperty>
+                    <!-- verify that the current commit has a tag -->
+                    <validationProperty>
+                      <name>validating current commit has a tag</name>
+                      <value>${git.closest.tag.commit.count}</value>
+                      <shouldMatchTo>0</shouldMatchTo>
+                    </validationProperty>
+                  </validationProperties>
+                  <validationShouldFailIfNoMatch>true</validationShouldFailIfNoMatch>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>deployToSonatype</id>
+      <properties>
+        <altReleaseDeploymentRepository>sonatype::https://oss.sonatype.org/service/local/staging/deploy/maven2/</altReleaseDeploymentRepository>
+        <altSnapshotDeploymentRepository>sonatype::https://oss.sonatype.org/content/repositories/snapshots</altSnapshotDeploymentRepository>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>EnableReportPlugins</id>
+      <activation>
+        <property>
+          <name>EnableReportPlugins</name>
+        </property>
+        <jdk>1.8</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <groupId>org.eluder.coveralls</groupId>
+            <artifactId>coveralls-maven-plugin</artifactId>
+            <version>4.3.0</version>
+            <configuration>
+              <timestampFormat>EpochMillis</timestampFormat>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>SkipSonarBecauseItWasNotConfigured</id>
+      <activation>
+        <property>
+          <name>!env.SONAR_TOKEN</name>
+        </property>
+      </activation>
+      <properties>
+        <sonar.skip>true</sonar.skip>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>Build with JDK 8</id>
+      <activation>
+        <jdk>1.8</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerVersion>${jdkLevel}</compilerVersion>
+              <source>${jdkLevel}</source>
+              <target>${jdkLevel}</target>
+              <compilerArgs>
+                <!-- Enable almost all warnings.-->
+                <!-- FIXME: Why does the hive udf fail with "An unknown compilation problem occurred" when using -Xlint:classfile,processing ? -->
+                <!-- Ignore the 'serial' warnings about not having a serialVersionUID -->
+                <arg>-Xlint:all,-classfile,-processing,-serial</arg>
+                <arg>-Werror</arg>
+              </compilerArgs>
+              <showWarnings>true</showWarnings>
+              <showDeprecation>true</showDeprecation>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>Build with JDK 11+</id>
+      <activation>
+        <jdk>[1.11,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerVersion>${jdkLevel}</compilerVersion>
+              <source>${jdkLevel}</source>
+              <target>${jdkLevel}</target>
+              <compilerArgs>
+                <!-- Enable almost all warnings.-->
+                <!-- FIXME: Why does the hive udf fail with "An unknown compilation problem occurred" when using -Xlint:classfile,processing ? -->
+                <!-- Ignore the 'serial' warnings about not having a serialVersionUID -->
+                <arg>-Xlint:all,-classfile,-processing,-serial</arg>
+                <arg>-Werror</arg>
+                <arg>-implicit:class</arg>
+              </compilerArgs>
+              <showWarnings>true</showWarnings>
+              <showDeprecation>true</showDeprecation>
+              <release>8</release>
+            </configuration>
+          </plugin>
+
+          <!-- Never run Coveralls under JDK 11 ... it won't work -->
+          <plugin>
+            <groupId>org.eluder.coveralls</groupId>
+            <artifactId>coveralls-maven-plugin</artifactId>
+            <version>4.3.0</version>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
+
+  </profiles>
 
   <licenses>
     <license>

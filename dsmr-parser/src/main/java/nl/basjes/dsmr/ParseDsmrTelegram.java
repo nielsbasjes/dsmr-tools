@@ -81,7 +81,11 @@ import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements ANTLRErrorListener {
+// CHECKSTYLE.OFF: LineLength
+// CHECKSTYLE.OFF: LeftCurly
+// CHECKSTYLE.OFF: ParamPad
+// CHECKSTYLE.OFF: MethodParamPad
+public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements ANTLRErrorListener {
 
     private boolean hasSyntaxError = false;
 
@@ -139,7 +143,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements ANTLRErr
 
         TelegramContext telegramContext = parser.telegram();
 
-        if (telegramContext == null || telegramContext.ident == null) {
+        if (telegramContext.ident == null) {
             return dsmrTelegram; // Unparsable
         }
 
@@ -193,7 +197,8 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements ANTLRErr
                         dsmrTelegram.thermalColdEquipmentId         = mBusEvent.equipmentId;
                         dsmrTelegram.thermalColdTimestamp           = mBusEvent.timestamp;
                         dsmrTelegram.thermalColdGJ                  = mBusEvent.value;
-                    }break;
+                    }
+                    break;
 
 //                case 0x05: // Steam                                                               0000 0101  05
 
@@ -220,7 +225,7 @@ public class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements ANTLRErr
     // https://stackoverflow.com/questions/50712987/hex-string-to-byte-array-conversion-java
     private byte[] hexStringToByteArray(String s) {
         byte[] data = new byte[s.length()/2];
-        for (int i = 0; i < data.length; i ++) {
+        for (int i = 0; i < data.length; i++) {
             data[i] = (byte) ((Character.digit(s.charAt(i*2), 16) << 4)
                 + Character.digit(s.charAt(i*2 + 1), 16));
         }

@@ -20,7 +20,6 @@ package nl.basjes.dsmr.nifi;
 import org.apache.nifi.util.MockFlowFile;
 import org.apache.nifi.util.TestRunner;
 import org.apache.nifi.util.TestRunners;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -94,7 +93,7 @@ public class DSMRParserProcessorTest {
         runner.assertQueueEmpty();
 
         // If you need to read or do additional tests on results you can access the content
-        List<MockFlowFile> results = runner.getFlowFilesForRelationship(DSMRParserProcessor.Valid);
+        List<MockFlowFile> results = runner.getFlowFilesForRelationship(DSMRParserProcessor.VALID);
         assertEquals(1, results.size(), "Should be 1 match");
         MockFlowFile result = results.get(0);
 
@@ -105,8 +104,8 @@ public class DSMRParserProcessorTest {
         assertAttributeEquals(result, "dsmr.p1Version",      "50");
         assertAttributeEquals(result, "dsmr.timestamp",      "2019-03-24T15:05:41+01:00");
 
-        assertAttributeEquals(result, "dsmr.equipmentId",         "E0044007131650618");
-        assertAttributeEquals(result, "dsmr.message",             "" );
+        assertAttributeEquals(result, "dsmr.equipmentId",    "E0044007131650618");
+        assertAttributeEquals(result, "dsmr.message",        "");
 
         assertAttributeEquals(result, "dsmr.electricityReceivedLowTariff",     "3432.829");
         assertAttributeEquals(result, "dsmr.electricityReceivedNormalTariff",  "3224.632");

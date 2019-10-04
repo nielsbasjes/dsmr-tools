@@ -65,7 +65,7 @@ public class TestCRCValidator {
             "1-0:62.7.0(00.000*kW)\r\n" +
             "!478B\r\n";
 
-        assertTrue(crcIsValid( record ), "CRC is not valid");
+        assertTrue(crcIsValid(record), "CRC is not valid");
     }
 
     @Test
