@@ -19,10 +19,14 @@
 package nl.basjes.dsmr.parse;
 
 
+import nl.basjes.dsmr.CheckCRC;
 import org.junit.jupiter.api.Test;
 
 import static nl.basjes.dsmr.CheckCRC.crcIsValid;
+import static nl.basjes.dsmr.CheckCRC.extractCrcFromTelegram;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestCRCValidator {
@@ -83,5 +87,20 @@ public class TestCRCValidator {
         assertFalse(crcIsValid("Bla bla bla"));
     }
 
+    @Test
+    public void testRepairingCrc(){
+        String record = "/ISK5\\2M550T-1012\r\n" +
+            "\r\n" +
+            "1-3:0.2.8(50)\r\n" +
+            "0-0:1.0.0(190324151445W)\r\n" +
+            "0-0:96.1.1(4530303434303037313331363530363138)\r\n" +
+            "!1234\r\n";
+
+        assertFalse(crcIsValid(record), "CRC is not valid");
+        assertEquals("1234", extractCrcFromTelegram(record), "Wrong CRC extracted");
+        record = CheckCRC.fixCrc(record);
+        assertTrue(crcIsValid(record), "CRC should be valid");
+        assertNotEquals("1234", extractCrcFromTelegram(record), "Wrong CRC extracted");
+    }
 
 }

@@ -88,6 +88,19 @@ public final class CheckCRC {
         return calculatedCrc(telegram.getBytes(UTF_8));
     }
 
+    public static String extractCrcFromTelegram(String input) {
+        if (input == null) {
+            return null;
+        }
+        Matcher matcher = extractPattern.matcher(input);
+
+        if (!matcher.find()) {
+            return null;
+        }
+
+        return matcher.group(2);
+    }
+
     public static String fixCrc(String input) {
         if (input == null) {
             return null;
