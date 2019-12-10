@@ -8,8 +8,8 @@ mvn clean verify -PpackageForRelease
 mvn clean
 
 # Prepare the versions for the release
-RELEASEVERSION=0.1
-NEXTVERSION=0.2
+RELEASEVERSION=0.2
+NEXTVERSION=0.3
 
 # Creating and publishing the new Tagging
 mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${RELEASEVERSION}
