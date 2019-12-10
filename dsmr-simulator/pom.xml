@@ -24,19 +24,20 @@
   <parent>
     <groupId>nl.basjes.dsmr</groupId>
     <artifactId>dsmr-parser-parent</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
   </parent>
 
   <artifactId>dsmr-simulator</artifactId>
   <packaging>jar</packaging>
   <name>DSMR : P1 simulator</name>
+  <url>https://dsmr.basjes.nl</url>
 
 
   <dependencies>
     <dependency>
       <groupId>nl.basjes.dsmr</groupId>
       <artifactId>dsmr-parser</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <version>0.1</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

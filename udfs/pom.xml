@@ -23,13 +23,14 @@
   <parent>
     <groupId>nl.basjes.dsmr</groupId>
     <artifactId>dsmr-parser-parent</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <packaging>pom</packaging>
 
   <artifactId>dsmr-udf-parent</artifactId>
   <name>DSMR : UDF :</name>
+  <url>https://dsmr.basjes.nl</url>
 
   <modules>
     <module>nifi-sensor-stream-cutter-bundle</module>

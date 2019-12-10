@@ -22,14 +22,15 @@
 
   <parent>
     <groupId>nl.basjes.dsmr</groupId>
-    <artifactId>nifi-dsmr-parser</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <artifactId>nifi-dsmr-parser-bundle</artifactId>
+    <version>0.1</version>
   </parent>
 
-  <artifactId>nifi-dsmr-parser-nar</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <artifactId>nifi-dsmr-parser</artifactId>
+  <version>0.1</version>
   <packaging>nar</packaging>
   <name>DSMR : UDF : Nifi : DSMR Parser : Nar</name>
+  <url>https://dsmr.basjes.nl</url>
 
   <properties>
     <maven.javadoc.skip>true</maven.javadoc.skip>
@@ -40,7 +41,7 @@
     <dependency>
       <groupId>nl.basjes.dsmr</groupId>
       <artifactId>nifi-dsmr-parser-processors</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <version>0.1</version>
     </dependency>
   </dependencies>
 

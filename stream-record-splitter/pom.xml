@@ -24,13 +24,14 @@
   <parent>
     <groupId>nl.basjes.dsmr</groupId>
     <artifactId>dsmr-parser-parent</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
   </parent>
 
   <groupId>nl.basjes.iot</groupId>
   <artifactId>stream-record-splitter</artifactId>
   <packaging>jar</packaging>
   <name>DSMR : Stream record splitter</name>
+  <url>https://dsmr.basjes.nl</url>
 
   <dependencies>
     <dependency>

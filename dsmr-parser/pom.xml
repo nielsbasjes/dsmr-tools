@@ -25,14 +25,13 @@
   <parent>
     <groupId>nl.basjes.dsmr</groupId>
     <artifactId>dsmr-parser-parent</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
   </parent>
   <artifactId>dsmr-parser</artifactId>
 
   <name>DSMR : Parser</name>
-  <!--<description>A parsing and analyzing library to get information from a useragent string.</description>-->
 
-  <!--<url>https://yauaa.basjes.nl</url>-->
+  <url>https://dsmr.basjes.nl</url>
 
   <properties>
     <antlr.version>4.7.2</antlr.version>
@@ -91,7 +90,7 @@
     <dependency>
       <groupId>nl.basjes.iot</groupId>
       <artifactId>stream-record-splitter</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <version>0.1</version>
     </dependency>
 
   </dependencies>

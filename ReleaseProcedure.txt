@@ -12,12 +12,12 @@ RELEASEVERSION=0.1
 NEXTVERSION=0.2
 
 # Creating and publishing the new Tagging
-mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${RELEASEVERSION} -Plogstash
+mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${RELEASEVERSION}
 
 # Update the version number in all of the examples in the generated documentation website.
-sed -i "s@YauaaVersion: \+\"[0-9\.]\+\"@YauaaVersion: \"${RELEASEVERSION}\"@g" src/book.js
-git diff src
-gitbook build ./src ./docs
+#sed -i "s@YauaaVersion: \+\"[0-9\.]\+\"@YauaaVersion: \"${RELEASEVERSION}\"@g" src/book.js
+#git diff src
+#gitbook build ./src ./docs
 
 # Update the top of the CHANGELOG.md
 
@@ -35,7 +35,7 @@ mvn clean deploy -PpackageForRelease -Prelease -PdeployToSonatype
 
 # Now check SONATYPE
 
-mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${NEXTVERSION}-SNAPSHOT -Plogstash
+mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${NEXTVERSION}-SNAPSHOT
 
 # Update ReleaseProcedure.txt (versions near the top)
 

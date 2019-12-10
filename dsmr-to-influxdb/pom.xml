@@ -24,12 +24,13 @@
   <parent>
     <groupId>nl.basjes.dsmr</groupId>
     <artifactId>dsmr-parser-parent</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
   </parent>
 
   <artifactId>dsmr-to-influxdb</artifactId>
   <packaging>jar</packaging>
   <name>DSMR : Stream to InfluxDB</name>
+  <url>https://dsmr.basjes.nl</url>
 
   <dependencies>
     <dependency>

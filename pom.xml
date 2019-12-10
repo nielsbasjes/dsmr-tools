@@ -23,7 +23,9 @@
 
   <groupId>nl.basjes.dsmr</groupId>
   <artifactId>dsmr-parser-parent</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.1</version>
+
+  <url>https://dsmr.basjes.nl</url>
 
   <packaging>pom</packaging>
   <name>DSMR :</name>
