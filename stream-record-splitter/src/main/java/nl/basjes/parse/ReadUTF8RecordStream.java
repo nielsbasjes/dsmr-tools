@@ -83,10 +83,12 @@ public class ReadUTF8RecordStream implements Serializable {
                 return record;
             }
 
-            if (previousLastRecord.length() > maxRecordSize) {
+            final int length = previousLastRecord.length();
+            if (length > maxRecordSize) {
                 LOG.error("After {} bytes the end-of-record pattern     {}     has not been found.",
-                    previousLastRecord.length(), endMatcher.pattern());
-                return null;
+                    length, endMatcher.pattern());
+                previousLastRecord = null;
+                throw new IOException("After "+ length +" bytes the end-of-record pattern has not been found yet.");
             }
         }
     }

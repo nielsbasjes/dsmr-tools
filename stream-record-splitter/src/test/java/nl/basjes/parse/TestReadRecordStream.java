@@ -28,6 +28,7 @@ import java.io.PipedOutputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TestReadRecordStream {
 
@@ -56,6 +57,28 @@ public class TestReadRecordStream {
     }
 
     @Test
+    public void testSingleLineRecordsMissingEndMarker() throws IOException, InterruptedException {
+        String[] recordFragments = {
+            "on",
+            "e\nt",
+            "wo\nthre",
+            "e\n",
+            "four\nfiv",
+            "e\nsix"  // The \n is missing here
+        };
+
+        String[] records = {
+            "one\n",
+            "two\n",
+            "three\n",
+            "four\n",
+            "five\n",
+            "six"   // No \n because it is also not in the input data.
+        };
+        testRecordReassemblyInBurstyStream(recordFragments, records, "\n");
+    }
+
+    @Test
     public void testMultiLineRecords() throws IOException, InterruptedException {
 
         String[] recordFragments = {
@@ -73,6 +96,26 @@ public class TestReadRecordStream {
             "five\nsix\nseven\n====\n",
             "eight\nnine\n====\n",
             "ten\neleven\n====\n"
+        };
+        // Use  ====\n  as the separator at the end of the record.
+        testRecordReassemblyInBurstyStream(recordFragments, records, "====\n");
+    }
+
+    @Test
+    public void testTooLargeRecords() throws IOException, InterruptedException {
+
+        StringBuilder input = new StringBuilder(10240);
+
+        for (int i = 0 ; i < 10000 ; i++) {
+            input.append("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+        }
+
+        String[] recordFragments = {
+            input.toString()
+        };
+
+        String[] records = {
+            "Should fail, no record expected."
         };
         // Use  ====\n  as the separator at the end of the record.
         testRecordReassemblyInBurstyStream(recordFragments, records, "====\n");
@@ -99,6 +142,11 @@ public class TestReadRecordStream {
                     e.printStackTrace();
                 }
             }
+            try {
+                pipedOutputStream.close();
+            } catch (IOException e) {
+                // Ignore
+            }
         });
 
         ReadUTF8RecordStream reader = new ReadUTF8RecordStream(pipedInputStream, endPattern, 10000);
@@ -119,6 +167,10 @@ public class TestReadRecordStream {
             }
         }
 
+        reader.read(); // Can be null or an empty string
+        assertNull(reader.read()); // Always null in our tests.
+
+        Thread.sleep(100);
         pipeWriter.interrupt();
         pipeWriter.join();
 

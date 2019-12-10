@@ -25,9 +25,13 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestMissingSeparator {
 
@@ -65,11 +69,11 @@ public class TestMissingSeparator {
 
         pipeWriter.start();
 
-        String record = reader.read();
-        assertNull(record, "We may not get ANY records from this");
-        LOG.info("Test passed: It should fail about not finding 'the end-of-record pattern'. ");
-        runWriter = false;
+        IOException exception = assertThrows(IOException.class, reader::read);
 
+        assertTrue(exception.getMessage().matches("After [0-9]+ bytes the end-of-record pattern has not been found yet."));
+
+        runWriter = false;
         pipeWriter.join();
 
         /*Close stream*/
