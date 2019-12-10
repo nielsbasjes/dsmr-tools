@@ -22,7 +22,6 @@ package nl.basjes.dsmr.parse;
 import nl.basjes.dsmr.CheckCRC;
 import org.junit.jupiter.api.Test;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static nl.basjes.dsmr.CheckCRC.calculatedCrc;
 import static nl.basjes.dsmr.CheckCRC.crcIsValid;
 import static nl.basjes.dsmr.CheckCRC.extractCrcFromTelegram;
@@ -30,12 +29,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestCRCValidator {
 
-    private String record = "/ISK5\\2M550T-1012\r\n" +
+    private String dsmrTelegram = "/ISK5\\2M550T-1012\r\n" +
         "\r\n" +
         "1-3:0.2.8(50)\r\n" +
         "0-0:1.0.0(190324151445W)\r\n" +
@@ -73,15 +71,15 @@ public class TestCRCValidator {
 
     @Test
     public void testCrc(){
-        assertTrue(crcIsValid(record), "CRC is not valid");
+        assertTrue(crcIsValid(dsmrTelegram), "CRC is not valid");
     }
 
     @Test
     public void testCaculateCrc(){
-        String hexCrc = String.format("%04X", calculatedCrc(record));
+        String hexCrc = String.format("%04X", calculatedCrc(dsmrTelegram));
 
         assertEquals("478B", hexCrc);
-        assertTrue(crcIsValid(record + hexCrc), "CRC is not valid");
+        assertTrue(crcIsValid(dsmrTelegram + hexCrc), "CRC is not valid");
     }
 
     @Test

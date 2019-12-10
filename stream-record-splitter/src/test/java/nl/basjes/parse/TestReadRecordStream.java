@@ -29,6 +29,8 @@ import java.io.PipedOutputStream;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestReadRecordStream {
 
@@ -106,7 +108,7 @@ public class TestReadRecordStream {
 
         StringBuilder input = new StringBuilder(10240);
 
-        for (int i = 0 ; i < 10000 ; i++) {
+        for (int i = 0; i < 10000; i++) {
             input.append("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
         }
 
@@ -115,68 +117,83 @@ public class TestReadRecordStream {
         };
 
         String[] records = {
-            "Should fail, no record expected."
+            "Ignored, should fail, no record expected."
         };
-        // Use  ====\n  as the separator at the end of the record.
-        testRecordReassemblyInBurstyStream(recordFragments, records, "====\n");
+
+        IOException exception = assertThrows(IOException.class, () -> {
+            testRecordReassemblyInBurstyStream(recordFragments, records, "====\n");
+        });
+
+        assertTrue(exception.getMessage().matches("After [0-9]+ bytes the end-of-record pattern has not been found yet."));
     }
 
+    volatile boolean keepRunning = true;
 
     public void testRecordReassemblyInBurstyStream(String[] recordFragments, String[] records, String endPattern)
         throws IOException, InterruptedException {
 
         final PipedInputStream  pipedInputStream  = new PipedInputStream();
         final PipedOutputStream pipedOutputStream = new PipedOutputStream();
+        Thread                  pipeWriter        = null;
+        keepRunning = true;
+        try {
 
-        /*Connect pipe*/
-        pipedInputStream.connect(pipedOutputStream);
+            /*Connect pipe*/
+            pipedInputStream.connect(pipedOutputStream);
 
 
-        /* Thread for writing data to pipe */
-        Thread pipeWriter = new Thread(() -> {
-            for (String fragment : recordFragments) {
-                try {
-                    pipedOutputStream.write(fragment.getBytes(UTF_8));
-                    Thread.sleep(100); // We periodically wait
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
+            /* Thread for writing data to pipe */
+            pipeWriter = new Thread(new Runnable() { // NOTE: This CANNOT be a Lambda !
+                @Override
+                public void run() {
+                    for (String fragment : recordFragments) {
+                        try {
+                            pipedOutputStream.write(fragment.getBytes(UTF_8));
+                            Thread.sleep(100); // We periodically wait
+                        } catch (IOException | InterruptedException e) {
+                            // Ignore
+                        }
+                        if (!keepRunning) {
+                            break;
+                        }
+                    }
+                    try {
+                        pipedOutputStream.close();
+                    } catch (IOException e) {
+                        // Ignore
+                    }
                 }
-            }
-            try {
-                pipedOutputStream.close();
-            } catch (IOException e) {
-                // Ignore
-            }
-        });
+            });
 
-        ReadUTF8RecordStream reader = new ReadUTF8RecordStream(pipedInputStream, endPattern, 10000);
+            ReadUTF8RecordStream reader = new ReadUTF8RecordStream(pipedInputStream, endPattern, 10000);
 
-        pipeWriter.start();
+            pipeWriter.start();
 
-        /*Thread for reading data from pipe*/
-        for (String expectedRecord : records) {
-            try {
+            /*Thread for reading data from pipe*/
+            for (String expectedRecord : records) {
                 String record = reader.read();
                 if (record == null) {
                     break;
                 }
                 LOG.info("Record received: \n{}", record);
                 assertEquals(expectedRecord, record, "Got the wrong record back");
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+
+            reader.read(); // Can be null or an empty string
+            assertNull(reader.read()); // Always null in our tests.
+        } finally {
+            keepRunning = false;
+            Thread.sleep(200);
+            if (pipeWriter != null) {
+                pipedOutputStream.close();
+                pipeWriter.interrupt();
+                pipeWriter.join();
+            }
+
+            /*Close stream*/
+            pipedOutputStream.close();
+            pipedInputStream.close();
         }
-
-        reader.read(); // Can be null or an empty string
-        assertNull(reader.read()); // Always null in our tests.
-
-        Thread.sleep(100);
-        pipeWriter.interrupt();
-        pipeWriter.join();
-
-        /*Close stream*/
-        pipedOutputStream.close();
-        pipedInputStream.close();
     }
 
 }

@@ -25,11 +25,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -54,7 +51,7 @@ public class TestMissingSeparator {
         Thread pipeWriter = new Thread(new Runnable() { // NOTE: This CANNOT be a Lambda !
             @Override
             public void run() {
-                byte[] output = "Something the does not contain the end marker".getBytes(UTF_8);
+                byte[] output = "Something that does not contain the end marker".getBytes(UTF_8);
                 while (runWriter) {
                     try {
                         pipedOutputStream.write(output);
