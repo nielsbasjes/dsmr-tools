@@ -1,0 +1,52 @@
+The maven release plugin turned out to be too hard to handle.
+So we do it manually.
+
+# Ensure all has been committed
+
+# Ensure it all works
+mvn clean verify -PpackageForRelease
+mvn clean
+
+# Prepare the versions for the release
+RELEASEVERSION=0.1
+NEXTVERSION=0.2
+
+# Creating and publishing the new Tagging
+mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${RELEASEVERSION} -Plogstash
+
+# Update the version number in all of the examples in the generated documentation website.
+sed -i "s@YauaaVersion: \+\"[0-9\.]\+\"@YauaaVersion: \"${RELEASEVERSION}\"@g" src/book.js
+git diff src
+gitbook build ./src ./docs
+
+# Update the top of the CHANGELOG.md
+
+git status
+git commit -m"Version ${RELEASEVERSION}" -a
+
+# We must first tag it because the tag is generated into the code
+git tag -a v${RELEASEVERSION} -m"Tag Version ${RELEASEVERSION}"
+
+#mvn clean deploy -Prelease -Pdeploy-local
+#VERIFY If this all looks good
+
+# These two profiles are defined in ~/.m2/settings.xml
+mvn clean deploy -PpackageForRelease -Prelease -PdeployToSonatype
+
+# Now check SONATYPE
+
+mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${NEXTVERSION}-SNAPSHOT -Plogstash
+
+# Update ReleaseProcedure.txt (versions near the top)
+
+git commit -m"Start development for ${NEXTVERSION}" -a
+
+git push
+git push origin v${RELEASEVERSION}
+
+
+#######################
+
+# Publishing a SNAPSHOT version
+mvn clean deploy -PpackageForRelease -PdeployToSonatype
+
