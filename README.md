@@ -29,6 +29,45 @@ The USB serial MUST be set to the right speed (115200 in my case) and set to 'ra
 
     stty -F /dev/ttyUSB0 115200 raw
 
+# Prebuilt binaries
+Several of the components have been published to maven central and can now be easily used on other applications.
+
+    <dependency>
+        <groupId>nl.basjes.iot</groupId>
+        <artifactId>stream-record-splitter</artifactId>
+        <version>0.1</version>
+    </dependency>
+
+    <dependency>
+        <groupId>nl.basjes.dsmr</groupId>
+        <artifactId>dsmr-parser</artifactId>
+        <version>0.1</version>
+    </dependency>
+
+and the corresponding Nifi NAR files (built against Nifi 1.7.0 to allow using it with MiNiFi 0.5.0) can be downloaded
+from Maven central aswell.
+
+    https://repo1.maven.org/maven2/nl/basjes/iot/nifi-sensor-stream-cutter/0.1/nifi-sensor-stream-cutter-0.1.nar
+
+    <dependency>
+        <groupId>nl.basjes.iot</groupId>
+        <artifactId>nifi-sensor-stream-cutter</artifactId>
+        <type>nar</type>
+        <version>0.1</version>
+    </dependency>
+
+and
+
+    https://repo1.maven.org/maven2/nl/basjes/dsmr/nifi-dsmr-parser/0.1/nifi-dsmr-parser-0.1.nar
+
+    <dependency>
+        <groupId>nl.basjes.dsmr</groupId>
+        <artifactId>nifi-dsmr-parser</artifactId>
+        <type>nar</type>
+        <version>0.1</version>
+    </dependency>
+
+
 # A basic (Mi)Nifi Flow
 After building and installing the processors in this project in a (local) Apache Nifi installation you can build this very simple flow which simply read and parses the data from the P1 port of the smart meter and stores everything in InfluxDb.
 
