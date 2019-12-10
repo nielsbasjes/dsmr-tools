@@ -30,6 +30,7 @@
 
   <artifactId>dsmr-udf-parent</artifactId>
   <name>DSMR : UDF :</name>
+  <description>A toolkit for reading and parsing the data conforming to the Dutch Smart Meter Requirements (DSMR).</description>
   <url>https://dsmr.basjes.nl</url>
 
   <modules>

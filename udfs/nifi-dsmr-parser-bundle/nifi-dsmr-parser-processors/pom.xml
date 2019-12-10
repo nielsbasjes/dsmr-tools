@@ -29,8 +29,8 @@
   <artifactId>nifi-dsmr-parser-processors</artifactId>
   <packaging>jar</packaging>
   <name>DSMR : UDF : Nifi : DSMR Parser : Processor</name>
+  <description>A toolkit for reading and parsing the data conforming to the Dutch Smart Meter Requirements (DSMR).</description>
   <url>https://dsmr.basjes.nl</url>
-
 
   <dependencies>
     <dependency>

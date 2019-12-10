@@ -32,6 +32,7 @@
   <packaging>pom</packaging>
 
   <name>DSMR : UDF : Nifi : Sensor Stream Cutter :</name>
+  <description>A toolkit for reading and parsing the data conforming to the Dutch Smart Meter Requirements (DSMR).</description>
   <url>https://dsmr.basjes.nl</url>
 
   <dependencies>

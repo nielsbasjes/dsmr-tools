@@ -31,6 +31,7 @@
   <artifactId>stream-record-splitter</artifactId>
   <packaging>jar</packaging>
   <name>DSMR : Stream record splitter</name>
+  <description>A toolkit for reading and parsing the data conforming to the Dutch Smart Meter Requirements (DSMR).</description>
   <url>https://dsmr.basjes.nl</url>
 
   <dependencies>

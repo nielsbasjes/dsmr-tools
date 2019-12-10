@@ -30,7 +30,7 @@
   <artifactId>dsmr-parser</artifactId>
 
   <name>DSMR : Parser</name>
-
+  <description>A toolkit for reading and parsing the data conforming to the Dutch Smart Meter Requirements (DSMR).</description>
   <url>https://dsmr.basjes.nl</url>
 
   <properties>
@@ -51,36 +51,6 @@
       <scope>provided</scope>
     </dependency>
 
-<!--    <dependency>-->
-<!--      <groupId>org.apache.commons</groupId>-->
-<!--      <artifactId>commons-text</artifactId>-->
-<!--      <version>1.6</version>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>org.apache.commons</groupId>-->
-<!--      <artifactId>commons-collections4</artifactId>-->
-<!--      <version>4.3</version>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>nl.basjes.collections</groupId>-->
-<!--      <artifactId>prefixmap</artifactId>-->
-<!--      <version>1.1</version>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>org.yaml</groupId>-->
-<!--      <artifactId>snakeyaml</artifactId>-->
-<!--      <version>1.24</version>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>com.google.guava</groupId>-->
-<!--      <artifactId>guava</artifactId>-->
-<!--      <version>27.0.1-jre</version>-->
-<!--    </dependency>-->
-
     <dependency>
       <groupId>com.esotericsoftware.kryo</groupId>
       <artifactId>kryo</artifactId>
@@ -97,32 +67,7 @@
 
   <build>
 
-<!--    <resources>-->
-<!--      <resource>-->
-<!--        <directory>src/main/resources</directory>-->
-<!--        <excludes>-->
-<!--          <exclude>version/*</exclude>-->
-<!--        </excludes>-->
-<!--      </resource>-->
-<!--    </resources>-->
-
     <plugins>
-<!--      <plugin>-->
-<!--        <groupId>org.apache.maven.plugins</groupId>-->
-<!--        <artifactId>maven-jar-plugin</artifactId>-->
-<!--        <version>3.0.2</version>-->
-<!--        <configuration>-->
-<!--          <excludes>-->
-<!--            <exclude>UserAgents/*.sh</exclude>-->
-<!--            <exclude>UserAgents/**/*.sh</exclude>-->
-<!--            <exclude>UserAgents/**/*.csv</exclude>-->
-<!--            <exclude>UserAgents/**/*.txt</exclude>-->
-<!--            <exclude>UserAgents/**/*.tab</exclude>-->
-<!--            <exclude>UserAgents/**/*.md</exclude>-->
-<!--          </excludes>-->
-<!--        </configuration>-->
-<!--      </plugin>-->
-
       <!-- Some of the dependencies (Antlr4, Spring and SnakeYaml) have proven to be problematic -->
       <!-- for downstream users who need different versions of these in the same application.    -->
       <!-- So for only these we include and relocate the used classes into the main jar.         -->
@@ -134,22 +79,10 @@
         <configuration>
           <minimizeJar>true</minimizeJar>
           <relocations>
-<!--            <relocation>-->
-<!--              <pattern>org.springframework</pattern>-->
-<!--              <shadedPattern>nl.basjes.shaded.org.springframework</shadedPattern>-->
-<!--            </relocation>-->
             <relocation>
               <pattern>org.antlr</pattern>
               <shadedPattern>nl.basjes.shaded.org.antlr</shadedPattern>
             </relocation>
-<!--            <relocation>-->
-<!--              <pattern>org.yaml.snakeyaml</pattern>-->
-<!--              <shadedPattern>nl.basjes.shaded.org.yaml.snakeyaml</shadedPattern>-->
-<!--            </relocation>-->
-<!--            <relocation>-->
-<!--              <pattern>com.google</pattern>-->
-<!--              <shadedPattern>nl.basjes.shaded.com.google</shadedPattern>-->
-<!--            </relocation>-->
           </relocations>
         </configuration>
 
@@ -164,9 +97,6 @@
               <artifactSet>
                 <includes>
                   <include>org.antlr:antlr4-runtime</include>
-<!--                  <include>org.springframework:spring-core</include>-->
-<!--                  <include>org.yaml:snakeyaml</include>-->
-<!--                  <include>com.google.guava:guava</include>-->
                 </includes>
               </artifactSet>
             </configuration>
@@ -179,13 +109,6 @@
         <groupId>org.antlr</groupId>
         <artifactId>antlr4-maven-plugin</artifactId>
         <version>${antlr.version}</version>
-        <!--<dependencies>-->
-          <!--<dependency>-->
-            <!--<groupId>nl.basjes.parse.dsmr</groupId>-->
-            <!--<artifactId>special-antlr4-visitor</artifactId>-->
-            <!--<version>${project.version}</version>-->
-            <!--</dependency>-->
-        <!--</dependencies>-->
         <executions>
           <execution>
             <id>antlr</id>
@@ -214,85 +137,6 @@
             </excludes>
         </configuration>
       </plugin>
-
-      <!--<plugin>-->
-        <!--<groupId>com.google.code.maven-replacer-plugin</groupId>-->
-        <!--<artifactId>replacer</artifactId>-->
-        <!--<version>1.5.3</version>-->
-        <!--<executions>-->
-
-          <!--<execution>-->
-            <!--<id>Generate Version YAML</id>-->
-            <!--<phase>generate-sources</phase>-->
-            <!--<goals>-->
-              <!--<goal>replace</goal>-->
-            <!--</goals>-->
-            <!--<configuration>-->
-            <!--<file>${basedir}/src/main/code-gen/version/Version.yaml.template</file>-->
-            <!--<outputFile>${basedir}/target/classes/UserAgents/__Version__.yaml</outputFile>-->
-            <!--</configuration>-->
-          <!--</execution>-->
-
-          <!--<execution>-->
-            <!--<id>Generate Version Java</id>-->
-            <!--<phase>generate-sources</phase>-->
-            <!--<goals>-->
-              <!--<goal>replace</goal>-->
-            <!--</goals>-->
-            <!--<configuration>-->
-              <!--<file>${basedir}/src/main/code-gen/version/Version.java.template</file>-->
-              <!--<outputFile>${basedir}/target/generated-sources/java/nl/basjes/parse/useragent/Version.java</outputFile>-->
-            <!--</configuration>-->
-          <!--</execution>-->
-
-          <!--<execution>-->
-            <!--<id>Generate Yaml List Java</id>-->
-            <!--<phase>generate-sources</phase>-->
-            <!--<goals>-->
-              <!--<goal>replace</goal>-->
-            <!--</goals>-->
-            <!--<configuration>-->
-              <!--<file>${basedir}/src/main/code-gen/UserAgents/PackagedRules.java.template</file>-->
-              <!--<outputFile>${basedir}/target/generated-sources/java/nl/basjes/parse/useragent/PackagedRules.java</outputFile>-->
-            <!--</configuration>-->
-          <!--</execution>-->
-
-        <!--</executions>-->
-        <!--<configuration>-->
-          <!--<replacements>-->
-            <!--<replacement>-->
-              <!--&lt;!&ndash;suppress MavenModelInspection &ndash;&gt;-->
-              <!--<token>@git.commit.id.describe-short@</token>-->
-              <!--&lt;!&ndash;suppress MavenModelInspection &ndash;&gt;-->
-              <!--<value>${git.commit.id.describe-short}</value>-->
-            <!--</replacement>-->
-            <!--<replacement>-->
-              <!--<token>@maven.build.timestamp@</token>-->
-              <!--<value>${maven.build.timestamp}</value>-->
-            <!--</replacement>-->
-            <!--<replacement>-->
-              <!--<token>@project.version@</token>-->
-              <!--<value>${project.version}</value>-->
-            <!--</replacement>-->
-            <!--<replacement>-->
-              <!--<token>@version.copyright@</token>-->
-              <!--<value>${version.copyright}</value>-->
-            <!--</replacement>-->
-            <!--<replacement>-->
-              <!--<token>@version.license@</token>-->
-              <!--<value>${version.license}</value>-->
-            <!--</replacement>-->
-            <!--<replacement>-->
-              <!--<token>@version.url@</token>-->
-              <!--<value>${version.url}</value>-->
-            <!--</replacement>-->
-            <!--<replacement>-->
-              <!--<token>###file-list###</token>-->
-              <!--<valueFile>${basedir}/target/temp-yaml-list.txt</valueFile>-->
-            <!--</replacement>-->
-          <!--</replacements>-->
-        <!--</configuration>-->
-      <!--</plugin>-->
 
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -334,12 +178,6 @@
           <excludedMethods>
             <excludedMethod>toString</excludedMethod>
           </excludedMethods>
-
-<!--          <excludedClasses>-->
-<!--            <excludedClass>nl.basjes.parse.useragent.Version</excludedClass>-->
-<!--            <excludedGroup>nl.basjes.parse.useragent.parser.*</excludedGroup> &lt;!&ndash; Generated antlr4 code &ndash;&gt;-->
-<!--            <excludedGroup>nl.basjes.parse.useragent.debug.*</excludedGroup>-->
-<!--          </excludedClasses>-->
 
           <avoidCallsTo>
             <avoidCallsTo>java.util.logging</avoidCallsTo>

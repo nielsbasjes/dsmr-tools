@@ -30,6 +30,7 @@
   <version>0.1</version>
   <packaging>nar</packaging>
   <name>DSMR : UDF : Nifi : DSMR Parser : Nar</name>
+  <description>A toolkit for reading and parsing the data conforming to the Dutch Smart Meter Requirements (DSMR).</description>
   <url>https://dsmr.basjes.nl</url>
 
   <properties>
