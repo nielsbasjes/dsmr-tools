@@ -12,10 +12,10 @@ This is a set of Java based libraries and tools that should allow processing DSM
 
 Parts in this toolkit:
 
-- *DSMR-Simulator* 
+- *DSMR-Simulator*
   - A local application that creates a local "named pipe" which outputs data in the DSMR format. The data itself is totally fake (you get nice sine wave patterns) and is intended for tesing a pipeline on your development system.
 - *Stream record splitter*
-  - A library that can read an endless UTF8 string from a file/character device and output substrings that are cut by means of a regex that describes what the end of a record looks like.  
+  - A library that can read an endless UTF8 string from a file/character device and output substrings that are cut by means of a regex that describes what the end of a record looks like.
 - *DSMR-Parser*
   - A library that is able to parse a string that is in the DSMR telegram format.
 - *Apache Nifi UDFs*
@@ -50,13 +50,13 @@ The steps in there:
 ## ReplaceText: Convert into the InfluxDB "line protocol"
 - Evaluation Mode: Entire text
 - Replacement strategy: Always replace
-- Replacement value: 
+- Replacement value:
 
       electricity,equipmentId=${dsmr.equipmentId},p1Version=${dsmr.p1Version} electricityReceivedLowTariff=${dsmr.electricityReceivedLowTariff},electricityReceivedNormalTariff=${dsmr.electricityReceivedNormalTariff},electricityReturnedLowTariff=${dsmr.electricityReturnedLowTariff},electricityReturnedNormalTariff=${dsmr.electricityReturnedNormalTariff},electricityTariffIndicator=${dsmr.electricityTariffIndicator},electricityPowerReceived=${dsmr.electricityPowerReceived},electricityPowerReturned=${dsmr.electricityPowerReturned},powerFailures=${dsmr.powerFailures}i,longPowerFailures=${dsmr.longPowerFailures}i,voltageSagsPhaseL1=${dsmr.voltageSagsPhaseL1}i,voltageSagsPhaseL2=${dsmr.voltageSagsPhaseL2}i,voltageSagsPhaseL3=${dsmr.voltageSagsPhaseL3}i,voltageSwellsPhaseL1=${dsmr.voltageSwellsPhaseL1}i,voltageSwellsPhaseL2=${dsmr.voltageSwellsPhaseL2}i,voltageSwellsPhaseL3=${dsmr.voltageSwellsPhaseL3}i,voltageL1=${dsmr.voltageL1},voltageL2=${dsmr.voltageL2},voltageL3=${dsmr.voltageL3},currentL1=${dsmr.currentL1},currentL2=${dsmr.currentL2},currentL3=${dsmr.currentL3},powerReceivedL1=${dsmr.powerReceivedL1},powerReceivedL2=${dsmr.powerReceivedL2},powerReceivedL3=${dsmr.powerReceivedL3},powerReturnedL1=${dsmr.powerReturnedL1},powerReturnedL2=${dsmr.powerReturnedL2},powerReturnedL3=${dsmr.powerReturnedL3} ${dsmr.timestamp.epochSecond}000000000
 
 **Warning about the timestamp in this replacement value!**
 
-The last field is the timestamp. 
+The last field is the timestamp.
 Here the time (in seconds) from the data of the energy meter is used (i.e. ${dsmr.timestamp.epochSecond}000000000 ).
 
 The meter I have has a clock that is off by about 7 seconds, this causes nasty effects in Grafana when I try to add/substract these values form other data streams I have (like from my solar inverter).
@@ -85,7 +85,7 @@ Now MiNiFi is REALLY picky about versions of nar files.
 Because MiNiFi 0.5.0. is build against NiFi 1.7.0 you need to download that exact version because we need some additional libraries from it.
 
 - Copy these from nifi to the minifi lib folder:
-    - nifi-influxdb-nar-1.7.0.nar 
+    - nifi-influxdb-nar-1.7.0.nar
     - nifi-standard-services-api-nar-1.7.0.nar
 - Copy the two nars from this project (also built against Nifi 1.7.0!!) to the minifi lib folder:
     - nifi-sensor-stream-cutter-nar-0.1-SNAPSHOT.nar
@@ -101,13 +101,13 @@ Also (Mi)NiFi writes a lot of stuff that I do not care about (like Provenance da
 To avoid disk related problems as much as possible I reduced the writing to only what is needed and created a RamDisk to run MiNiFi on.
 
 ### No Provenance for MiNiFi
-So after converting the flow into the MiNiFi yaml format I changed this 
+So after converting the flow into the MiNiFi yaml format I changed this
 
     Provenance Repository:
       provenance rollover time: 1 min
       implementation: org.apache.nifi.provenance.MiNiFiPersistentProvenanceRepository
 
-into 
+into
 
     Provenance Repository:
       provenance rollover time: 1 min
@@ -122,8 +122,8 @@ First create the actual directory/mount point:
     mkdir /minifi
 
 Then in /etc/fstab I added this line to define a new 10MiB Ramdisk:
-      
-    tmpfs /minifi tmpfs nodev,nosuid,size=10M 0 0      
+
+    tmpfs /minifi tmpfs nodev,nosuid,size=10M 0 0
 
 and run
 
@@ -147,7 +147,7 @@ Now we put our MiNiFi setup somewhere on the SD card and we add this script as `
         mkdir ${DIR}/work
         ln -s ${DIR}/work   ${RUNDIR}
     fi
-    
+
     ${RUNDIR}/bin/minifi.sh start
 
 This script will effectively make MiNiFi read the 'immutable' stuff from the SD card and read/write the fast changing stuff to the ramdisk.
