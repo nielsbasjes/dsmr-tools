@@ -44,12 +44,12 @@
 
     <!-- ============================================== -->
 
-    <checkstyle-plugin.version>3.0.0</checkstyle-plugin.version>
-    <checkstyle.version>8.20</checkstyle.version>
-    <slf4j.version>1.7.26</slf4j.version>
+    <checkstyle-plugin.version>3.1.0</checkstyle-plugin.version>
+    <checkstyle.version>8.27</checkstyle.version>
+    <slf4j.version>1.7.29</slf4j.version>
     <rat.version>0.13</rat.version>
     <jacoco.version>0.8.2</jacoco.version>
-    <junit5.version>5.5.0</junit5.version>
+    <junit5.version>5.6.0-M1</junit5.version>
 
     <!-- See http://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html-->
     <jacoco.surefireArgLine/>
