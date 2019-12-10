@@ -36,6 +36,8 @@ The USB serial MUST be set to the right speed (115200 in my case) and set to 'ra
 # Prebuilt binaries
 Several of the components have been published to maven central and can now be easily used on other applications.
 
+## Java library
+
     <dependency>
         <groupId>nl.basjes.iot</groupId>
         <artifactId>stream-record-splitter</artifactId>
@@ -48,8 +50,9 @@ Several of the components have been published to maven central and can now be ea
         <version>0.1</version>
     </dependency>
 
-and the corresponding Nifi NAR files (built against Nifi 1.7.0 to allow using it with MiNiFi 0.5.0) can be downloaded
-from Maven central aswell.
+## Apache (Mi)Nifi processors
+The corresponding Nifi NAR files (built against Nifi 1.7.0 to allow using it with MiNiFi 0.5.0) can be downloaded
+from Maven central as well.
 
     https://repo1.maven.org/maven2/nl/basjes/iot/nifi-sensor-stream-cutter/0.1/nifi-sensor-stream-cutter-0.1.nar
 
