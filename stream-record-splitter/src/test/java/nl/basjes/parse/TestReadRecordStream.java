@@ -175,7 +175,7 @@ public class TestReadRecordStream {
                 if (record == null) {
                     break;
                 }
-                LOG.info("Record received: \n{}", record);
+//                LOG.info("Record received: \n{}", record);
                 assertEquals(expectedRecord, record, "Got the wrong record back");
             }
 

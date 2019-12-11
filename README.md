@@ -196,6 +196,11 @@ Now we put our MiNiFi setup somewhere on the SD card and we add this script as `
 
 This script will effectively make MiNiFi read the 'immutable' stuff from the SD card and read/write the fast changing stuff to the ramdisk.
 
+# External references
+- [Official specifications at Netbeheer Nederland](https://www.netbeheernederland.nl/dossiers/slimme-meter-15/documenten)
+    - [Dutch Smart Meter Requirements - P1 Companion Standard - v5.0.2](https://www.netbeheernederland.nl/_upload/Files/Slimme_meter_15_a727fce1f1.pdf)
+- http://www.lipin.nl/DSMRBinding.html
+
 # LICENSE: Apache 2.0
 
     Copyright 2019 Niels Basjes

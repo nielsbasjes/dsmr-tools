@@ -63,7 +63,7 @@ public class TestDsmrParser {
     // - Instantaneous active power (-P) per phase
 
     @Test
-    public void testParse(){
+    public void testParseTestcaseFromSpecification(){
         String testcase = "\r\n" +
             "/ISk5\\2MT382-1000\r\n" +
             "\r\n" +
@@ -191,7 +191,7 @@ public class TestDsmrParser {
         assertTrue(dsmrTelegram.isValidCRC());
         assertEquals("9DF0", dsmrTelegram.getCrc());
 
-        LOG.info("{}", dsmrTelegram);
+//        LOG.info("{}", dsmrTelegram);
     }
 
     @Test
@@ -298,7 +298,7 @@ public class TestDsmrParser {
 
         assertEquals(    "003", dsmrTelegram.getMBusEvents().get(1).getDeviceType());
         assertEquals("G0019340315370616", dsmrTelegram.getMBusEvents().get(1).getEquipmentId());
-        assertEquals(ZonedDateTime.parse("2019-09-05T21:00:00+02:00"), dsmrTelegram.getGasTimestamp());
+        assertEquals(ZonedDateTime.parse("2019-09-05T21:00:00+02:00"), dsmrTelegram.getMBusEvents().get(1).getTimestamp());
         assertEquals( 1091.352, dsmrTelegram.getMBusEvents().get(1).getValue(), 0.001);
         assertEquals(     "m3", dsmrTelegram.getMBusEvents().get(1).getUnit());
 
@@ -309,7 +309,7 @@ public class TestDsmrParser {
         assertTrue(dsmrTelegram.isValidCRC());
         assertEquals("BB2A", dsmrTelegram.getCrc());
 
-        LOG.info("{}", dsmrTelegram);
+//        LOG.info("{}", dsmrTelegram);
     }
 
     @Test

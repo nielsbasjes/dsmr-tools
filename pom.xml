@@ -104,6 +104,72 @@
   </dependencyManagement>
 
   <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <version>${rat.version}</version>
+        <inherited>false</inherited>
+        <!-- https://issues.apache.org/jira/browse/RAT-158 -->
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.doxia</groupId>
+            <artifactId>doxia-core</artifactId>
+            <version>1.9</version>
+            <exclusions>
+              <exclusion>
+                <groupId>xerces</groupId>
+                <artifactId>xercesImpl</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <consoleOutput>true</consoleOutput>
+          <excludeSubProjects>false</excludeSubProjects>
+          <excludes>
+            <!-- Version control files -->
+            <exclude>**/.git/**</exclude>
+            <exclude>**/.gitignore</exclude>
+            <!-- IDE settings and files -->
+            <exclude>**/.classpath</exclude>
+            <exclude>**/.project</exclude>
+            <exclude>**/.settings/**</exclude>
+            <exclude>**/.idea/**</exclude>
+            <exclude>**/*.iml</exclude>
+            <exclude>*.patch</exclude>
+            <exclude>*.diff</exclude>
+            <!-- Documentation -->
+            <exclude>docs/**</exclude>
+            <!-- Files that cannot be 'polluted' -->
+            <exclude>.github/**</exclude>
+            <exclude>CNAME</exclude>
+            <!-- Test and demo input files -->
+            <exclude>**/testfiles/**</exclude>
+            <exclude>**/testinput.txt</exclude>
+            <exclude>**/*.log</exclude>
+            <!-- File generated during build -->
+            <exclude>**/target/**</exclude>
+            <exclude>**/dependency-reduced-pom.xml</exclude>
+            <!-- Other files -->
+            <exclude>ReleaseProcedure.txt</exclude>
+            <exclude>**/.~lock.*</exclude>
+            <!-- Test scripts -->
+            <exclude>*.sh</exclude>
+            <exclude>**/_*/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+
     <pluginManagement>
       <plugins>
         <plugin>

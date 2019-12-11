@@ -30,42 +30,30 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import static nl.basjes.dsmr.CheckCRC.crcIsValid;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestRecordStream {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestRecordStream.class);
 
     @Test
-    public void runTest() throws IOException, InterruptedException {
-        FileInputStream inputStream = new FileInputStream("../ttyUSB0-raw.txt");
+    public void runTest() throws IOException {
+        // This file has a bad 'first' record and the rest are all good.
+        FileInputStream inputStream = new FileInputStream("../testfiles/ttyUSB0-raw.txt");
 
         ReadUTF8RecordStream reader = new ReadUTF8RecordStream(inputStream, "\r\n![0-9A-F]{4}\r\n");
 
         String value;
-        int count = 0;
         while ((value = reader.read())!= null) {
-            if (value.length() < 8) {
-                continue;
-            }
-
-            count++;
-            boolean valid = crcIsValid(value);
-            LOG.info("{}: {} --> {}",
-                count,
-                value.substring(value.length()-7, value.length()-2),
-                valid ? "Ok" : "BAD");
             if (value.startsWith("/")) {
-                if (!valid) {
-                    crcIsValid(value);
-                }
+                assertTrue(crcIsValid(value));
             }
         }
-        LOG.info("---------------------- Done ----------------------");
     }
 
     @Disabled
     @Test
-    public void runTestWithSimulator() throws IOException, InterruptedException {
+    public void runTestWithSimulator() throws IOException {
         FileInputStream inputStream = new FileInputStream("../simulator/ttyDSMR");
 
         ReadUTF8RecordStream reader = new ReadUTF8RecordStream(inputStream, "\r\n![0-9A-F]{4}\r\n");

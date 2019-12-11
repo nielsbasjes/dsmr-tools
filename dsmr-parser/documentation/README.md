@@ -1,4 +1,4 @@
-Download via 
+Download via
 https://www.netbeheernederland.nl/dossiers/slimme-meter-15/documenten
 the file
 https://www.netbeheernederland.nl/_upload/Files/Slimme_meter_15_a727fce1f1.pdf
@@ -9,7 +9,7 @@ A big unknown was the Device Type field used when an MBus attached device is use
 Although I'm not 100% sure the only documentation that I have found (which also happens to match the only example telegrams I have) was found here: http://www.m-bus.com/
 
 The only match is the "gas" = "3" case.
- 
+
 | Medium | Code bin. Bit 7 .. 0 | Code hex. |
 | --- | --- | --- |
 |Other | 0000 0000 |00
@@ -36,3 +36,18 @@ The only match is the "gas" = "3" case.
 |A/D Converter|0001 1001|19
 |Reserved|..........|20 to FF
 
+<!--
+    Copyright 2019 Niels Basjes
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        https://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
