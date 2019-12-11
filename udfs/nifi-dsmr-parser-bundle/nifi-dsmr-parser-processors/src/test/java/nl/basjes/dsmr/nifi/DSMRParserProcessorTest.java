@@ -107,11 +107,11 @@ public class DSMRParserProcessorTest {
         assertAttributeEquals(result, "dsmr.equipmentId",    "E0044007131650618");
         assertAttributeEquals(result, "dsmr.message",        "");
 
+        assertAttributeEquals(result, "dsmr.electricityTariffIndicator",              "1");
         assertAttributeEquals(result, "dsmr.electricityReceivedLowTariff",     "3432.829");
         assertAttributeEquals(result, "dsmr.electricityReceivedNormalTariff",  "3224.632");
         assertAttributeEquals(result, "dsmr.electricityReturnedLowTariff",          "0.0");
         assertAttributeEquals(result, "dsmr.electricityReturnedNormalTariff",       "0.0");
-        assertAttributeEquals(result, "dsmr.electricityTariffIndicator",            "1.0");
         assertAttributeEquals(result, "dsmr.electricityPowerReceived",            "0.433");
         assertAttributeEquals(result, "dsmr.electricityPowerReturned",              "0.0");
         assertAttributeEquals(result, "dsmr.powerFailures",                           "5");

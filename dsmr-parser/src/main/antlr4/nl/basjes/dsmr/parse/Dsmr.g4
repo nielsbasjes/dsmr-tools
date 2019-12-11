@@ -64,11 +64,11 @@ field
     : cosemid='1-3:0.2.8'    '(' version=INT                             ')' #p1Version                        // P1 Version information
     | cosemid='0-0:1.0.0'    '(' timestamp=TIMESTAMP                     ')' #timestamp                        // Timestamp
     | cosemid='0-0:96.1.1'   '(' id=HEXSTRING                            ')' #equipmentId                      // Equipment identifier
+    | cosemid='0-0:96.14.0'  '(' value=INT                               ')' #electricityTariffIndicator       // Tariff indicator electricity
     | cosemid='1-0:1.8.1'    '(' value=(FLOAT|INT) '*' unit='kWh'        ')' #electricityReceivedLowTariff     // Meter Reading electricity delivered to client (low tariff) in 0,001 kWh
     | cosemid='1-0:1.8.2'    '(' value=(FLOAT|INT) '*' unit='kWh'        ')' #electricityReceivedNormalTariff  // Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh
     | cosemid='1-0:2.8.1'    '(' value=(FLOAT|INT) '*' unit='kWh'        ')' #electricityReturnedLowTariff     // Meter Reading electricity delivered by client (low tariff) in 0,001 kWh
     | cosemid='1-0:2.8.2'    '(' value=(FLOAT|INT) '*' unit='kWh'        ')' #electricityReturnedNormalTariff  // Meter Reading electricity delivered by client (normal tariff) in 0,001 kWh
-    | cosemid='0-0:96.14.0'  '(' value=INT                               ')' #electricityTariffIndicator       // Tariff indicator electricity
     | cosemid='1-0:1.7.0'    '(' value=(FLOAT|INT) '*' unit='kW'         ')' #electricityPowerReceived         // Actual electricity power delivered (+P) in 1 Watt resolution
     | cosemid='1-0:2.7.0'    '(' value=(FLOAT|INT) '*' unit='kW'         ')' #electricityPowerReturned         // Actual electricity power received (-P) in 1 Watt resolution
     | cosemid='0-0:96.7.21'  '(' count=INT                               ')' #powerFailures                    // Number of power failures in any phases

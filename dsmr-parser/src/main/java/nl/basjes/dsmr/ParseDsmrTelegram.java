@@ -154,7 +154,7 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
             MBusEvent mBusEvent = mBusEventEntry.getValue();
 
             // This mapping is based on the documentation found on http://www.m-bus.com/
-            switch (Integer.valueOf(mBusEvent.deviceType)) {
+            switch (Integer.parseInt(mBusEvent.deviceType)) {
 //                case 0x00: // Other                                                               0000 0000  00
 //                case 0x01: // Oil                                                                 0000 0001  01
                 case 0x02: // Electricity via a slave                                               0000 0010  02
@@ -267,11 +267,11 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
         return null;
     }
 
+    @Override public Void visitElectricityTariffIndicator       (ElectricityTariffIndicatorContext       ctx) { dsmrTelegram.electricityTariffIndicator      = Long.valueOf(ctx.value.getText()); return null; } // Tariff indicator electricity
     @Override public Void visitElectricityReceivedLowTariff     (ElectricityReceivedLowTariffContext     ctx) { dsmrTelegram.electricityReceivedLowTariff    = Double.valueOf(ctx.value.getText()); return null; } // Meter Reading electricity delivered to client (low tariff) in 0,001 kWh
     @Override public Void visitElectricityReceivedNormalTariff  (ElectricityReceivedNormalTariffContext  ctx) { dsmrTelegram.electricityReceivedNormalTariff = Double.valueOf(ctx.value.getText()); return null; } // Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh
     @Override public Void visitElectricityReturnedLowTariff     (ElectricityReturnedLowTariffContext     ctx) { dsmrTelegram.electricityReturnedLowTariff    = Double.valueOf(ctx.value.getText()); return null; } // Meter Reading electricity delivered by client (low tariff) in 0,001 kWh
     @Override public Void visitElectricityReturnedNormalTariff  (ElectricityReturnedNormalTariffContext  ctx) { dsmrTelegram.electricityReturnedNormalTariff = Double.valueOf(ctx.value.getText()); return null; } // Meter Reading electricity delivered by client (normal tariff) in 0,001 kWh
-    @Override public Void visitElectricityTariffIndicator       (ElectricityTariffIndicatorContext       ctx) { dsmrTelegram.electricityTariffIndicator      = Double.valueOf(ctx.value.getText()); return null; } // Tariff indicator electricity
     @Override public Void visitElectricityPowerReceived         (ElectricityPowerReceivedContext         ctx) { dsmrTelegram.electricityPowerReceived        = Double.valueOf(ctx.value.getText()); return null; } // Actual electricity power delivered (+P) in 1 Watt resolution
     @Override public Void visitElectricityPowerReturned         (ElectricityPowerReturnedContext         ctx) { dsmrTelegram.electricityPowerReturned        = Double.valueOf(ctx.value.getText()); return null; } // Actual electricity power received (-P) in 1 Watt resolution
 

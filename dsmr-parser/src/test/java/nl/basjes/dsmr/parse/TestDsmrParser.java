@@ -107,7 +107,59 @@ public class TestDsmrParser {
             "\r\n";
         DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(testcase);
 
-        LOG.info("{}", dsmrTelegram);
+        // CHECKSTYLE.OFF: ParenPad
+        assertEquals("/ISk5\\2MT382-1000", dsmrTelegram.getIdent());
+        assertEquals("50", dsmrTelegram.getP1Version());
+        assertEquals(ZonedDateTime.parse("2010-12-09T11:30:20+01:00"), dsmrTelegram.getTimestamp());
+
+        assertEquals("K8EG004046395507", dsmrTelegram.getEquipmentId());
+        assertEquals("0123456789:;<=>?0123456789:;<=>?0123456789:;<=>?0123456789:;<=>?0123456789:;<=>?", dsmrTelegram.getMessage());
+
+        assertEquals(      2,      dsmrTelegram.getElectricityTariffIndicator());
+        assertEquals( 123456.789,  dsmrTelegram.getElectricityReceivedLowTariff(),    0.001);
+        assertEquals( 123456.789,  dsmrTelegram.getElectricityReceivedNormalTariff(), 0.001);
+        assertEquals( 123456.789,  dsmrTelegram.getElectricityReturnedLowTariff(),    0.001);
+        assertEquals( 123456.789,  dsmrTelegram.getElectricityReturnedNormalTariff(), 0.001);
+        assertEquals(      1.193,  dsmrTelegram.getElectricityPowerReceived(),        0.001);
+        assertEquals(      0.0,    dsmrTelegram.getElectricityPowerReturned(),        0.001);
+        assertEquals(      4,      dsmrTelegram.getPowerFailures().longValue());
+        assertEquals(      2,      dsmrTelegram.getLongPowerFailures().longValue());
+        assertEquals(      2,      dsmrTelegram.getVoltageSagsPhaseL1().longValue());
+        assertEquals(      1,      dsmrTelegram.getVoltageSagsPhaseL2().longValue());
+        assertEquals(      0,      dsmrTelegram.getVoltageSagsPhaseL3().longValue());
+        assertEquals(      0,      dsmrTelegram.getVoltageSwellsPhaseL1().longValue());
+        assertEquals(      3,      dsmrTelegram.getVoltageSwellsPhaseL2().longValue());
+        assertEquals(      0,      dsmrTelegram.getVoltageSwellsPhaseL3().longValue());
+        assertEquals(    220.1,    dsmrTelegram.getVoltageL1(),       0.001);
+        assertEquals(    220.2,    dsmrTelegram.getVoltageL2(),       0.001);
+        assertEquals(    220.3,    dsmrTelegram.getVoltageL3(),       0.001);
+        assertEquals(      1,      dsmrTelegram.getCurrentL1(),       0.001);
+        assertEquals(      2,      dsmrTelegram.getCurrentL2(),       0.001);
+        assertEquals(      3,      dsmrTelegram.getCurrentL3(),       0.001);
+        assertEquals(      1.111,  dsmrTelegram.getPowerReceivedL1(), 0.001);
+        assertEquals(      2.222,  dsmrTelegram.getPowerReceivedL2(), 0.001);
+        assertEquals(      3.333,  dsmrTelegram.getPowerReceivedL3(), 0.001);
+        assertEquals(      4.444,  dsmrTelegram.getPowerReturnedL1(), 0.001);
+        assertEquals(      5.555,  dsmrTelegram.getPowerReturnedL2(), 0.001);
+        assertEquals(      6.666,  dsmrTelegram.getPowerReturnedL3(), 0.001);
+        assertEquals(      1,      dsmrTelegram.getMBusEvents().size());
+
+        assertEquals(    "003", dsmrTelegram.getMBusEvents().get(1).getDeviceType());
+        assertEquals("2222ABCD123456789", dsmrTelegram.getMBusEvents().get(1).getEquipmentId());
+        assertEquals(ZonedDateTime.parse("2010-12-09T11:25+01:00"), dsmrTelegram.getMBusEvents().get(1).getTimestamp());
+        assertEquals( 12785.123, dsmrTelegram.getMBusEvents().get(1).getValue(), 0.001);
+        assertEquals(     "m3", dsmrTelegram.getMBusEvents().get(1).getUnit());
+
+        assertEquals("2222ABCD123456789", dsmrTelegram.getGasEquipmentId());
+        assertEquals(ZonedDateTime.parse("2010-12-09T11:25+01:00"), dsmrTelegram.getGasTimestamp());
+        assertEquals(12785.123, dsmrTelegram.getGasM3(), 0.001);
+
+        assertEquals("EF2F", dsmrTelegram.getCrc());
+
+        // The CRC of this testcase is invalid.
+        // Or better: I have not been able to copy it from the documentation and
+        // recreate the "original" record for which the provided CRC was calculated.
+        // assertTrue(dsmrTelegram.isValidCRC());
     }
 
 
@@ -159,11 +211,11 @@ public class TestDsmrParser {
         assertEquals("E0044007131650618", dsmrTelegram.getEquipmentId());
         assertEquals("", dsmrTelegram.getMessage());
 
+        assertEquals(      1.0, dsmrTelegram.getElectricityTariffIndicator(),      0.001);
         assertEquals( 3432.829, dsmrTelegram.getElectricityReceivedLowTariff(),    0.001);
         assertEquals( 3224.632, dsmrTelegram.getElectricityReceivedNormalTariff(), 0.001);
         assertEquals(      0.0, dsmrTelegram.getElectricityReturnedLowTariff(),    0.001);
         assertEquals(      0.0, dsmrTelegram.getElectricityReturnedNormalTariff(), 0.001);
-        assertEquals(      1.0, dsmrTelegram.getElectricityTariffIndicator(),      0.001);
         assertEquals(    0.433, dsmrTelegram.getElectricityPowerReceived(),        0.001);
         assertEquals(      0.0, dsmrTelegram.getElectricityPowerReturned(),        0.001);
         assertEquals(        5, dsmrTelegram.getPowerFailures().longValue());
@@ -267,11 +319,11 @@ public class TestDsmrParser {
         assertEquals("E0031003239456716", dsmrTelegram.getEquipmentId());
         assertEquals("", dsmrTelegram.getMessage());
 
+        assertEquals(      2,   dsmrTelegram.getElectricityTariffIndicator());
         assertEquals( 3235.689, dsmrTelegram.getElectricityReceivedLowTariff(),    0.001);
         assertEquals( 6777.240, dsmrTelegram.getElectricityReceivedNormalTariff(), 0.001);
         assertEquals(    0.313, dsmrTelegram.getElectricityReturnedLowTariff(),    0.001);
         assertEquals(      0.0, dsmrTelegram.getElectricityReturnedNormalTariff(), 0.001);
-        assertEquals(      2.0, dsmrTelegram.getElectricityTariffIndicator(),      0.001);
         assertEquals(    0.374, dsmrTelegram.getElectricityPowerReceived(),        0.001);
         assertEquals(      0.0, dsmrTelegram.getElectricityPowerReturned(),        0.001);
         assertEquals(        3, dsmrTelegram.getPowerFailures().longValue());

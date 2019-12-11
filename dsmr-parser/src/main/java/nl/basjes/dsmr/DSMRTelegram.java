@@ -37,11 +37,11 @@ public class DSMRTelegram {
     ZonedDateTime timestamp;                 // Timestamp
     String equipmentId;                      // Equipment identifier
 
+    Long   electricityTariffIndicator;       // Tariff indicator electricity
     Double electricityReceivedLowTariff;     // Meter Reading electricity delivered to client (low tariff) in 0,001 kWh
     Double electricityReceivedNormalTariff;  // Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh
     Double electricityReturnedLowTariff;     // Meter Reading electricity delivered by client (low tariff) in 0,001 kWh
     Double electricityReturnedNormalTariff;  // Meter Reading electricity delivered by client (normal tariff) in 0,001 kWh
-    Double electricityTariffIndicator;       // Tariff indicator electricity
     Double electricityPowerReceived;         // Actual electricity power delivered (+P) in 1 Watt resolution
     Double electricityPowerReturned;         // Actual electricity power received (-P) in 1 Watt resolution
 

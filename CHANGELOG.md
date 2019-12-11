@@ -2,7 +2,7 @@ This is intended as an overview of the major changes
 
 v0.2-SNAPSHOT
 ===
-...
+- Changed ElectricityTariffIndicator from Double to Long
 
 v0.1
 ===
