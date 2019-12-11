@@ -23,12 +23,12 @@
   <parent>
     <groupId>nl.basjes.dsmr</groupId>
     <artifactId>dsmr-udf-parent</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
   </parent>
 
   <groupId>nl.basjes.iot</groupId>
   <artifactId>nifi-sensor-stream-cutter-bundle</artifactId>
-  <version>0.2-SNAPSHOT</version>
+  <version>0.2</version>
   <packaging>pom</packaging>
 
   <name>DSMR : UDF : Nifi : Sensor Stream Cutter :</name>

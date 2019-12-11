@@ -1,6 +1,10 @@
 This is intended as an overview of the major changes
 
-v0.2-SNAPSHOT
+v0.3-SNAPSHOT
+===
+...
+
+v0.2
 ===
 - Changed ElectricityTariffIndicator from Double to Long
 
