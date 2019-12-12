@@ -36,7 +36,7 @@ public class TestRecordStream {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestRecordStream.class);
 
-    @Disabled
+    @Disabled // FIXME: For currently unknown reasons this passes locally and fails on Travis-ci.
     @Test
     public void runTest() throws IOException {
         // This file has a bad 'first' record and the rest are all good.
@@ -52,7 +52,7 @@ public class TestRecordStream {
         }
     }
 
-    @Disabled
+    @Disabled // This test can only run in conjunction with the local simulator.
     @Test
     public void runTestWithSimulator() throws IOException {
         FileInputStream inputStream = new FileInputStream("../simulator/ttyDSMR");
