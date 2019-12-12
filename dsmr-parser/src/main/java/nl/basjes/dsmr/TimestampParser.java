@@ -62,19 +62,16 @@ public class TimestampParser {
         String zoneOffset;
 
         switch(matcher.group(7)) {
-            case "S": // Summertime
+            default:
+            case "S": // Dutch Summertime
             case "s":
                 zoneOffset = "+02:00";
                 break;
 
-            case "W": // Wintertime
+            case "W": // Dutch Wintertime
             case "w":
                 zoneOffset = "+01:00";
                 break;
-
-            default:
-                // This cannot happen as the S or W is hardcoded in the regex.
-                return null;
         }
         zonedDateTime = zonedDateTime.withZoneSameLocal(ZoneOffset.of(zoneOffset));
 

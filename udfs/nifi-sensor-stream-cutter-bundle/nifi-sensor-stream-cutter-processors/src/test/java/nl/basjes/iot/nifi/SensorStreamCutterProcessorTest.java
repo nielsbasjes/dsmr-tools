@@ -23,6 +23,7 @@ import org.apache.nifi.util.TestRunners;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 import static nl.basjes.iot.nifi.SensorStreamCutterProcessor.END_OF_RECORD_REGEX;
@@ -30,6 +31,7 @@ import static nl.basjes.iot.nifi.SensorStreamCutterProcessor.FILE_NAME;
 import static nl.basjes.iot.nifi.SensorStreamCutterProcessor.MAX_CHARACTERS_PER_RECORD;
 import static nl.basjes.iot.nifi.SensorStreamCutterProcessor.SUCCESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class SensorStreamCutterProcessorTest {
@@ -64,4 +66,14 @@ public class SensorStreamCutterProcessorTest {
         results.get(4).assertContentEquals("");
     }
 
+    @Test
+    public void testTooLarge() {
+
+        runner.setProperty(END_OF_RECORD_REGEX,       "\\r\\n![0-9A-F]{4}\\r\\n");
+        runner.setProperty(FILE_NAME,                 "src/test/data/TooLargeRecord.txt");
+        runner.setProperty(MAX_CHARACTERS_PER_RECORD, "10240"); // Slightly smaller than 20k
+
+        // Run the enqueued content, it also takes an int = number of contents queued
+        assertThrows(AssertionError.class, () -> runner.run(1));
+    }
 }

@@ -65,7 +65,8 @@ public class TestTimestampParser {
     public void testBad() {
         TimestampParser timestampParser = new TimestampParser();
         assertNull(timestampParser.parse("Not a date string at all"));
+        assertNull(timestampParser.parse("190324151444"));
+        assertNull(timestampParser.parse("190324151444x"));
     }
-
 
 }
