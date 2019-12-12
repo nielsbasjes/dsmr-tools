@@ -56,7 +56,7 @@ Several of the components have been published to maven central and can now be ea
 The corresponding Nifi NAR files (built against Nifi 1.7.0 to allow using it with MiNiFi 0.5.0) can be downloaded
 from Maven central as well.
 
-    https://repo1.maven.org/maven2/nl/basjes/iot/nifi-sensor-stream-cutter/0.1/nifi-sensor-stream-cutter-0.1.nar
+    https://repo1.maven.org/maven2/nl/basjes/iot/nifi-sensor-stream-cutter/0.3/nifi-sensor-stream-cutter-0.3.nar
 
     <dependency>
         <groupId>nl.basjes.iot</groupId>
@@ -67,7 +67,7 @@ from Maven central as well.
 
 and
 
-    https://repo1.maven.org/maven2/nl/basjes/dsmr/nifi-dsmr-parser/0.1/nifi-dsmr-parser-0.1.nar
+    https://repo1.maven.org/maven2/nl/basjes/dsmr/nifi-dsmr-parser/0.3/nifi-dsmr-parser-0.3.nar
 
     <dependency>
         <groupId>nl.basjes.dsmr</groupId>
