@@ -36,6 +36,7 @@ public class TestRecordStream {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestRecordStream.class);
 
+    @Disabled
     @Test
     public void runTest() throws IOException {
         // This file has a bad 'first' record and the rest are all good.
