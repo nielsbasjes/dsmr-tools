@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import static nl.basjes.dsmr.CheckCRC.calculatedCrc;
 import static nl.basjes.dsmr.CheckCRC.crcIsValid;
 import static nl.basjes.dsmr.CheckCRC.extractCrcFromTelegram;
+import static nl.basjes.dsmr.CheckCRC.fixCrc;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -83,17 +84,30 @@ public class TestCRCValidator {
     }
 
     @Test
-    public void testNull(){
+    public void testBadInputCalculatedCrc() {
+        assertNull(calculatedCrc(null));
+        assertNull(calculatedCrc(""));
+        assertNull(calculatedCrc("Bla bla bla"));
+    }
+
+    @Test
+    public void testBadInputExtractCrcFromTelegram() {
+        assertNull(extractCrcFromTelegram(null));
+        assertNull(extractCrcFromTelegram(""));
+        assertNull(extractCrcFromTelegram("Bla bla bla"));
+    }
+
+    @Test
+    public void testBadInputFixCrc() {
+        assertNull(fixCrc(null));
+        assertEquals("", fixCrc(""));
+        assertEquals("Bla bla bla", fixCrc("Bla bla bla"));
+    }
+
+    @Test
+    public void testBadInputCrcIsValid(){
         assertFalse(crcIsValid(null));
-    }
-
-    @Test
-    public void testEmpty(){
         assertFalse(crcIsValid(""));
-    }
-
-    @Test
-    public void testSyntaxError(){
         assertFalse(crcIsValid("Bla bla bla"));
     }
 
