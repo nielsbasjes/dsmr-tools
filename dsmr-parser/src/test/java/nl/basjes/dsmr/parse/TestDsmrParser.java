@@ -163,115 +163,6 @@ public class TestDsmrParser {
         // assertTrue(dsmrTelegram.isValidCRC());
     }
 
-
-    @Test
-    public void testParseExtendedTestcase(){
-        String testcase = "\r\n" +
-            "/ISk5\\2MT382-1000\r\n" +
-            "\r\n" +
-            "1-3:0.2.8(50)\r\n" +
-            "0-0:1.0.0(101209113020W)\r\n" +
-            "0-0:96.1.1(4B384547303034303436333935353037)\r\n" +
-            "1-0:1.8.1(123456.789*kWh)\r\n" +
-            "1-0:1.8.2(123456.789*kWh)\r\n" +
-            "1-0:2.8.1(123456.789*kWh)\r\n" +
-            "1-0:2.8.2(123456.789*kWh)\r\n" +
-            "0-0:96.14.0(0002)\r\n" +
-            "1-0:1.7.0(01.193*kW)\r\n" +
-            "1-0:2.7.0(00.000*kW)\r\n" +
-            "0-0:96.7.21(00004)\r\n" +
-            "0-0:96.7.9(00002)\r\n" +
-            "1-0:99.97.0(2)(0-0:96.7.19)(101208152415W)(0000000240*s)(101208151004W)(0000000301*s)\r\n" +
-            "1-0:32.32.0(00002)\r\n" +
-            "1-0:52.32.0(00001)\r\n" +
-            "1-0:72.32.0(00000)\r\n" +
-            "1-0:32.36.0(00000)\r\n" +
-            "1-0:52.36.0(00003)\r\n" +
-            "1-0:72.36.0(00000)\r\n" +
-            "0-0:96.13.0(303132333435363738393A3B3C3D3E3F303132333435363738393A3B3C3D3E3F30313233343536373839" +
-            "3A3B3C3D3E3F303132333435363738393A3B3C3D3E3F303132333435363738393A3B3C3D3E3F)\r\n" +
-            "1-0:32.7.0(220.1*V)\r\n" +
-            "1-0:52.7.0(220.2*V)\r\n" +
-            "1-0:72.7.0(220.3*V)\r\n" +
-            "1-0:31.7.0(001*A)\r\n" +
-            "1-0:51.7.0(002*A)\r\n" +
-            "1-0:71.7.0(003*A)\r\n" +
-            "1-0:21.7.0(01.111*kW)\r\n" +
-            "1-0:41.7.0(02.222*kW)\r\n" +
-            "1-0:61.7.0(03.333*kW)\r\n" +
-            "1-0:22.7.0(04.444*kW)\r\n" +
-            "1-0:42.7.0(05.555*kW)\r\n" +
-            "1-0:62.7.0(06.666*kW)\r\n" +
-
-            // NOTE: These values are created from what I understand of the specs.
-            // FIXME: I really NEED a REAL example of these values !!!
-
-            "0-1:24.1.0(002)\r\n" +
-            "0-1:96.1.0(5f5f5f5f4f4e455f5f5f5f)\r\n" +
-            "0-1:24.2.1(101209112100W)(12785.111*kWh)\r\n" +
-            "0-2:24.1.0(003)\r\n" +
-            "0-2:96.1.0(5f5f5f5f54574f5f5f5f5f)\r\n" +
-            "0-2:24.2.1(101209112200W)(12785.222*m3)\r\n" +
-            "0-3:24.1.0(004)\r\n" +
-            "0-3:96.1.0(5f5f5f5f54485245455f5f)\r\n" +
-            "0-3:24.2.1(101209112300W)(12785.333*GJ)\r\n" +
-            "0-4:24.1.0(010)\r\n" +
-            "0-4:96.1.0(5f5f5f5f464f55525f5f5f)\r\n" +
-            "0-4:24.2.1(101209112400W)(12785.444*GJ)\r\n" +
-            "!BAD0\r\n" +
-            "\r\n";
-
-
-
-        DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(testcase);
-
-        // CHECKSTYLE.OFF: ParenPad
-        assertEquals("/ISk5\\2MT382-1000", dsmrTelegram.getIdent());
-        assertEquals("50", dsmrTelegram.getP1Version());
-        assertEquals(ZonedDateTime.parse("2010-12-09T11:30:20+01:00"), dsmrTelegram.getTimestamp());
-
-        assertEquals("K8EG004046395507", dsmrTelegram.getEquipmentId());
-        assertEquals("0123456789:;<=>?0123456789:;<=>?0123456789:;<=>?0123456789:;<=>?0123456789:;<=>?", dsmrTelegram.getMessage());
-
-        assertEquals(      2,      dsmrTelegram.getElectricityTariffIndicator());
-        assertEquals( 123456.789,  dsmrTelegram.getElectricityReceivedLowTariff(),    0.001);
-        assertEquals( 123456.789,  dsmrTelegram.getElectricityReceivedNormalTariff(), 0.001);
-        assertEquals( 123456.789,  dsmrTelegram.getElectricityReturnedLowTariff(),    0.001);
-        assertEquals( 123456.789,  dsmrTelegram.getElectricityReturnedNormalTariff(), 0.001);
-        assertEquals(      1.193,  dsmrTelegram.getElectricityPowerReceived(),        0.001);
-        assertEquals(      0.0,    dsmrTelegram.getElectricityPowerReturned(),        0.001);
-        assertEquals(      4,      dsmrTelegram.getPowerFailures().longValue());
-        assertEquals(      2,      dsmrTelegram.getLongPowerFailures().longValue());
-        assertEquals(      2,      dsmrTelegram.getVoltageSagsPhaseL1().longValue());
-        assertEquals(      1,      dsmrTelegram.getVoltageSagsPhaseL2().longValue());
-        assertEquals(      0,      dsmrTelegram.getVoltageSagsPhaseL3().longValue());
-        assertEquals(      0,      dsmrTelegram.getVoltageSwellsPhaseL1().longValue());
-        assertEquals(      3,      dsmrTelegram.getVoltageSwellsPhaseL2().longValue());
-        assertEquals(      0,      dsmrTelegram.getVoltageSwellsPhaseL3().longValue());
-        assertEquals(    220.1,    dsmrTelegram.getVoltageL1(),       0.001);
-        assertEquals(    220.2,    dsmrTelegram.getVoltageL2(),       0.001);
-        assertEquals(    220.3,    dsmrTelegram.getVoltageL3(),       0.001);
-        assertEquals(      1,      dsmrTelegram.getCurrentL1(),       0.001);
-        assertEquals(      2,      dsmrTelegram.getCurrentL2(),       0.001);
-        assertEquals(      3,      dsmrTelegram.getCurrentL3(),       0.001);
-        assertEquals(      1.111,  dsmrTelegram.getPowerReceivedL1(), 0.001);
-        assertEquals(      2.222,  dsmrTelegram.getPowerReceivedL2(), 0.001);
-        assertEquals(      3.333,  dsmrTelegram.getPowerReceivedL3(), 0.001);
-        assertEquals(      4.444,  dsmrTelegram.getPowerReturnedL1(), 0.001);
-        assertEquals(      5.555,  dsmrTelegram.getPowerReturnedL2(), 0.001);
-        assertEquals(      6.666,  dsmrTelegram.getPowerReturnedL3(), 0.001);
-        assertEquals(      4,      dsmrTelegram.getMBusEvents().size());
-
-        checkMbus(dsmrTelegram, 1, "2010-12-09T11:21+01:00",  2, "____ONE____",  12785.111, "kWh");
-        checkMbus(dsmrTelegram, 2, "2010-12-09T11:22+01:00",  3, "____TWO____",  12785.222, "m3");
-        checkMbus(dsmrTelegram, 3, "2010-12-09T11:23+01:00",  4, "____THREE__",  12785.333, "GJ");
-        checkMbus(dsmrTelegram, 4, "2010-12-09T11:24+01:00", 10, "____FOUR___",  12785.444, "GJ");
-
-        assertEquals("BAD0", dsmrTelegram.getCrc());
-
-        // The CRC of this testcase is invalid.
-    }
-
     @Test
     public void testParseRealTelegram(){
         DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(
@@ -468,6 +359,198 @@ public class TestDsmrParser {
 
 //        LOG.info("{}", dsmrTelegram);
     }
+
+
+    @Test
+    public void testParseExtendedTestcase(){
+        String testcase = "\r\n" +
+            "/ISk5\\2MT382-1000\r\n" +
+            "\r\n" +
+            "1-3:0.2.8(50)\r\n" +
+            "0-0:1.0.0(101209113020W)\r\n" +
+            "0-0:96.1.1(4B384547303034303436333935353037)\r\n" +
+            "1-0:1.8.1(123456.789*kWh)\r\n" +
+            "1-0:1.8.2(123456.789*kWh)\r\n" +
+            "1-0:2.8.1(123456.789*kWh)\r\n" +
+            "1-0:2.8.2(123456.789*kWh)\r\n" +
+            "0-0:96.14.0(0002)\r\n" +
+            "1-0:1.7.0(01.193*kW)\r\n" +
+            "1-0:2.7.0(00.000*kW)\r\n" +
+            "0-0:96.7.21(00004)\r\n" +
+            "0-0:96.7.9(00002)\r\n" +
+            "1-0:99.97.0(2)(0-0:96.7.19)(101208152415W)(0000000240*s)(101208151004W)(0000000301*s)\r\n" +
+            "1-0:32.32.0(00002)\r\n" +
+            "1-0:52.32.0(00001)\r\n" +
+            "1-0:72.32.0(00000)\r\n" +
+            "1-0:32.36.0(00000)\r\n" +
+            "1-0:52.36.0(00003)\r\n" +
+            "1-0:72.36.0(00000)\r\n" +
+            "0-0:96.13.0(303132333435363738393A3B3C3D3E3F303132333435363738393A3B3C3D3E3F30313233343536373839" +
+            "3A3B3C3D3E3F303132333435363738393A3B3C3D3E3F303132333435363738393A3B3C3D3E3F)\r\n" +
+            "1-0:32.7.0(220.1*V)\r\n" +
+            "1-0:52.7.0(220.2*V)\r\n" +
+            "1-0:72.7.0(220.3*V)\r\n" +
+            "1-0:31.7.0(001*A)\r\n" +
+            "1-0:51.7.0(002*A)\r\n" +
+            "1-0:71.7.0(003*A)\r\n" +
+            "1-0:21.7.0(01.111*kW)\r\n" +
+            "1-0:41.7.0(02.222*kW)\r\n" +
+            "1-0:61.7.0(03.333*kW)\r\n" +
+            "1-0:22.7.0(04.444*kW)\r\n" +
+            "1-0:42.7.0(05.555*kW)\r\n" +
+            "1-0:62.7.0(06.666*kW)\r\n" +
+
+            // NOTE: These values are created from what I understand of the specs.
+            // FIXME: I really NEED a REAL example of these values !!!
+
+            "0-1:24.1.0(002)\r\n" +
+            "0-1:96.1.0(5f5f5f5f4f4e455f5f5f5f)\r\n" +
+            "0-1:24.2.1(101209112100W)(12785.111*kWh)\r\n" +
+            "0-2:24.1.0(003)\r\n" +
+            "0-2:96.1.0(5f5f5f5f54574f5f5f5f5f)\r\n" +
+            "0-2:24.2.1(101209112200W)(12785.222*m3)\r\n" +
+            "0-3:24.1.0(004)\r\n" +
+            "0-3:96.1.0(5f5f5f5f54485245455f5f)\r\n" +
+            "0-3:24.2.1(101209112300W)(12785.333*GJ)\r\n" +
+            "0-4:24.1.0(010)\r\n" +
+            "0-4:96.1.0(5f5f5f5f464f55525f5f5f)\r\n" +
+            "0-4:24.2.1(101209112400W)(12785.444*GJ)\r\n" +
+            "!BAD0\r\n" +
+            "\r\n";
+
+
+
+        DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(testcase);
+
+        // CHECKSTYLE.OFF: ParenPad
+        assertEquals("/ISk5\\2MT382-1000", dsmrTelegram.getIdent());
+        assertEquals("50", dsmrTelegram.getP1Version());
+        assertEquals(ZonedDateTime.parse("2010-12-09T11:30:20+01:00"), dsmrTelegram.getTimestamp());
+
+        assertEquals("K8EG004046395507", dsmrTelegram.getEquipmentId());
+        assertEquals("0123456789:;<=>?0123456789:;<=>?0123456789:;<=>?0123456789:;<=>?0123456789:;<=>?", dsmrTelegram.getMessage());
+
+        assertEquals(      2,      dsmrTelegram.getElectricityTariffIndicator());
+        assertEquals( 123456.789,  dsmrTelegram.getElectricityReceivedLowTariff(),    0.001);
+        assertEquals( 123456.789,  dsmrTelegram.getElectricityReceivedNormalTariff(), 0.001);
+        assertEquals( 123456.789,  dsmrTelegram.getElectricityReturnedLowTariff(),    0.001);
+        assertEquals( 123456.789,  dsmrTelegram.getElectricityReturnedNormalTariff(), 0.001);
+        assertEquals(      1.193,  dsmrTelegram.getElectricityPowerReceived(),        0.001);
+        assertEquals(      0.0,    dsmrTelegram.getElectricityPowerReturned(),        0.001);
+        assertEquals(      4,      dsmrTelegram.getPowerFailures().longValue());
+        assertEquals(      2,      dsmrTelegram.getLongPowerFailures().longValue());
+        assertEquals(      2,      dsmrTelegram.getVoltageSagsPhaseL1().longValue());
+        assertEquals(      1,      dsmrTelegram.getVoltageSagsPhaseL2().longValue());
+        assertEquals(      0,      dsmrTelegram.getVoltageSagsPhaseL3().longValue());
+        assertEquals(      0,      dsmrTelegram.getVoltageSwellsPhaseL1().longValue());
+        assertEquals(      3,      dsmrTelegram.getVoltageSwellsPhaseL2().longValue());
+        assertEquals(      0,      dsmrTelegram.getVoltageSwellsPhaseL3().longValue());
+        assertEquals(    220.1,    dsmrTelegram.getVoltageL1(),       0.001);
+        assertEquals(    220.2,    dsmrTelegram.getVoltageL2(),       0.001);
+        assertEquals(    220.3,    dsmrTelegram.getVoltageL3(),       0.001);
+        assertEquals(      1,      dsmrTelegram.getCurrentL1(),       0.001);
+        assertEquals(      2,      dsmrTelegram.getCurrentL2(),       0.001);
+        assertEquals(      3,      dsmrTelegram.getCurrentL3(),       0.001);
+        assertEquals(      1.111,  dsmrTelegram.getPowerReceivedL1(), 0.001);
+        assertEquals(      2.222,  dsmrTelegram.getPowerReceivedL2(), 0.001);
+        assertEquals(      3.333,  dsmrTelegram.getPowerReceivedL3(), 0.001);
+        assertEquals(      4.444,  dsmrTelegram.getPowerReturnedL1(), 0.001);
+        assertEquals(      5.555,  dsmrTelegram.getPowerReturnedL2(), 0.001);
+        assertEquals(      6.666,  dsmrTelegram.getPowerReturnedL3(), 0.001);
+        assertEquals(      4,      dsmrTelegram.getMBusEvents().size());
+
+        checkMbus(dsmrTelegram, 1, "2010-12-09T11:21+01:00",  2, "____ONE____",  12785.111, "kWh");
+        checkMbus(dsmrTelegram, 2, "2010-12-09T11:22+01:00",  3, "____TWO____",  12785.222, "m3");
+        checkMbus(dsmrTelegram, 3, "2010-12-09T11:23+01:00",  4, "____THREE__",  12785.333, "GJ");
+        checkMbus(dsmrTelegram, 4, "2010-12-09T11:24+01:00", 10, "____FOUR___",  12785.444, "GJ");
+
+        assertEquals("BAD0", dsmrTelegram.getCrc());
+
+        // The CRC of this testcase is invalid.
+    }
+
+
+    public void validateParseExtendedTestcaseMultipleMbus(int mbusType, String unit){
+        String testcase = "\r\n" +
+            "/ISk5\\2MT382-1000\r\n" +
+            "\r\n" +
+            "1-3:0.2.8(50)\r\n" +
+            "0-0:1.0.0(101209113020W)\r\n" +
+            "0-0:96.1.1(4B384547303034303436333935353037)\r\n" +
+
+            "0-1:24.1.0(00"+mbusType+")\r\n" +
+            "0-1:96.1.0(5f5f5f5f4f4e455f5f5f5f)\r\n" +
+            "0-1:24.2.1(101209112100W)(12785.111*"+unit+")\r\n" +
+            "0-2:24.1.0(00"+mbusType+")\r\n" +
+            "0-2:96.1.0(5f5f5f5f54574f5f5f5f5f)\r\n" +
+            "0-2:24.2.1(101209112200W)(12785.222*"+unit+")\r\n" +
+            "0-3:24.1.0(00"+mbusType+")\r\n" +
+            "0-3:96.1.0(5f5f5f5f54485245455f5f)\r\n" +
+            "0-3:24.2.1(101209112300W)(12785.333*"+unit+")\r\n" +
+            "0-4:24.1.0(00"+mbusType+")\r\n" +
+            "0-4:96.1.0(5f5f5f5f464f55525f5f5f)\r\n" +
+            "0-4:24.2.1(101209112400W)(12785.444*"+unit+")\r\n" +
+            "!BAD0\r\n" +
+            "\r\n";
+
+        DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(testcase);
+
+        // CHECKSTYLE.OFF: ParenPad
+        assertEquals("/ISk5\\2MT382-1000", dsmrTelegram.getIdent());
+        assertEquals("50", dsmrTelegram.getP1Version());
+        assertEquals(ZonedDateTime.parse("2010-12-09T11:30:20+01:00"), dsmrTelegram.getTimestamp());
+
+        assertEquals("K8EG004046395507", dsmrTelegram.getEquipmentId());
+
+        assertEquals(      4,      dsmrTelegram.getMBusEvents().size());
+
+        checkMbus(dsmrTelegram, 1, "2010-12-09T11:21+01:00", mbusType, "____ONE____",  12785.111, unit);
+        checkMbus(dsmrTelegram, 2, "2010-12-09T11:22+01:00", mbusType, "____TWO____",  12785.222, unit);
+        checkMbus(dsmrTelegram, 3, "2010-12-09T11:23+01:00", mbusType, "____THREE__",  12785.333, unit);
+        checkMbus(dsmrTelegram, 4, "2010-12-09T11:24+01:00", mbusType, "____FOUR___",  12785.444, unit);
+
+        assertEquals("BAD0", dsmrTelegram.getCrc());
+
+        // The CRC of this testcase is invalid.
+    }
+
+
+    @Test
+    public void testParseExtendedTestcaseMultipleElectric(){
+        validateParseExtendedTestcaseMultipleMbus(2, "kWh");
+    }
+
+    @Test
+    public void testParseExtendedTestcaseMultipleGas() {
+        validateParseExtendedTestcaseMultipleMbus(3, "m3");
+    }
+
+    @Test
+    public void testParseExtendedTestcaseMultipleHeat(){
+        validateParseExtendedTestcaseMultipleMbus(4, "GJ");
+    }
+
+    @Test
+    public void testParseExtendedTestcaseMultipleWarmWater(){
+        validateParseExtendedTestcaseMultipleMbus(6, "m3");
+    }
+
+    @Test
+    public void testParseExtendedTestcaseMultipleWater(){
+        validateParseExtendedTestcaseMultipleMbus(7, "m3");
+    }
+
+    @Test
+    public void testParseExtendedTestcaseMultipleCoolingInlet(){
+        validateParseExtendedTestcaseMultipleMbus(11, "GJ");
+    }
+
+    @Test
+    public void testParseExtendedTestcaseMultipleCoolingOutlet(){
+        validateParseExtendedTestcaseMultipleMbus(10, "GJ");
+    }
+
+
 
     @Test
     public void testNull(){
