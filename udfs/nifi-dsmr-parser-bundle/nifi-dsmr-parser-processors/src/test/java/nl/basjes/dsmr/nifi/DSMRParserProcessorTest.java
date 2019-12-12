@@ -77,7 +77,27 @@ public class DSMRParserProcessorTest {
             "1-0:22.7.0(00.000*kW)\r\n" +
             "1-0:42.7.0(00.000*kW)\r\n" +
             "1-0:62.7.0(00.000*kW)\r\n" +
-            "!9DF0\r\n" +
+
+            // NOTE: These values are created from what I understand of the specs.
+            // I have put them 'out-of-order' deliberately to test the code better
+            // 4
+            "0-4:24.1.0(010)\r\n" +
+            "0-4:96.1.0(5f5f5f5f464f55525f5f5f)\r\n" +
+            "0-4:24.2.1(101209112400W)(12785.444*GJ)\r\n" +
+            // 1
+            "0-1:24.1.0(002)\r\n" +
+            "0-1:96.1.0(5f5f5f5f4f4e455f5f5f5f)\r\n" +
+            "0-1:24.2.1(101209112100W)(12785.111*kWh)\r\n" +
+            // 3
+            "0-3:24.1.0(004)\r\n" +
+            "0-3:96.1.0(5f5f5f5f54485245455f5f)\r\n" +
+            "0-3:24.2.1(101209112300W)(12785.333*GJ)\r\n" +
+            // 2
+            "0-2:24.1.0(003)\r\n" +
+            "0-2:96.1.0(5f5f5f5f54574f5f5f5f5f)\r\n" +
+            "0-2:24.2.1(101209112200W)(12785.222*m3)\r\n" +
+
+            "!7CC1\r\n" +
             "\r\n"; // Stray newline that should be ignored.
 
         // Add the content to the runner (just because we 'should' have some content).
@@ -105,7 +125,7 @@ public class DSMRParserProcessorTest {
         MockFlowFile result = results.get(0);
 
         assertAttributeEquals(result, "dsmr.validCRC",       "true");
-        assertAttributeEquals(result, "dsmr.crc",            "9DF0");
+        assertAttributeEquals(result, "dsmr.crc",            "7CC1");
 
         assertAttributeEquals(result, "dsmr.ident",          "/ISK5\\2M550T-1012");
         assertAttributeEquals(result, "dsmr.p1Version",      "50");
@@ -141,7 +161,59 @@ public class DSMRParserProcessorTest {
         assertAttributeEquals(result, "dsmr.powerReturnedL1",                       "0.0");
         assertAttributeEquals(result, "dsmr.powerReturnedL2",                       "0.0");
         assertAttributeEquals(result, "dsmr.powerReturnedL3",                       "0.0");
-//        assertAttributeEquals(result, "dsmr.mBusEvents",                              "0");
+
+
+        assertAttributeEquals(result, "dsmr.mBusEvents",                              "4");
+
+        assertAttributeEquals(result, "dsmr.mbus.1.deviceType",                   "2");
+        assertAttributeEquals(result, "dsmr.mbus.1.equipmentId",                  "____ONE____");
+        assertAttributeEquals(result, "dsmr.mbus.1.timestamp",                    "2010-12-09T11:21:00+01:00");
+        assertAttributeEquals(result, "dsmr.mbus.1.timestamp.epochSecond",        "1291890060");
+        assertAttributeEquals(result, "dsmr.mbus.1.unit",                         "kWh");
+        assertAttributeEquals(result, "dsmr.mbus.1.value",                        "12785.111");
+
+        assertAttributeEquals(result, "dsmr.mbus.2.deviceType",                   "3");
+        assertAttributeEquals(result, "dsmr.mbus.2.equipmentId",                  "____TWO____");
+        assertAttributeEquals(result, "dsmr.mbus.2.timestamp",                    "2010-12-09T11:22:00+01:00");
+        assertAttributeEquals(result, "dsmr.mbus.2.timestamp.epochSecond",        "1291890120");
+        assertAttributeEquals(result, "dsmr.mbus.2.unit",                         "m3");
+        assertAttributeEquals(result, "dsmr.mbus.2.value",                        "12785.222");
+
+        assertAttributeEquals(result, "dsmr.mbus.3.deviceType",                   "4");
+        assertAttributeEquals(result, "dsmr.mbus.3.equipmentId",                  "____THREE__");
+        assertAttributeEquals(result, "dsmr.mbus.3.timestamp",                    "2010-12-09T11:23:00+01:00");
+        assertAttributeEquals(result, "dsmr.mbus.3.timestamp.epochSecond",        "1291890180");
+        assertAttributeEquals(result, "dsmr.mbus.3.unit",                         "GJ");
+        assertAttributeEquals(result, "dsmr.mbus.3.value",                        "12785.333");
+
+        assertAttributeEquals(result, "dsmr.mbus.4.deviceType",                   "10");
+        assertAttributeEquals(result, "dsmr.mbus.4.equipmentId",                  "____FOUR___");
+        assertAttributeEquals(result, "dsmr.mbus.4.timestamp",                    "2010-12-09T11:24:00+01:00");
+        assertAttributeEquals(result, "dsmr.mbus.4.timestamp.epochSecond",        "1291890240");
+        assertAttributeEquals(result, "dsmr.mbus.4.unit",                         "GJ");
+        assertAttributeEquals(result, "dsmr.mbus.4.value",                        "12785.444");
+
+
+        assertAttributeEquals(result, "dsmr.slaveEMeterEquipmentId",              "____ONE____");
+        assertAttributeEquals(result, "dsmr.slaveEMeterkWh",                      "12785.111");
+        assertAttributeEquals(result, "dsmr.slaveEMeterTimestamp",                "2010-12-09T11:21:00+01:00");
+        assertAttributeEquals(result, "dsmr.slaveEMeterTimestamp.epochSecond",    "1291890060");
+
+        assertAttributeEquals(result, "dsmr.gasEquipmentId",                      "____TWO____");
+        assertAttributeEquals(result, "dsmr.gasM3",                               "12785.222");
+        assertAttributeEquals(result, "dsmr.gasTimestamp",                        "2010-12-09T11:22:00+01:00");
+        assertAttributeEquals(result, "dsmr.gasTimestamp.epochSecond",            "1291890120");
+
+        assertAttributeEquals(result, "dsmr.thermalHeatEquipmentId",              "____THREE__");
+        assertAttributeEquals(result, "dsmr.thermalHeatGJ",                       "12785.333");
+        assertAttributeEquals(result, "dsmr.thermalHeatTimestamp",                "2010-12-09T11:23:00+01:00");
+        assertAttributeEquals(result, "dsmr.thermalHeatTimestamp.epochSecond",    "1291890180");
+
+        assertAttributeEquals(result, "dsmr.thermalColdEquipmentId",              "____FOUR___");
+        assertAttributeEquals(result, "dsmr.thermalColdGJ",                       "12785.444");
+        assertAttributeEquals(result, "dsmr.thermalColdTimestamp",                "2010-12-09T11:24:00+01:00");
+        assertAttributeEquals(result, "dsmr.thermalColdTimestamp.epochSecond",    "1291890240");
+
 
         // Test attributes and content
         result.assertContentEquals(content);
@@ -279,6 +351,32 @@ public class DSMRParserProcessorTest {
 
         List<MockFlowFile> badresults = runner.getFlowFilesForRelationship(DSMRParserProcessor.BAD_RECORDS);
         assertEquals(1, badresults.size());
+    }
+
+
+    @Test
+    public void testNoContentRecord() {
+        // Test content
+        String content = "                                  "; // Big, but no data
+
+        // Add the content to the runner (just because we 'should' have some content).
+        MockFlowFile flowfile = runner.enqueue(content);
+        Map<String, String> attributes = new HashMap<>();
+        // NO attributes
+        flowfile.putAttributes(attributes);
+
+        // Run the enqueued content, it also takes an int = number of contents queued
+        runner.run(1);
+
+        // All results were processed with out failure
+        runner.assertQueueEmpty();
+
+        // If you need to read or do additional tests on results you can access the content
+        List<MockFlowFile> results = runner.getFlowFilesForRelationship(DSMRParserProcessor.VALID);
+        assertEquals(0, results.size());
+
+        List<MockFlowFile> badresults = runner.getFlowFilesForRelationship(DSMRParserProcessor.BAD_RECORDS);
+        assertEquals(0, badresults.size());
     }
 
 

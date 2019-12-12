@@ -94,10 +94,6 @@ public class DSMRParserProcessor extends AbstractProcessor {
         return Collections.emptyList();
     }
 
-//    @OnScheduled
-//    public void onScheduled(final ProcessContext context) {
-//    }
-
     private static final String ATTRIBUTE_PREFIX = "dsmr.";
 
     private void put(Map<String, String> map, String name, String value) {
@@ -167,7 +163,7 @@ public class DSMRParserProcessor extends AbstractProcessor {
         DSMRTelegram record = ParseDsmrTelegram.parse(contentString);
 
         if (record == null) {
-            return;
+            return; // This should not happen.
         }
 
         Map<String, String> parseResults = new HashMap<>();
@@ -214,6 +210,7 @@ public class DSMRParserProcessor extends AbstractProcessor {
         put(parseResults, "powerReturnedL3",                  record.getPowerReturnedL3());                  // Instantaneous active power L3 (-P)
         put(parseResults, "message",                          record.getMessage());                          // Text message max 1024 characters.
 
+        put(parseResults, "mBusEvents",                       record.getMBusEvents().size());                // The number of available MBus entries
 
         for(Map.Entry<Integer, MBusEvent> mBusEventEntry: record.getMBusEvents().entrySet()) {
             MBusEvent mBusEvent = mBusEventEntry.getValue();
