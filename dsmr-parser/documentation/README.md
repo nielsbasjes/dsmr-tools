@@ -37,7 +37,7 @@ The only match is the "gas" = "3" case.
 |Reserved|..........|20 to FF
 
 <!--
-    Copyright 2019 Niels Basjes
+    Copyright (C) 2019-2019 Niels Basjes
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
