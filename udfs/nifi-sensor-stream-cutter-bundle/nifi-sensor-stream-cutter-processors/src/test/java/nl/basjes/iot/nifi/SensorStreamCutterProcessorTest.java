@@ -23,7 +23,6 @@ import org.apache.nifi.util.TestRunners;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.List;
 
 import static nl.basjes.iot.nifi.SensorStreamCutterProcessor.END_OF_RECORD_REGEX;

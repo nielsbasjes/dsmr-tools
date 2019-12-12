@@ -156,6 +156,7 @@
             <exclude>**/testfiles/**</exclude>
             <exclude>**/testinput.txt</exclude>
             <exclude>**/*.log</exclude>
+            <exclude>**/src/test/data/**</exclude>
             <!-- File generated during build -->
             <exclude>**/target/**</exclude>
             <exclude>**/dependency-reduced-pom.xml</exclude>
