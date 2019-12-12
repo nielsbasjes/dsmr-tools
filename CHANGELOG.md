@@ -1,6 +1,10 @@
 This is intended as an overview of the major changes
 
-v0.3-SNAPSHOT
+v0.4-SNAPSHOT
+===
+...
+
+v0.3
 ===
 - Changed the MBus channel Device type from a String to an Integer.
 - Added basic support to also accept kWh for MBus devices.
