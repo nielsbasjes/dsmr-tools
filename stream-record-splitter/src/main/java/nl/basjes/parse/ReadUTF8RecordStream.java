@@ -18,6 +18,7 @@
 
 package nl.basjes.parse;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,8 +86,8 @@ public class ReadUTF8RecordStream implements Serializable {
 
             final int length = previousLastRecord.length();
             if (length > maxRecordSize) {
-                LOG.error("After {} bytes the end-of-record pattern     {}     has not been found.",
-                    length, endMatcher.pattern());
+                LOG.error("After {} bytes the end-of-record pattern  >>>{}<<<  has not been found.",
+                    length, StringEscapeUtils.escapeJava(endMatcher.pattern()));
                 previousLastRecord = null;
                 throw new IOException("After "+ length +" bytes the end-of-record pattern has not been found yet.");
             }
