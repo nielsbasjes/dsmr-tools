@@ -76,7 +76,7 @@ field
     | cosemid='1-0:99.97.0'  '(' count=INT ')' '(' eventTypeId=COSEMID ')'
                                 ( '(' eventTime=TIMESTAMP ')'
                                   '(' eventDuration=INT '*' eventDurationUnit='s' ')'
-                                )+                                      #powerFailureEventLog             // Power failure event log
+                                )+                                           #powerFailureEventLog             // Power failure event log
 
     | cosemid='1-0:32.32.0'  '(' count=INT  ')'                              #voltageSagsPhaseL1               // Number of voltage sags in phase L1
     | cosemid='1-0:52.32.0'  '(' count=INT  ')'                              #voltageSagsPhaseL2               // Number of voltage sags in phase L2
@@ -101,20 +101,20 @@ field
     | cosemid='0-1:24.1.0'   '(' type=INT ')'                                #mBus1Type                        // MBus channel 1: Device type.
     | cosemid='0-1:96.1.0'   '(' id=HEXSTRING ')'                            #mBus1EquipmentId                 // MBus channel 1: Equipment Identifier.
     | cosemid='0-1:24.2.1'   '(' timestamp=TIMESTAMP ')'
-                             '(' value=(FLOAT|INT) '*' unit=('m3'|'GJ') ')'  #mBus1Usage                       // MBus channel 1: Last 5 minute reading.
+                             '(' value=(FLOAT|INT) '*' unit=('m3'|'GJ'|'kWh') ')'  #mBus1Usage                 // MBus channel 1: Last 5 minute reading.
 
     | cosemid='0-2:24.1.0'   '(' type=INT ')'                                #mBus2Type                        // MBus channel 2: Device type.
     | cosemid='0-2:96.1.0'   '(' id=HEXSTRING ')'                            #mBus2EquipmentId                 // MBus channel 2: Equipment Identifier.
     | cosemid='0-2:24.2.1'   '(' timestamp=TIMESTAMP ')'
-                             '(' value=(FLOAT|INT) '*' unit=('m3'|'GJ') ')'  #mBus2Usage                       // MBus channel 2: Last 5 minute reading.
+                             '(' value=(FLOAT|INT) '*' unit=('m3'|'GJ'|'kWh') ')'  #mBus2Usage                 // MBus channel 2: Last 5 minute reading.
 
     | cosemid='0-3:24.1.0'   '(' type=INT ')'                                #mBus3Type                        // MBus channel 3: Device type.
     | cosemid='0-3:96.1.0'   '(' id=HEXSTRING ')'                            #mBus3EquipmentId                 // MBus channel 3: Equipment Identifier.
     | cosemid='0-3:24.2.1'   '(' timestamp=TIMESTAMP ')'
-                             '(' value=(FLOAT|INT) '*' unit=('m3'|'GJ') ')'  #mBus3Usage                       // MBus channel 3: Last 5 minute reading.
+                             '(' value=(FLOAT|INT) '*' unit=('m3'|'GJ'|'kWh') ')'  #mBus3Usage                 // MBus channel 3: Last 5 minute reading.
 
     | cosemid='0-4:24.1.0'   '(' type=INT ')'                                #mBus4Type                        // MBus channel 4: Device type.
     | cosemid='0-4:96.1.0'   '(' id=HEXSTRING ')'                            #mBus4EquipmentId                 // MBus channel 4: Equipment Identifier.
     | cosemid='0-4:24.2.1'   '(' timestamp=TIMESTAMP ')'
-                             '(' value=(FLOAT|INT) '*' unit=('m3'|'GJ') ')'  #mBus4Usage                       // MBus channel 4: Last 5 minute reading.
+                             '(' value=(FLOAT|INT) '*' unit=('m3'|'GJ'|'kWh') ')'  #mBus4Usage                 // MBus channel 4: Last 5 minute reading.
     ;

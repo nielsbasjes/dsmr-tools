@@ -124,6 +124,12 @@ public class DSMRParserProcessor extends AbstractProcessor {
         }
     }
 
+    private void put(Map<String, String> map, String name, Integer value) {
+        if (value != null) {
+            map.put(ATTRIBUTE_PREFIX + name, Integer.toString(value));
+        }
+    }
+
     private void put(Map<String, String> map, String name, ZonedDateTime value) {
         if (value != null) {
             map.put(ATTRIBUTE_PREFIX + name, ISO_OFFSET_DATE_TIME.format(value));

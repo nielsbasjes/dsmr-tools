@@ -153,8 +153,10 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
         for (Map.Entry<Integer, MBusEvent> mBusEventEntry: dsmrTelegram.mBusEvents.entrySet()) {
             MBusEvent mBusEvent = mBusEventEntry.getValue();
 
+            // TODO: Check if the correct unit has been provided (so no 'm3' electric power) .
+
             // This mapping is based on the documentation found on http://www.m-bus.com/
-            switch (Integer.parseInt(mBusEvent.deviceType)) {
+            switch (mBusEvent.deviceType) {
 //                case 0x00: // Other                                                               0000 0000  00
 //                case 0x01: // Oil                                                                 0000 0001  01
                 case 0x02: // Electricity via a slave                                               0000 0010  02
@@ -304,15 +306,15 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
         return dsmrTelegram.mBusEvents.computeIfAbsent(index, i -> new MBusEvent());
     }
 
-    private void setMBusType(int index, String type) {
+    private void setMBusType(int index, int type) {
         MBusEvent mBusEvent = getMBusEvent(index);
         mBusEvent.deviceType = type;
     }
 
-    @Override public Void visitMBus1Type(MBus1TypeContext ctx) { setMBusType(1, ctx.type.getText()); return null; }
-    @Override public Void visitMBus2Type(MBus2TypeContext ctx) { setMBusType(2, ctx.type.getText()); return null; }
-    @Override public Void visitMBus3Type(MBus3TypeContext ctx) { setMBusType(3, ctx.type.getText()); return null; }
-    @Override public Void visitMBus4Type(MBus4TypeContext ctx) { setMBusType(4, ctx.type.getText()); return null; }
+    @Override public Void visitMBus1Type(MBus1TypeContext ctx) { setMBusType(1, Integer.parseInt(ctx.type.getText())); return null; }
+    @Override public Void visitMBus2Type(MBus2TypeContext ctx) { setMBusType(2, Integer.parseInt(ctx.type.getText())); return null; }
+    @Override public Void visitMBus3Type(MBus3TypeContext ctx) { setMBusType(3, Integer.parseInt(ctx.type.getText())); return null; }
+    @Override public Void visitMBus4Type(MBus4TypeContext ctx) { setMBusType(4, Integer.parseInt(ctx.type.getText())); return null; }
 
     private void setMBusEquipmentId(int index, String equipmentId) {
         MBusEvent mBusEvent = getMBusEvent(index);
