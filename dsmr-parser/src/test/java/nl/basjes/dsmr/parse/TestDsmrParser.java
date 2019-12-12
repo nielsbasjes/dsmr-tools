@@ -565,6 +565,13 @@ public class TestDsmrParser {
     }
 
     @Test
+    public void testSyntaxNotEmpty(){
+        DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(" ");
+        assertNotNull(dsmrTelegram);
+        assertFalse(dsmrTelegram.isValid());
+    }
+
+    @Test
     public void testSyntaxError(){
         String testcase = "\r\n" +
             "/ISk5\\2MT382-1000\r\n" +
