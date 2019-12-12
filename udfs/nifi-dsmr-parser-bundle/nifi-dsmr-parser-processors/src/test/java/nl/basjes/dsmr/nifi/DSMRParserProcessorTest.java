@@ -27,6 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static nl.basjes.dsmr.nifi.DSMRParserProcessor.BAD_RECORDS;
+import static nl.basjes.dsmr.nifi.DSMRParserProcessor.INVALID_CRC;
+import static nl.basjes.dsmr.nifi.DSMRParserProcessor.VALID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DSMRParserProcessorTest {
@@ -113,13 +116,13 @@ public class DSMRParserProcessorTest {
         runner.assertQueueEmpty();
 
         // If you need to read or do additional tests on results you can access the content
-        List<MockFlowFile> results = runner.getFlowFilesForRelationship(DSMRParserProcessor.VALID);
+        List<MockFlowFile> results = runner.getFlowFilesForRelationship(VALID);
         assertEquals(1, results.size());
 
-        List<MockFlowFile> invalidCRCresults = runner.getFlowFilesForRelationship(DSMRParserProcessor.INVALID_CRC);
+        List<MockFlowFile> invalidCRCresults = runner.getFlowFilesForRelationship(INVALID_CRC);
         assertEquals(0, invalidCRCresults.size());
 
-        List<MockFlowFile> badresults = runner.getFlowFilesForRelationship(DSMRParserProcessor.BAD_RECORDS);
+        List<MockFlowFile> badresults = runner.getFlowFilesForRelationship(BAD_RECORDS);
         assertEquals(0, badresults.size());
 
         MockFlowFile result = results.get(0);
@@ -274,13 +277,13 @@ public class DSMRParserProcessorTest {
         runner.assertQueueEmpty();
 
         // If you need to read or do additional tests on results you can access the content
-        List<MockFlowFile> validResults = runner.getFlowFilesForRelationship(DSMRParserProcessor.VALID);
+        List<MockFlowFile> validResults = runner.getFlowFilesForRelationship(VALID);
         assertEquals(0, validResults.size());
 
-        List<MockFlowFile> invalidCRCresults = runner.getFlowFilesForRelationship(DSMRParserProcessor.INVALID_CRC);
+        List<MockFlowFile> invalidCRCresults = runner.getFlowFilesForRelationship(INVALID_CRC);
         assertEquals(1, invalidCRCresults.size());
 
-        List<MockFlowFile> badresults = runner.getFlowFilesForRelationship(DSMRParserProcessor.BAD_RECORDS);
+        List<MockFlowFile> badresults = runner.getFlowFilesForRelationship(BAD_RECORDS);
         assertEquals(0, badresults.size());
 
         MockFlowFile result = invalidCRCresults.get(0);
@@ -329,32 +332,6 @@ public class DSMRParserProcessorTest {
     }
 
     @Test
-    public void testBadSizeRecord() {
-        // Test content
-        String content = "  "; // Almost empty
-
-        // Add the content to the runner (just because we 'should' have some content).
-        MockFlowFile flowfile = runner.enqueue(content);
-        Map<String, String> attributes = new HashMap<>();
-        // NO attributes
-        flowfile.putAttributes(attributes);
-
-        // Run the enqueued content, it also takes an int = number of contents queued
-        runner.run(1);
-
-        // All results were processed with out failure
-        runner.assertQueueEmpty();
-
-        // If you need to read or do additional tests on results you can access the content
-        List<MockFlowFile> results = runner.getFlowFilesForRelationship(DSMRParserProcessor.VALID);
-        assertEquals(0, results.size());
-
-        List<MockFlowFile> badresults = runner.getFlowFilesForRelationship(DSMRParserProcessor.BAD_RECORDS);
-        assertEquals(1, badresults.size());
-    }
-
-
-    @Test
     public void testNoContentRecord() {
         // Test content
         String content = "                                  "; // Big, but no data
@@ -372,11 +349,92 @@ public class DSMRParserProcessorTest {
         runner.assertQueueEmpty();
 
         // If you need to read or do additional tests on results you can access the content
-        List<MockFlowFile> results = runner.getFlowFilesForRelationship(DSMRParserProcessor.VALID);
+        List<MockFlowFile> results = runner.getFlowFilesForRelationship(VALID);
         assertEquals(0, results.size());
 
-        List<MockFlowFile> badresults = runner.getFlowFilesForRelationship(DSMRParserProcessor.BAD_RECORDS);
-        assertEquals(0, badresults.size());
+        List<MockFlowFile> invalidCRCresults = runner.getFlowFilesForRelationship(INVALID_CRC);
+        assertEquals(0, invalidCRCresults.size());
+
+        List<MockFlowFile> badresults = runner.getFlowFilesForRelationship(BAD_RECORDS);
+        assertEquals(1, badresults.size());
+    }
+
+    @Test
+    public void testTooSmallRecord() {
+        // Test content
+        String content = "  "; // Almost empty
+
+        // Add the content to the runner (just because we 'should' have some content).
+        MockFlowFile flowfile = runner.enqueue(content);
+        Map<String, String> attributes = new HashMap<>();
+        // NO attributes
+        flowfile.putAttributes(attributes);
+
+        // Run the enqueued content, it also takes an int = number of contents queued
+        runner.run(1);
+
+        // All results were processed with out failure
+        runner.assertQueueEmpty();
+
+        // If you need to read or do additional tests on results you can access the content
+        List<MockFlowFile> results = runner.getFlowFilesForRelationship(VALID);
+        assertEquals(0, results.size());
+
+        List<MockFlowFile> invalidCRCresults = runner.getFlowFilesForRelationship(INVALID_CRC);
+        assertEquals(0, invalidCRCresults.size());
+
+        List<MockFlowFile> badresults = runner.getFlowFilesForRelationship(BAD_RECORDS);
+        assertEquals(1, badresults.size());
+    }
+
+
+    @Test
+    public void testTooLargeRecord() {
+        // Test content
+        StringBuilder stringBuilder = new StringBuilder(10000000);
+        for (int i = 0; i < 2000; i++) {
+            stringBuilder
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ")
+                .append("                                                  ");
+        }
+        String content = stringBuilder.toString();
+
+        // Add the content to the runner (just because we 'should' have some content).
+        MockFlowFile flowfile = runner.enqueue(content);
+        Map<String, String> attributes = new HashMap<>();
+        // NO attributes
+        flowfile.putAttributes(attributes);
+
+        // Run the enqueued content, it also takes an int = number of contents queued
+        runner.run(1);
+
+        // All results were processed with out failure
+        runner.assertQueueEmpty();
+
+        // If you need to read or do additional tests on results you can access the content
+        List<MockFlowFile> results = runner.getFlowFilesForRelationship(VALID);
+        assertEquals(0, results.size());
+
+        List<MockFlowFile> badresults = runner.getFlowFilesForRelationship(BAD_RECORDS);
+        assertEquals(1, badresults.size());
     }
 
 

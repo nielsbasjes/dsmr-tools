@@ -160,10 +160,13 @@ public class DSMRParserProcessor extends AbstractProcessor {
         final long len = Math.min(byteBuffer.length, flowFile.getSize());
         String contentString = new String(byteBuffer, 0, (int) len, UTF_8);
 
+        // This ONLY returns null iff the content is either null or empty.
+        // At this point this can no longer be the case because of the size check earlier.
         DSMRTelegram record = ParseDsmrTelegram.parse(contentString);
 
-        if (record == null) {
-            return; // This should not happen.
+        if (record.getIdent() == null) {
+            session.transfer(flowFile, BAD_RECORDS);
+            return; // Garbage
         }
 
         Map<String, String> parseResults = new HashMap<>();
