@@ -25,7 +25,7 @@
   <parent>
     <groupId>nl.basjes.dsmr</groupId>
     <artifactId>dsmr-parser-parent</artifactId>
-    <version>0.3</version>
+    <version>0.4-SNAPSHOT</version>
   </parent>
   <artifactId>dsmr-parser</artifactId>
 
@@ -60,7 +60,7 @@
     <dependency>
       <groupId>nl.basjes.iot</groupId>
       <artifactId>stream-record-splitter</artifactId>
-      <version>0.3</version>
+      <version>0.4-SNAPSHOT</version>
     </dependency>
 
   </dependencies>
