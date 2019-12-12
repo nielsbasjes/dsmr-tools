@@ -140,6 +140,8 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
 
         lexer.removeErrorListeners();
         parser.removeErrorListeners();
+        lexer.addErrorListener(this);
+        parser.addErrorListener(this);
 
         TelegramContext telegramContext = parser.telegram();
 
