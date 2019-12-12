@@ -43,13 +43,13 @@ Several of the components have been published to maven central and can now be ea
     <dependency>
         <groupId>nl.basjes.iot</groupId>
         <artifactId>stream-record-splitter</artifactId>
-        <version>0.1</version>
+        <version>0.3</version>
     </dependency>
 
     <dependency>
         <groupId>nl.basjes.dsmr</groupId>
         <artifactId>dsmr-parser</artifactId>
-        <version>0.1</version>
+        <version>0.3</version>
     </dependency>
 
 ## Apache (Mi)Nifi processors
@@ -62,7 +62,7 @@ from Maven central as well.
         <groupId>nl.basjes.iot</groupId>
         <artifactId>nifi-sensor-stream-cutter</artifactId>
         <type>nar</type>
-        <version>0.1</version>
+        <version>0.3</version>
     </dependency>
 
 and
@@ -73,7 +73,7 @@ and
         <groupId>nl.basjes.dsmr</groupId>
         <artifactId>nifi-dsmr-parser</artifactId>
         <type>nar</type>
-        <version>0.1</version>
+        <version>0.3</version>
     </dependency>
 
 
