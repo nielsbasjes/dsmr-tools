@@ -67,7 +67,7 @@ public final class P1Simulator {
             double sin4 = Math.sin(epochMillis / sinPeriodScaler * 1.3);
 
             String record =
-                "/ISk5\\2MT382-1000\r\n" +
+                "/ISk5\\2MT382-1000 FAKE\r\n" +
                 "\r\n" +
                 "1-3:0.2.8(50)\r\n" +                 // DSMR Version
                 "0-0:1.0.0("+nowString+")\r\n" +      // Timestamp

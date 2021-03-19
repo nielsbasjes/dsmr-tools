@@ -24,7 +24,8 @@ grammar Dsmr;
 SPACES: [ \t\r\n]+ -> skip;
 
 //    /ISK5\2M550T-1012
-IDENT       : '/' [a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9] [0-9] [\\a-zA-Z0-9_-]+ ;
+//    /Ene5\SAGEMCOM CX2000-           <-- Note the space in the name !
+IDENT       : '/' [a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9] [0-9] [ \\a-zA-Z0-9_-]+ ;
 
 CRC         : '!' [0-9A-F][0-9A-F][0-9A-F][0-9A-F] ;
 

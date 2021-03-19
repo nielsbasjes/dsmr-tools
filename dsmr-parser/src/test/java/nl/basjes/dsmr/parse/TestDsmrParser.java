@@ -64,7 +64,7 @@ public class TestDsmrParser {
     // - Instantaneous active power (-P) per phase
 
     @Test
-    public void testParseTestcaseFromSpecification(){
+    void testParseTestcaseFromSpecification(){
         String testcase = "\r\n" +
             "/ISk5\\2MT382-1000\r\n" +
             "\r\n" +
@@ -164,7 +164,7 @@ public class TestDsmrParser {
     }
 
     @Test
-    public void testParseRealTelegram(){
+    void testParseRealTelegram(){
         DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(
             "/ISK5\\2M550T-1012\r\n" +
             "\r\n" +
@@ -247,7 +247,7 @@ public class TestDsmrParser {
     }
 
     @Test
-    public void testParseRealTelegram2(){
+    void testParseRealTelegram2(){
         DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(
             "/Ene5\\XS210 ESMR 5.0\r\n" +
             "\r\n" +
@@ -281,7 +281,7 @@ public class TestDsmrParser {
     }
 
     @Test
-    public void testParseRealTelegramWithGas(){
+    void testParseRealTelegramWithGas(){
         // From a Landis+Gyr E350 that also reports about the connected gas meter.
         DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(
             "/XMX5LGBBFG1009325446\r\n" +
@@ -360,9 +360,104 @@ public class TestDsmrParser {
 //        LOG.info("{}", dsmrTelegram);
     }
 
+    @Test
+    void testParseRealTelegramWithSpaceInDeviceName(){
+        // From a Enexis/Sagemcom T120D that has a space in the device name
+        DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(
+            "/Ene5\\SAGEMCOM CX2000-\r\n" +
+            "\r\n" +
+            "1-3:0.2.8(50)\r\n" +
+            "0-0:1.0.0(181202060910W)\r\n" +
+            "0-0:96.1.1(5354545454313233343530303237333137)\r\n" +
+            "1-0:1.8.1(000098.508*kWh)\r\n" +
+            "1-0:1.8.2(000000.000*kWh)\r\n" +
+            "1-0:2.8.1(000000.917*kWh)\r\n" +
+            "1-0:2.8.2(000000.000*kWh)\r\n" +
+            "0-0:96.14.0(0001)\r\n" +
+            "1-0:1.7.0(00.004*kW)\r\n" +
+            "1-0:2.7.0(00.000*kW)\r\n" +
+            "0-0:96.7.21(00933)\r\n" +
+            "0-0:96.7.9(00108)\r\n" +
+            "1-0:99.97.0(10)(0-0:96.7.19)" +
+                "(181201030814W)(0000758635*s)" +
+                "(180904173923S)(0000001820*s)" +
+                "(180707220440S)(0000024288*s)" +
+                "(180611204409S)(0002246666*s)" +
+                "(180425175248S)(0000002897*s)" +
+                "(180420221654S)(0000001068*s)" +
+                "(180226203438W)(0000952147*s)" +
+                "(180215192356W)(0000268881*s)" +
+                "(180209184337W)(0000003307*s)" +
+                "(180208200717W)(0000000266*s)\r\n" +
+            "1-0:32.32.0(00060)\r\n" +
+            "1-0:52.32.0(00044)\r\n" +
+            "1-0:72.32.0(00045)\r\n" +
+            "1-0:32.36.0(00000)\r\n" +
+            "1-0:52.36.0(00000)\r\n" +
+            "1-0:72.36.0(00000)\r\n" +
+            "0-0:96.13.0()\r\n" +
+            "1-0:32.7.0(227.0*V)\r\n" +
+            "1-0:52.7.0(226.0*V)\r\n" +
+            "1-0:72.7.0(228.0*V)\r\n" +
+            "1-0:31.7.0(000*A)\r\n" +
+            "1-0:51.7.0(000*A)\r\n" +
+            "1-0:71.7.0(000*A)\r\n" +
+            "1-0:21.7.0(00.004*kW)\r\n" +
+            "1-0:41.7.0(00.000*kW)\r\n" +
+            "1-0:61.7.0(00.000*kW)\r\n" +
+            "1-0:22.7.0(00.000*kW)\r\n" +
+            "1-0:42.7.0(00.000*kW)\r\n" +
+            "1-0:62.7.0(00.000*kW)\r\n" +
+            "!0B43\r\n"
+        );
+
+        assertEquals("/Ene5\\SAGEMCOM CX2000-", dsmrTelegram.getIdent());
+        assertEquals("50", dsmrTelegram.getP1Version());
+        assertEquals(ZonedDateTime.parse("2018-12-02T06:09:10+01:00"), dsmrTelegram.getTimestamp());
+
+        assertEquals("STTTT123450027317", dsmrTelegram.getEquipmentId());
+        assertEquals("", dsmrTelegram.getMessage());
+
+        assertEquals(        1, dsmrTelegram.getElectricityTariffIndicator());
+        assertEquals(   98.508, dsmrTelegram.getElectricityReceivedLowTariff(),    0.001);
+        assertEquals(      0.0, dsmrTelegram.getElectricityReceivedNormalTariff(), 0.001);
+        assertEquals(    0.917, dsmrTelegram.getElectricityReturnedLowTariff(),    0.001);
+        assertEquals(      0.0, dsmrTelegram.getElectricityReturnedNormalTariff(), 0.001);
+        assertEquals(    0.004, dsmrTelegram.getElectricityPowerReceived(),        0.001);
+        assertEquals(      0.0, dsmrTelegram.getElectricityPowerReturned(),        0.001);
+        assertEquals(      933, dsmrTelegram.getPowerFailures().longValue());
+        assertEquals(      108, dsmrTelegram.getLongPowerFailures().longValue());
+        assertEquals(       60, dsmrTelegram.getVoltageSagsPhaseL1().longValue());
+        assertEquals(       44, dsmrTelegram.getVoltageSagsPhaseL2());
+        assertEquals(       45, dsmrTelegram.getVoltageSagsPhaseL3());
+        assertEquals(        0, dsmrTelegram.getVoltageSwellsPhaseL1().longValue());
+        assertEquals(        0, dsmrTelegram.getVoltageSwellsPhaseL2());
+        assertEquals(        0, dsmrTelegram.getVoltageSwellsPhaseL3());
+        assertEquals(    227.0, dsmrTelegram.getVoltageL1());
+        assertEquals(    226.0, dsmrTelegram.getVoltageL2());
+        assertEquals(    228.0, dsmrTelegram.getVoltageL3());
+        assertEquals(      0.0, dsmrTelegram.getCurrentL1(),       0.001);
+        assertEquals(      0.0, dsmrTelegram.getCurrentL2());
+        assertEquals(      0.0, dsmrTelegram.getCurrentL3());
+        assertEquals(    0.004, dsmrTelegram.getPowerReceivedL1(), 0.001);
+        assertEquals(      0.0, dsmrTelegram.getPowerReceivedL2(),  0.001);
+        assertEquals(      0.0, dsmrTelegram.getPowerReceivedL3(),  0.001);
+        assertEquals(      0.0, dsmrTelegram.getPowerReturnedL1(), 0.001);
+        assertEquals(      0.0, dsmrTelegram.getPowerReturnedL2(),  0.001);
+        assertEquals(      0.0, dsmrTelegram.getPowerReturnedL3(),  0.001);
+        assertEquals(        0, dsmrTelegram.getMBusEvents().size());
+
+        assertNull(dsmrTelegram.getGasEquipmentId());
+
+        assertTrue(dsmrTelegram.isValidCRC());
+        assertEquals("0B43", dsmrTelegram.getCrc());
+
+//        LOG.info("{}", dsmrTelegram);
+    }
+
 
     @Test
-    public void testParseExtendedTestcase(){
+    void testParseExtendedTestcase(){
         String testcase = "\r\n" +
             "/ISk5\\2MT382-1000\r\n" +
             "\r\n" +
@@ -470,7 +565,7 @@ public class TestDsmrParser {
     }
 
 
-    public void validateParseExtendedTestcaseMultipleMbus(int mbusType, String unit){
+    void validateParseExtendedTestcaseMultipleMbus(int mbusType, String unit){
         String testcase = "\r\n" +
             "/ISk5\\2MT382-1000\r\n" +
             "\r\n" +
@@ -516,63 +611,63 @@ public class TestDsmrParser {
 
 
     @Test
-    public void testParseExtendedTestcaseMultipleElectric(){
+    void testParseExtendedTestcaseMultipleElectric(){
         validateParseExtendedTestcaseMultipleMbus(2, "kWh");
     }
 
     @Test
-    public void testParseExtendedTestcaseMultipleGas() {
+    void testParseExtendedTestcaseMultipleGas() {
         validateParseExtendedTestcaseMultipleMbus(3, "m3");
     }
 
     @Test
-    public void testParseExtendedTestcaseMultipleHeat(){
+    void testParseExtendedTestcaseMultipleHeat(){
         validateParseExtendedTestcaseMultipleMbus(4, "GJ");
     }
 
     @Test
-    public void testParseExtendedTestcaseMultipleWarmWater(){
+    void testParseExtendedTestcaseMultipleWarmWater(){
         validateParseExtendedTestcaseMultipleMbus(6, "m3");
     }
 
     @Test
-    public void testParseExtendedTestcaseMultipleWater(){
+    void testParseExtendedTestcaseMultipleWater(){
         validateParseExtendedTestcaseMultipleMbus(7, "m3");
     }
 
     @Test
-    public void testParseExtendedTestcaseMultipleCoolingInlet(){
+    void testParseExtendedTestcaseMultipleCoolingInlet(){
         validateParseExtendedTestcaseMultipleMbus(11, "GJ");
     }
 
     @Test
-    public void testParseExtendedTestcaseMultipleCoolingOutlet(){
+    void testParseExtendedTestcaseMultipleCoolingOutlet(){
         validateParseExtendedTestcaseMultipleMbus(10, "GJ");
     }
 
 
 
     @Test
-    public void testNull(){
+    void testNull(){
         DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(null);
         assertNull(dsmrTelegram);
     }
 
     @Test
-    public void testEmpty(){
+    void testEmpty(){
         DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse("");
         assertNull(dsmrTelegram);
     }
 
     @Test
-    public void testSyntaxNotEmpty(){
+    void testSyntaxNotEmpty(){
         DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(" ");
         assertNotNull(dsmrTelegram);
         assertFalse(dsmrTelegram.isValid());
     }
 
     @Test
-    public void testSyntaxError(){
+    void testSyntaxError(){
         String testcase = "\r\n" +
             "/ISk5\\2MT382-1000\r\n" +
             "\r\n" +
