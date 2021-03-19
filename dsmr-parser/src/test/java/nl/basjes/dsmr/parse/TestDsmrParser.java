@@ -451,6 +451,7 @@ public class TestDsmrParser {
 
         assertTrue(dsmrTelegram.isValidCRC());
         assertEquals("0B43", dsmrTelegram.getCrc());
+        assertTrue(dsmrTelegram.isValid());
 
 //        LOG.info("{}", dsmrTelegram);
     }
