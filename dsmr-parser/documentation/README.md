@@ -1,12 +1,61 @@
+# Specification
+
+## Main document
 Download via
 https://www.netbeheernederland.nl/dossiers/slimme-meter-15/documenten
 the file
 https://www.netbeheernederland.nl/_upload/Files/Slimme_meter_15_a727fce1f1.pdf
 
+## MBus Device type
 
-A big unknown was the Device Type field used when an MBus attached device is used.
+A big unknown in this specification was the Device Type field of an attached MBus device.
 
-Although I'm not 100% sure the only documentation that I have found (which also happens to match the only example telegrams I have) was found here: http://www.m-bus.com/
+Based mainly on the answers from Netbeheer Nederland only these values actually occur:
+
+    Meter type description                          Device type (hex)
+    Electricity Meter                               02
+    Gas meter                                       03
+
+### Answer from netbeheernederland.nl in december 2019 (in Dutch)
+
+In December 2019 I sent an email to Netbeheer Nederland and they kindly clarified this issue (in Dutch)
+
+    De mogelijke waarden voor device types staan de in achterliggende standaard EN-13757-3 tabel 6 (M-Bus).
+    In gebruik in de Nederlandse slimme meter zijn:
+
+    Meter type description                          Device type (hex)
+    Gas meter                                       03
+    Water meter                                     07
+    Electricity Meter                               02
+    Heat                                            04
+    Warm water (30 – 90 degrees C)                  06
+    Hot water (>=90 degrees C)                      15
+    Dual register meter (Hot/Cold water meter)      17
+
+    Wat betreft de voorbeelden voor water en warmte/koude meters; die zijn er niet.
+    Alhoewel de DSMR het wel mogelijk maakt om ook deze meters via de E-meter uit te lezen wordt er in de
+    praktijk geen gebruik van gemaakt omdat water en warmte/koude geen onderdeel zijn van de E/G netbeheerders.
+
+My simplified English translation:
+
+    The possible values are defined in EN-13757-3 tabel 6 (M-Bus) yet in the Dutch smart meters only these values
+    are actually used:
+
+    Meter type description                          Device type (hex)
+    Gas meter                                       03
+    Water meter                                     07
+    Electricity Meter                               02
+    Heat                                            04
+    Warm water (30 – 90 degrees C)                  06
+    Hot water (>=90 degrees C)                      15
+    Dual register meter (Hot/Cold water meter)      17
+
+    There are no examples available for the water and hot/cold meters because that is simply never used
+    because these are supplied by other companies that do not use these measuring systems.
+
+### Answer from m-bus.com
+
+I found additional information on http://www.m-bus.com/
 
 The only match is the "gas" = "3" case.
 
