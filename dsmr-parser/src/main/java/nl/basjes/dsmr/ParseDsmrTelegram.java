@@ -114,9 +114,9 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
         return new ParseDsmrTelegram(telegram).parse();
     }
 
-    private String          telegramString;
-    private DSMRTelegram    dsmrTelegram;
-    private TimestampParser timestampParser = new TimestampParser();
+    private final String          telegramString;
+    private final DSMRTelegram    dsmrTelegram;
+    private final TimestampParser timestampParser = new TimestampParser();
 
     private ParseDsmrTelegram(String telegram) {
         telegramString = telegram;
@@ -177,18 +177,22 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
                     }
                     break;
 
-                case 0x06: // Warm Water (30-90 Celcius)                                            0000 0110  06
+//                case 0x05: // Steam                                                               0000 0101  05
+//                case 0x06: // Warm Water (30-90 Celcius)                                          0000 0110  06
                 case 0x07: // Water                                                                 0000 0111  07
-                    if (dsmrTelegram.waterEquipmentId== null) {
+                    if (dsmrTelegram.waterEquipmentId == null) {
                         dsmrTelegram.waterEquipmentId               = mBusEvent.equipmentId;
                         dsmrTelegram.waterTimestamp                 = mBusEvent.timestamp;
                         dsmrTelegram.waterM3                        = mBusEvent.value;
                     }
                     break;
 
+//                case 0x08: // Heat Cost Allocator                                                 0000 1000  08
+//                case 0x09: // Compressed Air                                                      0000 1001  09
+
                 case 0x04: // Heat (Volume measured at return temperature: outlet)                  0000 0100  04
-                case 0x0C: // Heat (Volume measured at flow temperature: inlet)                     0000 1100  0C
-                    if (dsmrTelegram.thermalHeatEquipmentId== null) {
+//                case 0x0C: // Heat (Volume measured at flow temperature: inlet)                   0000 1100  0C
+                    if (dsmrTelegram.thermalHeatEquipmentId == null) {
                         dsmrTelegram.thermalHeatEquipmentId         = mBusEvent.equipmentId;
                         dsmrTelegram.thermalHeatTimestamp           = mBusEvent.timestamp;
                         dsmrTelegram.thermalHeatGJ                  = mBusEvent.value;
@@ -204,10 +208,6 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
                     }
                     break;
 
-//                case 0x05: // Steam                                                               0000 0101  05
-
-//                case 0x08: // Heat Cost Allocator                                                 0000 1000  08
-//                case 0x09: // Compressed Air                                                      0000 1001  09
 //                case 0xOD: // Heat / Cooling load meter                                           0000 1101  OD
 //                case 0x0E: // Bus / System                                                        0000 1110  0E
 //                case 0x0F: // Unknown Medium                                                      0000 1111  0F
