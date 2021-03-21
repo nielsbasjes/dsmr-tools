@@ -3,7 +3,7 @@ This is intended as an overview of the major changes
 v0.4-SNAPSHOT
 ===
 - Fix parsing a device name with a space ' ' or dot '.' in it.
-- Parse the list of power failures
+- Parse the list of power failures (including Nifi support)
 
 v0.3
 ===

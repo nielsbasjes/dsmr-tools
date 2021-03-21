@@ -18,6 +18,7 @@
 package nl.basjes.dsmr.nifi;
 
 import nl.basjes.dsmr.DSMRTelegram;
+import nl.basjes.dsmr.DSMRTelegram.PowerFailureEvent;
 import nl.basjes.dsmr.MBusEvent;
 import nl.basjes.dsmr.ParseDsmrTelegram;
 import org.apache.nifi.annotation.behavior.ReadsAttribute;
@@ -41,6 +42,7 @@ import org.apache.nifi.stream.io.StreamUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -191,7 +193,21 @@ public class DSMRParserProcessor extends AbstractProcessor {
 
         put(parseResults, "powerFailures",                    record.getPowerFailures());                    // Number of power failures in any phases
         put(parseResults, "longPowerFailures",                record.getLongPowerFailures());                // Number of long power failures in any phases
-// TODO: private double powerFailureEventLog;                       // Power failure event log
+
+        Long powerFailureEventLogSize = record.getPowerFailureEventLogSize();
+
+        if (powerFailureEventLogSize != null && powerFailureEventLogSize > 0) {
+            put(parseResults, "powerFailureEventLog.size",     powerFailureEventLogSize);                    // Number of long power failures in the log
+
+            int logEntry = 0;
+            for (PowerFailureEvent powerFailureEvent: record.getPowerFailureEventLog()) {
+                put(parseResults, "powerFailureEventLog." + logEntry + ".startTime",       powerFailureEvent.getStartTime().toString());             // When the power failure started
+                put(parseResults, "powerFailureEventLog." + logEntry + ".endTime",         powerFailureEvent.getEndTime().toString());               // When the power failure ended
+                put(parseResults, "powerFailureEventLog." + logEntry + ".durationSeconds", powerFailureEvent.getDuration().get(ChronoUnit.SECONDS)); // How many seconds it lasted
+                logEntry++;
+            }
+        }
+
         put(parseResults, "voltageSagsPhaseL1",               record.getVoltageSagsPhaseL1());               // Number of voltage sags in phase L1
         put(parseResults, "voltageSagsPhaseL2",               record.getVoltageSagsPhaseL2());               // Number of voltage sags in phase L2
         put(parseResults, "voltageSagsPhaseL3",               record.getVoltageSagsPhaseL3());               // Number of voltage sags in phase L3

@@ -60,7 +60,7 @@ class DSMRParserProcessorTest {
             "1-0:2.7.0(00.000*kW)\r\n" +
             "0-0:96.7.21(00005)\r\n" +
             "0-0:96.7.9(00003)\r\n" +
-            "1-0:99.97.0(1)(0-0:96.7.19)(180417201458S)(0000000236*s)\r\n" +
+            "1-0:99.97.0(2)(0-0:96.7.19)(180417201458S)(0000000236*s)(210321163842S)(0000001234*s)\r\n" +
             "1-0:32.32.0(00001)\r\n" +
             "1-0:52.32.0(00001)\r\n" +
             "1-0:72.32.0(00001)\r\n" +
@@ -100,7 +100,7 @@ class DSMRParserProcessorTest {
             "0-2:96.1.0(5f5f5f5f54574f5f5f5f5f)\r\n" +
             "0-2:24.2.1(101209112200W)(12785.222*m3)\r\n" +
 
-            "!7CC1\r\n" +
+            "!B053\r\n" +
             "\r\n"; // Stray newline that should be ignored.
 
         // Add the content to the runner (just because we 'should' have some content).
@@ -128,7 +128,7 @@ class DSMRParserProcessorTest {
         MockFlowFile result = results.get(0);
 
         assertAttributeEquals(result, "dsmr.validCRC",       "true");
-        assertAttributeEquals(result, "dsmr.crc",            "7CC1");
+        assertAttributeEquals(result, "dsmr.crc",            "B053");
 
         assertAttributeEquals(result, "dsmr.ident",          "/ISK5\\2M550T-1012");
         assertAttributeEquals(result, "dsmr.p1Version",      "50");
@@ -146,6 +146,17 @@ class DSMRParserProcessorTest {
         assertAttributeEquals(result, "dsmr.electricityPowerReturned",              "0.0");
         assertAttributeEquals(result, "dsmr.powerFailures",                           "5");
         assertAttributeEquals(result, "dsmr.longPowerFailures",                       "3");
+
+        assertAttributeEquals(result, "dsmr.powerFailureEventLog.size",               "2");
+
+        assertAttributeEquals(result, "dsmr.powerFailureEventLog.0.startTime",        "2018-04-17T20:11:02+02:00");
+        assertAttributeEquals(result, "dsmr.powerFailureEventLog.0.endTime",          "2018-04-17T20:14:58+02:00");
+        assertAttributeEquals(result, "dsmr.powerFailureEventLog.0.durationSeconds",  "236");
+
+        assertAttributeEquals(result, "dsmr.powerFailureEventLog.1.startTime",        "2021-03-21T16:18:08+02:00");
+        assertAttributeEquals(result, "dsmr.powerFailureEventLog.1.endTime",          "2021-03-21T16:38:42+02:00");
+        assertAttributeEquals(result, "dsmr.powerFailureEventLog.1.durationSeconds",  "1234");
+
         assertAttributeEquals(result, "dsmr.voltageSagsPhaseL1",                      "1");
         assertAttributeEquals(result, "dsmr.voltageSagsPhaseL2",                      "1");
         assertAttributeEquals(result, "dsmr.voltageSagsPhaseL3",                      "1");
@@ -241,7 +252,7 @@ class DSMRParserProcessorTest {
                 "1-0:2.7.0(00.000*kW)\r\n" +
                 "0-0:96.7.21(00005)\r\n" +
                 "0-0:96.7.9(00003)\r\n" +
-                "1-0:99.97.0(1)(0-0:96.7.19)(180417201458S)(0000000236*s)\r\n" +
+                "1-0:99.97.0(2)(0-0:96.7.19)(180417201458S)(0000000236*s)(210321163842S)(0000001234*s)\r\n" +
                 "1-0:32.32.0(00001)\r\n" +
                 "1-0:52.32.0(00001)\r\n" +
                 "1-0:72.32.0(00001)\r\n" +
@@ -307,6 +318,17 @@ class DSMRParserProcessorTest {
         assertAttributeEquals(result, "dsmr.electricityPowerReturned",              "0.0");
         assertAttributeEquals(result, "dsmr.powerFailures",                           "5");
         assertAttributeEquals(result, "dsmr.longPowerFailures",                       "3");
+
+        assertAttributeEquals(result, "dsmr.powerFailureEventLog.size",               "2");
+
+        assertAttributeEquals(result, "dsmr.powerFailureEventLog.0.startTime",        "2018-04-17T20:11:02+02:00");
+        assertAttributeEquals(result, "dsmr.powerFailureEventLog.0.endTime",          "2018-04-17T20:14:58+02:00");
+        assertAttributeEquals(result, "dsmr.powerFailureEventLog.0.durationSeconds",  "236");
+
+        assertAttributeEquals(result, "dsmr.powerFailureEventLog.1.startTime",        "2021-03-21T16:18:08+02:00");
+        assertAttributeEquals(result, "dsmr.powerFailureEventLog.1.endTime",          "2021-03-21T16:38:42+02:00");
+        assertAttributeEquals(result, "dsmr.powerFailureEventLog.1.durationSeconds",  "1234");
+
         assertAttributeEquals(result, "dsmr.voltageSagsPhaseL1",                      "1");
         assertAttributeEquals(result, "dsmr.voltageSagsPhaseL2",                      "1");
         assertAttributeEquals(result, "dsmr.voltageSagsPhaseL3",                      "1");
