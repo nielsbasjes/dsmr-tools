@@ -174,7 +174,7 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
                         telegram.slaveEMeterEquipmentId         = mBusEvent.equipmentId;
                         telegram.slaveEMeterTimestamp           = mBusEvent.timestamp;
                         telegram.slaveEMeterkWh                 = mBusEvent.value;
-                        if (!"kWh".equals(mBusEvent.unit)) {
+                        if (!mBusEvent.unit.isEmpty() && !"kWh".equals(mBusEvent.unit)) {
                             hasSyntaxError = true;
                         }
                     }
@@ -185,7 +185,7 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
                         telegram.gasEquipmentId                 = mBusEvent.equipmentId;
                         telegram.gasTimestamp                   = mBusEvent.timestamp;
                         telegram.gasM3                          = mBusEvent.value;
-                        if (!"m3".equals(mBusEvent.unit)) {
+                        if (!mBusEvent.unit.isEmpty() && !"m3".equals(mBusEvent.unit)) {
                             hasSyntaxError = true;
                         }
                     }
@@ -198,7 +198,7 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
                         telegram.waterEquipmentId               = mBusEvent.equipmentId;
                         telegram.waterTimestamp                 = mBusEvent.timestamp;
                         telegram.waterM3                        = mBusEvent.value;
-                        if (!"m3".equals(mBusEvent.unit)) {
+                        if (!mBusEvent.unit.isEmpty() && !"m3".equals(mBusEvent.unit)) {
                             hasSyntaxError = true;
                         }
                     }
@@ -213,7 +213,7 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
                         telegram.thermalHeatEquipmentId         = mBusEvent.equipmentId;
                         telegram.thermalHeatTimestamp           = mBusEvent.timestamp;
                         telegram.thermalHeatGJ                  = mBusEvent.value;
-                        if (!"GJ".equals(mBusEvent.unit)) {
+                        if (!mBusEvent.unit.isEmpty() && !"GJ".equals(mBusEvent.unit)) {
                             hasSyntaxError = true;
                         }
                     }
@@ -225,7 +225,7 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
                         telegram.thermalColdEquipmentId         = mBusEvent.equipmentId;
                         telegram.thermalColdTimestamp           = mBusEvent.timestamp;
                         telegram.thermalColdGJ                  = mBusEvent.value;
-                        if (!"GJ".equals(mBusEvent.unit)) {
+                        if (!mBusEvent.unit.isEmpty() && !"GJ".equals(mBusEvent.unit)) {
                             hasSyntaxError = true;
                         }
                     }
@@ -378,8 +378,8 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
         mBusEvent.unit = unit;
     }
 
-    @Override public Void visitMBus1Usage(MBus1UsageContext ctx) { setMBusUsage(1, ctx.timestamp.getText(), ctx.value.getText(), ctx.unit.getText()); return null; }
-    @Override public Void visitMBus2Usage(MBus2UsageContext ctx) { setMBusUsage(2, ctx.timestamp.getText(), ctx.value.getText(), ctx.unit.getText()); return null; }
-    @Override public Void visitMBus3Usage(MBus3UsageContext ctx) { setMBusUsage(3, ctx.timestamp.getText(), ctx.value.getText(), ctx.unit.getText()); return null; }
-    @Override public Void visitMBus4Usage(MBus4UsageContext ctx) { setMBusUsage(4, ctx.timestamp.getText(), ctx.value.getText(), ctx.unit.getText()); return null; }
+    @Override public Void visitMBus1Usage(MBus1UsageContext ctx) { setMBusUsage(1, ctx.timestamp.getText(), ctx.value.getText(), ctx.unit == null ? "" : ctx.unit.getText()); return null; }
+    @Override public Void visitMBus2Usage(MBus2UsageContext ctx) { setMBusUsage(2, ctx.timestamp.getText(), ctx.value.getText(), ctx.unit == null ? "" : ctx.unit.getText()); return null; }
+    @Override public Void visitMBus3Usage(MBus3UsageContext ctx) { setMBusUsage(3, ctx.timestamp.getText(), ctx.value.getText(), ctx.unit == null ? "" : ctx.unit.getText()); return null; }
+    @Override public Void visitMBus4Usage(MBus4UsageContext ctx) { setMBusUsage(4, ctx.timestamp.getText(), ctx.value.getText(), ctx.unit == null ? "" : ctx.unit.getText()); return null; }
 }
