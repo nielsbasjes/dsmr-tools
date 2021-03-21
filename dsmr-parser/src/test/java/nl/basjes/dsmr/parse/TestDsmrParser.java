@@ -277,6 +277,7 @@ class TestDsmrParser {
             "!8F46\r\n"
         );
 
+        assertEquals("/Ene5\\XS210 ESMR 5.0", dsmrTelegram.getIdent());
         LOG.info("{}", dsmrTelegram);
     }
 
