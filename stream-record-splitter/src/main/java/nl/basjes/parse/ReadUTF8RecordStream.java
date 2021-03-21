@@ -24,23 +24,22 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class ReadUTF8RecordStream implements Serializable {
+public class ReadUTF8RecordStream {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReadUTF8RecordStream.class);
 
     public static final long MIN_MAX_RECORD_SIZE =         10 * 1024L; //  10 KiB
     public static final long MAX_MAX_RECORD_SIZE = 100 * 1024 * 1024L; // 100 MiB
 
-    private InputStream inputStream;
-    private Pattern endMatcher;
-    private long maxRecordSize;
+    private final InputStream inputStream;
+    private final Pattern     endMatcher;
+    private       long        maxRecordSize;
 
     public ReadUTF8RecordStream(InputStream input, String recordEndRegex) {
         this(input, recordEndRegex, MIN_MAX_RECORD_SIZE);

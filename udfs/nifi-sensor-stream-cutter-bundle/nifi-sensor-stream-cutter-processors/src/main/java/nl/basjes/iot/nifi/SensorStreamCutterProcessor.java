@@ -78,10 +78,11 @@ public class SensorStreamCutterProcessor extends AbstractProcessor {
         .Builder()
         .name("End-of-record regex")
         .displayName("End-of-record regex")
-        .description("The regular expression that is the end of the record. NOTE: Grouping is NOT allowed!")
+        .description("The regular expression that is the end of the record. NOTE: Grouping is NOT allowed! " +
+            "Examples: Normal line ending: \\r?\\n   Separating DSMR record:   \\r\\n![0-9A-F]{4}\\r\\n")
         .required(true)
         .defaultValue("\\r?\\n")
-        .allowableValues("\\r?\\n", "\\r\\n![0-9A-F]{4}\\r\\n") // FIXME: Show these allowed values and still support a manual regex
+//        .allowableValues("\\r?\\n", "\\r\\n![0-9A-F]{4}\\r\\n") // Show these allowed values and still support a manual regex
         .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
         .addValidator(createRegexValidator(0, 0, false)) // It must be a regex without grouping
         .build();
