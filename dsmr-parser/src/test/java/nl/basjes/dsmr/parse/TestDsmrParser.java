@@ -19,6 +19,7 @@
 package nl.basjes.dsmr.parse;
 
 import nl.basjes.dsmr.DSMRTelegram;
+import nl.basjes.dsmr.DSMRTelegram.PowerFailureEvent;
 import nl.basjes.dsmr.MBusEvent;
 import nl.basjes.dsmr.ParseDsmrTelegram;
 import org.junit.jupiter.api.Test;
@@ -26,12 +27,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class TestDsmrParser {
 
@@ -125,6 +128,14 @@ class TestDsmrParser {
         assertEquals(      0.0,    dsmrTelegram.getElectricityPowerReturned(),        0.001);
         assertEquals(      4,      dsmrTelegram.getPowerFailures().longValue());
         assertEquals(      2,      dsmrTelegram.getLongPowerFailures().longValue());
+
+        assertEquals(2, dsmrTelegram.getPowerFailureEventLogSize());
+
+        List<PowerFailureEvent> powerFailureEventLog = dsmrTelegram.getPowerFailureEventLog();
+        assertEquals(2, powerFailureEventLog.size());
+        assertPowerFailureEvent(powerFailureEventLog.get(0), "2010-12-08T15:20:15+01:00", "2010-12-08T15:24:15+01:00", "PT4M");
+        assertPowerFailureEvent(powerFailureEventLog.get(1), "2010-12-08T15:05:03+01:00", "2010-12-08T15:10:04+01:00", "PT5M1S");
+
         assertEquals(      2,      dsmrTelegram.getVoltageSagsPhaseL1().longValue());
         assertEquals(      1,      dsmrTelegram.getVoltageSagsPhaseL2().longValue());
         assertEquals(      0,      dsmrTelegram.getVoltageSagsPhaseL3().longValue());
@@ -220,6 +231,13 @@ class TestDsmrParser {
         assertEquals(      0.0, dsmrTelegram.getElectricityPowerReturned(),        0.001);
         assertEquals(        5, dsmrTelegram.getPowerFailures().longValue());
         assertEquals(        3, dsmrTelegram.getLongPowerFailures().longValue());
+
+        assertEquals(1, dsmrTelegram.getPowerFailureEventLogSize());
+
+        List<PowerFailureEvent> powerFailureEventLog = dsmrTelegram.getPowerFailureEventLog();
+        assertEquals(1, powerFailureEventLog.size());
+        assertPowerFailureEvent(powerFailureEventLog.get(0), "2018-04-17T20:11:02+02:00", "2018-04-17T20:14:58+02:00", "PT3M56S");
+
         assertEquals(        1, dsmrTelegram.getVoltageSagsPhaseL1().longValue());
         assertEquals(        1, dsmrTelegram.getVoltageSagsPhaseL2().longValue());
         assertEquals(        1, dsmrTelegram.getVoltageSagsPhaseL3().longValue());
@@ -278,6 +296,10 @@ class TestDsmrParser {
         );
 
         assertEquals("/Ene5\\XS210 ESMR 5.0", dsmrTelegram.getIdent());
+
+        assertEquals(0, dsmrTelegram.getPowerFailureEventLogSize());
+        assertEquals(0, dsmrTelegram.getPowerFailureEventLog().size());
+
         LOG.info("{}", dsmrTelegram);
     }
 
@@ -328,6 +350,13 @@ class TestDsmrParser {
         assertEquals(    0.374, dsmrTelegram.getElectricityPowerReceived(),        0.001);
         assertEquals(      0.0, dsmrTelegram.getElectricityPowerReturned(),        0.001);
         assertEquals(        3, dsmrTelegram.getPowerFailures().longValue());
+
+        assertEquals(        1, dsmrTelegram.getPowerFailureEventLogSize());
+
+        List<PowerFailureEvent> powerFailureEventLog = dsmrTelegram.getPowerFailureEventLog();
+        assertEquals(1, powerFailureEventLog.size());
+        assertPowerFailureEvent(powerFailureEventLog.get(0), "2017-01-17T04:19:06+01:00", "2017-01-17T06:59:12+01:00", "PT2H40M6S");
+
         assertEquals(        1, dsmrTelegram.getLongPowerFailures().longValue());
         assertEquals(        0, dsmrTelegram.getVoltageSagsPhaseL1().longValue());
         assertNull(             dsmrTelegram.getVoltageSagsPhaseL2());
@@ -449,58 +478,19 @@ class TestDsmrParser {
         assertEquals(        0, dsmrTelegram.getMBusEvents().size());
 
         assertEquals(10, dsmrTelegram.getPowerFailureEventLogSize());
-        assertEquals(10, dsmrTelegram.getPowerFailureEventLog().size());
-        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-11-22T08:24:19+01:00, " +
-                                                      "endTime=2018-12-01T03:08:14+01:00, " +
-                                                     "duration=PT210H43M55S)",
-            dsmrTelegram.getPowerFailureEventLog().get(0).toString());
 
-        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-09-04T17:09:03+02:00, " +
-                                                      "endTime=2018-09-04T17:39:23+02:00, " +
-                                                     "duration=PT30M20S)",
-            dsmrTelegram.getPowerFailureEventLog().get(1).toString());
-
-        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-07-07T15:19:52+02:00, " +
-                                                      "endTime=2018-07-07T22:04:40+02:00, " +
-                                                     "duration=PT6H44M48S)",
-            dsmrTelegram.getPowerFailureEventLog().get(2).toString());
-
-        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-05-16T20:39:43+02:00, " +
-                                                      "endTime=2018-06-11T20:44:09+02:00, " +
-                                                     "duration=PT624H4M26S)",
-            dsmrTelegram.getPowerFailureEventLog().get(3).toString());
-
-        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-04-25T17:04:31+02:00, " +
-                                                      "endTime=2018-04-25T17:52:48+02:00, " +
-                                                     "duration=PT48M17S)",
-            dsmrTelegram.getPowerFailureEventLog().get(4).toString());
-
-        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-04-20T21:59:06+02:00, " +
-                                                      "endTime=2018-04-20T22:16:54+02:00, " +
-                                                     "duration=PT17M48S)",
-            dsmrTelegram.getPowerFailureEventLog().get(5).toString());
-
-        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-02-15T20:05:31+01:00, " +
-                                                      "endTime=2018-02-26T20:34:38+01:00, " +
-                                                     "duration=PT264H29M7S)",
-            dsmrTelegram.getPowerFailureEventLog().get(6).toString());
-
-        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-02-12T16:42:35+01:00, " +
-                                                      "endTime=2018-02-15T19:23:56+01:00, " +
-                                                     "duration=PT74H41M21S)",
-            dsmrTelegram.getPowerFailureEventLog().get(7).toString());
-
-        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-02-09T17:48:30+01:00, " +
-                                                      "endTime=2018-02-09T18:43:37+01:00, " +
-                                                     "duration=PT55M7S)",
-            dsmrTelegram.getPowerFailureEventLog().get(8).toString());
-
-        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-02-08T20:02:51+01:00, " +
-                                                      "endTime=2018-02-08T20:07:17+01:00, " +
-                                                     "duration=PT4M26S)",
-            dsmrTelegram.getPowerFailureEventLog().get(9).toString());
-
-
+        List<PowerFailureEvent> powerFailureEventLog = dsmrTelegram.getPowerFailureEventLog();
+        assertEquals(10, powerFailureEventLog.size());
+        assertPowerFailureEvent(powerFailureEventLog.get(0), "2018-11-22T08:24:19+01:00", "2018-12-01T03:08:14+01:00", "PT210H43M55S");
+        assertPowerFailureEvent(powerFailureEventLog.get(1), "2018-09-04T17:09:03+02:00", "2018-09-04T17:39:23+02:00", "PT30M20S");
+        assertPowerFailureEvent(powerFailureEventLog.get(2), "2018-07-07T15:19:52+02:00", "2018-07-07T22:04:40+02:00", "PT6H44M48S");
+        assertPowerFailureEvent(powerFailureEventLog.get(3), "2018-05-16T20:39:43+02:00", "2018-06-11T20:44:09+02:00", "PT624H4M26S");
+        assertPowerFailureEvent(powerFailureEventLog.get(4), "2018-04-25T17:04:31+02:00", "2018-04-25T17:52:48+02:00", "PT48M17S");
+        assertPowerFailureEvent(powerFailureEventLog.get(5), "2018-04-20T21:59:06+02:00", "2018-04-20T22:16:54+02:00", "PT17M48S");
+        assertPowerFailureEvent(powerFailureEventLog.get(6), "2018-02-15T20:05:31+01:00", "2018-02-26T20:34:38+01:00", "PT264H29M7S");
+        assertPowerFailureEvent(powerFailureEventLog.get(7), "2018-02-12T16:42:35+01:00", "2018-02-15T19:23:56+01:00", "PT74H41M21S");
+        assertPowerFailureEvent(powerFailureEventLog.get(8), "2018-02-09T17:48:30+01:00", "2018-02-09T18:43:37+01:00", "PT55M7S");
+        assertPowerFailureEvent(powerFailureEventLog.get(9), "2018-02-08T20:02:51+01:00", "2018-02-08T20:07:17+01:00", "PT4M26S");
 
         assertNull(dsmrTelegram.getGasEquipmentId());
 
@@ -511,6 +501,18 @@ class TestDsmrParser {
 //        LOG.info("{}", dsmrTelegram);
     }
 
+    private void assertPowerFailureEvent(PowerFailureEvent powerFailureEvent, String startTime, String endTime, String duration) {
+        String actualStartTime  = powerFailureEvent.getStartTime().toString();
+        String actualEndTime    = powerFailureEvent.getEndTime().toString();
+        String actualDuration   = powerFailureEvent.getDuration().toString();
+
+        if (!actualStartTime.equals(startTime) || !actualEndTime.equals(endTime) || !actualDuration.equals(duration)) {
+            fail("PowerFailureLogEntry is different: \n" +
+                 "Expected: " + startTime + " --> " + endTime + " ~~ " + duration + "\n" +
+                 "Actual  : " + actualStartTime + " --> " + actualEndTime + " ~~ " + actualDuration + "\n"
+            );
+        }
+    }
 
     @Test
     void testParseExtendedTestcase(){

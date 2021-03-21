@@ -165,8 +165,6 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
         for (Map.Entry<Integer, MBusEvent> mBusEventEntry: telegram.mBusEvents.entrySet()) {
             MBusEvent mBusEvent = mBusEventEntry.getValue();
 
-            // TODO: Check if the correct unit has been provided (so no 'm3' electric power) .
-
             // This mapping is based on the documentation found on http://www.m-bus.com/
             switch (mBusEvent.deviceType) {
 //                case 0x00: // Other                                                               0000 0000  00
@@ -176,6 +174,9 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
                         telegram.slaveEMeterEquipmentId         = mBusEvent.equipmentId;
                         telegram.slaveEMeterTimestamp           = mBusEvent.timestamp;
                         telegram.slaveEMeterkWh                 = mBusEvent.value;
+                        if (!"kWh".equals(mBusEvent.unit)) {
+                            hasSyntaxError = true;
+                        }
                     }
                     break;
 
@@ -184,6 +185,9 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
                         telegram.gasEquipmentId                 = mBusEvent.equipmentId;
                         telegram.gasTimestamp                   = mBusEvent.timestamp;
                         telegram.gasM3                          = mBusEvent.value;
+                        if (!"m3".equals(mBusEvent.unit)) {
+                            hasSyntaxError = true;
+                        }
                     }
                     break;
 
@@ -194,6 +198,9 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
                         telegram.waterEquipmentId               = mBusEvent.equipmentId;
                         telegram.waterTimestamp                 = mBusEvent.timestamp;
                         telegram.waterM3                        = mBusEvent.value;
+                        if (!"m3".equals(mBusEvent.unit)) {
+                            hasSyntaxError = true;
+                        }
                     }
                     break;
 
@@ -206,6 +213,9 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
                         telegram.thermalHeatEquipmentId         = mBusEvent.equipmentId;
                         telegram.thermalHeatTimestamp           = mBusEvent.timestamp;
                         telegram.thermalHeatGJ                  = mBusEvent.value;
+                        if (!"GJ".equals(mBusEvent.unit)) {
+                            hasSyntaxError = true;
+                        }
                     }
                     break;
 
@@ -215,6 +225,9 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
                         telegram.thermalColdEquipmentId         = mBusEvent.equipmentId;
                         telegram.thermalColdTimestamp           = mBusEvent.timestamp;
                         telegram.thermalColdGJ                  = mBusEvent.value;
+                        if (!"GJ".equals(mBusEvent.unit)) {
+                            hasSyntaxError = true;
+                        }
                     }
                     break;
 

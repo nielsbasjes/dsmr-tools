@@ -27,7 +27,7 @@ public final class CheckCRC {
     private CheckCRC() {
     }
 
-    private static int[] table = {
+    private static final int[] CRC_TABLE = {
         0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241,
         0xC601, 0x06C0, 0x0780, 0xC741, 0x0500, 0xC5C1, 0xC481, 0x0440,
         0xCC01, 0x0CC0, 0x0D80, 0xCD41, 0x0F00, 0xCFC1, 0xCE81, 0x0E40,
@@ -62,12 +62,12 @@ public final class CheckCRC {
         0x8201, 0x42C0, 0x4380, 0x8341, 0x4100, 0x81C1, 0x8081, 0x4040,
     };
 
-    private static Pattern extractPattern = Pattern.compile("(^/[^!]+!)([0-9A-Fa-f]{4})", Pattern.MULTILINE);
+    private static final Pattern EXTRACT_PATTERN = Pattern.compile("(^/[^!]+!)([0-9A-Fa-f]{4})", Pattern.MULTILINE);
 
     private static int calculatedCrc(byte[] telegramBytes) {
         int crc = 0x0000;
         for (byte b : telegramBytes) {
-            crc = (crc >>> 8) ^ table[(crc ^ b) & 0xff];
+            crc = (crc >>> 8) ^ CRC_TABLE[(crc ^ b) & 0xff];
         }
 
         return crc;
@@ -77,14 +77,13 @@ public final class CheckCRC {
         if (input == null) {
             return null;
         }
-        Matcher matcher = extractPattern.matcher(input);
+        Matcher matcher = EXTRACT_PATTERN.matcher(input);
 
         if (!matcher.find()) {
             return null;
         }
 
         String telegram = matcher.group(1);
-//        String expectedCrc = matcher.group(2);
         return calculatedCrc(telegram.getBytes(UTF_8));
     }
 
@@ -92,7 +91,7 @@ public final class CheckCRC {
         if (input == null) {
             return null;
         }
-        Matcher matcher = extractPattern.matcher(input);
+        Matcher matcher = EXTRACT_PATTERN.matcher(input);
 
         if (!matcher.find()) {
             return null;
@@ -105,7 +104,7 @@ public final class CheckCRC {
         if (input == null) {
             return null;
         }
-        Matcher matcher = extractPattern.matcher(input);
+        Matcher matcher = EXTRACT_PATTERN.matcher(input);
 
         if (!matcher.find()) {
             return input;
@@ -121,7 +120,7 @@ public final class CheckCRC {
         if (input == null) {
             return false;
         }
-        Matcher matcher = extractPattern.matcher(input);
+        Matcher matcher = EXTRACT_PATTERN.matcher(input);
 
         if (!matcher.find()) {
             return false;
