@@ -43,37 +43,37 @@ Several of the components have been published to maven central and can now be ea
     <dependency>
         <groupId>nl.basjes.iot</groupId>
         <artifactId>stream-record-splitter</artifactId>
-        <version>0.3</version>
+        <version>0.4</version>
     </dependency>
 
     <dependency>
         <groupId>nl.basjes.dsmr</groupId>
         <artifactId>dsmr-parser</artifactId>
-        <version>0.3</version>
+        <version>0.4</version>
     </dependency>
 
 ## Apache (Mi)Nifi processors
 The corresponding Nifi NAR files (built against Nifi 1.7.0 to allow using it with MiNiFi 0.5.0) can be downloaded
 from Maven central as well.
 
-    https://repo1.maven.org/maven2/nl/basjes/iot/nifi-sensor-stream-cutter/0.3/nifi-sensor-stream-cutter-0.3.nar
+    https://repo1.maven.org/maven2/nl/basjes/iot/nifi-sensor-stream-cutter/0.4/nifi-sensor-stream-cutter-0.4.nar
 
     <dependency>
         <groupId>nl.basjes.iot</groupId>
         <artifactId>nifi-sensor-stream-cutter</artifactId>
         <type>nar</type>
-        <version>0.3</version>
+        <version>0.4</version>
     </dependency>
 
 and
 
-    https://repo1.maven.org/maven2/nl/basjes/dsmr/nifi-dsmr-parser/0.3/nifi-dsmr-parser-0.3.nar
+    https://repo1.maven.org/maven2/nl/basjes/dsmr/nifi-dsmr-parser/0.4/nifi-dsmr-parser-0.4.nar
 
     <dependency>
         <groupId>nl.basjes.dsmr</groupId>
         <artifactId>nifi-dsmr-parser</artifactId>
         <type>nar</type>
-        <version>0.3</version>
+        <version>0.4</version>
     </dependency>
 
 
