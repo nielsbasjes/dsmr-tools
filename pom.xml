@@ -23,7 +23,7 @@
 
   <groupId>nl.basjes.dsmr</groupId>
   <artifactId>dsmr-parser-parent</artifactId>
-  <version>0.4</version>
+  <version>0.5-SNAPSHOT</version>
 
   <packaging>pom</packaging>
   <name>DSMR :</name>
