@@ -100,6 +100,7 @@ field
     | cosemid='1-0:22.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReturnedL1                  // Instantaneous active power L1 (-P)
     | cosemid='1-0:42.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReturnedL2                  // Instantaneous active power L2 (-P)
     | cosemid='1-0:62.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReturnedL3                  // Instantaneous active power L3 (-P)
+    | cosemid='0-0:96.13.1'  '(' (text=HEXSTRING)? ')'                       #messageCodes                     // Text message codes: numeric 8 digits.
     | cosemid='0-0:96.13.0'  '(' (text=HEXSTRING)? ')'                       #message                          // Text message max 1024 characters.
 
     | cosemid='0-1:24.1.0'   '(' type=INT ')'                                #mBus1Type                        // MBus channel 1: Device type.

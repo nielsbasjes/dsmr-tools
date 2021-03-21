@@ -46,6 +46,7 @@ import nl.basjes.dsmr.parse.DsmrParser.MBus3UsageContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus4EquipmentIdContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus4TypeContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus4UsageContext;
+import nl.basjes.dsmr.parse.DsmrParser.MessageCodesContext;
 import nl.basjes.dsmr.parse.DsmrParser.MessageContext;
 import nl.basjes.dsmr.parse.DsmrParser.P1VersionContext;
 import nl.basjes.dsmr.parse.DsmrParser.PowerFailureEventLogContext;
@@ -284,6 +285,14 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
         dsmrTelegram.equipmentId = hexStringToString(ctx.id.getText());
         return null;
     }
+
+    @Override
+    public Void visitMessageCodes(MessageCodesContext ctx) {
+        // Text message codes: numeric 8 digits.
+        dsmrTelegram.messageCodes = (ctx.text == null) ? "" : hexStringToString(ctx.text.getText());
+        return null;
+    }
+
     @Override
     public Void visitMessage     (MessageContext     ctx) {
         // Text message max 1024 characters.

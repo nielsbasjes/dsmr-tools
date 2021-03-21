@@ -81,6 +81,7 @@ public class DSMRTelegram {
     Double powerReturnedL1;                  // Instantaneous active power L1 (-P)
     Double powerReturnedL2;                  // Instantaneous active power L2 (-P)
     Double powerReturnedL3;                  // Instantaneous active power L3 (-P)
+    String messageCodes;                     // Text message codes: numeric 8 digits.
     String message;                          // Text message max 1024 characters.
 
     Map<Integer, MBusEvent> mBusEvents = new TreeMap<>();
