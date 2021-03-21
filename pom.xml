@@ -534,19 +534,26 @@
       <activation>
         <jdk>1.8</jdk>
       </activation>
+      <properties>
+        <!-- Sonar is no longer supported on Java 8                                -->
+        <!-- https://sonarcloud.io/documentation/user-guide/move-analysis-java-11/ -->
+        <sonar.skip>true</sonar.skip>
+      </properties>
       <build>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
-              <compilerVersion>${jdkLevel}</compilerVersion>
-              <source>${jdkLevel}</source>
-              <target>${jdkLevel}</target>
+              <compilerVersion>${target.java.version}</compilerVersion>
+              <source>${target.java.version}</source>
+              <target>${target.java.version}</target>
               <compilerArgs>
                 <!-- Enable almost all warnings.-->
-                <!-- Ignore the 'serial' warnings about not having a serialVersionUID -->
-                <arg>-Xlint:all,-processing,-serial</arg>
+                <!-- Ignore 'classfile' to allow leaving Kryo out. -->
+                <!-- Ignore 'processing' to avoid "No processor claimed any of these annotations" in several places. -->
+                <!-- Ignore 'serial' warnings about not having a serialVersionUID -->
+                <arg>-Xlint:all,-classfile,-processing,-serial</arg>
                 <arg>-Werror</arg>
               </compilerArgs>
               <showWarnings>true</showWarnings>
@@ -568,29 +575,18 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
-              <compilerVersion>${jdkLevel}</compilerVersion>
-              <source>${jdkLevel}</source>
-              <target>${jdkLevel}</target>
+              <release>${target.java.release}</release>
               <compilerArgs>
                 <!-- Enable almost all warnings.-->
-                <!-- Ignore the 'serial' warnings about not having a serialVersionUID -->
-                <arg>-Xlint:all,-processing,-serial</arg>
+                <!-- Ignore 'classfile' to allow leaving Kryo out. -->
+                <!-- Ignore 'processing' to avoid "No processor claimed any of these annotations" in several places. -->
+                <!-- Ignore 'serial' warnings about not having a serialVersionUID -->
+                <arg>-Xlint:all,-classfile,-processing,-serial</arg>
                 <arg>-Werror</arg>
                 <arg>-implicit:class</arg>
               </compilerArgs>
               <showWarnings>true</showWarnings>
               <showDeprecation>true</showDeprecation>
-              <release>8</release>
-            </configuration>
-          </plugin>
-
-          <!-- Never run Coveralls under JDK 11 ... it won't work -->
-          <plugin>
-            <groupId>org.eluder.coveralls</groupId>
-            <artifactId>coveralls-maven-plugin</artifactId>
-            <version>4.3.0</version>
-            <configuration>
-              <skip>true</skip>
             </configuration>
           </plugin>
 
