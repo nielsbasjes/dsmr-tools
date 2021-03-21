@@ -52,7 +52,7 @@ class TestRecordStream {
         }
     }
 
-    @Disabled // This test can only run in conjunction with the local simulator.
+    @Disabled("This test can only run in conjunction with the local simulator.")
     @Test
     void runTestWithSimulator() throws IOException {
         FileInputStream inputStream = new FileInputStream("../simulator/ttyDSMR");
@@ -82,6 +82,7 @@ class TestRecordStream {
             }
         }
         LOG.info("---------------------- Done ----------------------");
+        assertTrue(count > 0);
     }
 
 }
