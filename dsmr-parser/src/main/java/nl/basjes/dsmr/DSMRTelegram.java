@@ -21,7 +21,10 @@ package nl.basjes.dsmr;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -47,7 +50,18 @@ public class DSMRTelegram {
 
     Long powerFailures;                      // Number of power failures in any phases
     Long longPowerFailures;                  // Number of long power failures in any phases
-    // TODO: List<...> powerFailureEventLog; // Power failure event log
+
+    @Getter
+    @ToString
+    public static final class PowerFailureEvent {
+        ZonedDateTime startTime;             // When did the powerfailure start
+        ZonedDateTime endTime;               // When did the powerfailure end
+        Duration duration;                   // How long did the failure last
+    }
+
+    Long powerFailureEventLogSize = 0L;      // Power failure event log size (as indicated in the output)
+    List<PowerFailureEvent> powerFailureEventLog = new ArrayList<>(); // Power failure event log
+
     Long voltageSagsPhaseL1;                 // Number of voltage sags in phase L1
     Long voltageSagsPhaseL2;                 // Number of voltage sags in phase L2
     Long voltageSagsPhaseL3;                 // Number of voltage sags in phase L3

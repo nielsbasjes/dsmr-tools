@@ -18,6 +18,7 @@
 
 package nl.basjes.dsmr;
 
+import nl.basjes.dsmr.DSMRTelegram.PowerFailureEvent;
 import nl.basjes.dsmr.parse.DsmrBaseVisitor;
 import nl.basjes.dsmr.parse.DsmrLexer;
 import nl.basjes.dsmr.parse.DsmrParser;
@@ -76,6 +77,8 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
 
+import java.time.Duration;
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Map;
 
@@ -152,7 +155,14 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
         this.visitTelegram(telegramContext);
 
         // Final step cross map the MBus events into usable attributes.
-        for (Map.Entry<Integer, MBusEvent> mBusEventEntry: dsmrTelegram.mBusEvents.entrySet()) {
+        fillMBusDataToAttributes(dsmrTelegram);
+
+        dsmrTelegram.isValid = !hasSyntaxError && dsmrTelegram.validCRC;
+        return dsmrTelegram;
+    }
+
+    private void fillMBusDataToAttributes(DSMRTelegram telegram) {
+        for (Map.Entry<Integer, MBusEvent> mBusEventEntry: telegram.mBusEvents.entrySet()) {
             MBusEvent mBusEvent = mBusEventEntry.getValue();
 
             // TODO: Check if the correct unit has been provided (so no 'm3' electric power) .
@@ -162,28 +172,28 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
 //                case 0x00: // Other                                                               0000 0000  00
 //                case 0x01: // Oil                                                                 0000 0001  01
                 case 0x02: // Electricity via a slave                                               0000 0010  02
-                    if (dsmrTelegram.slaveEMeterEquipmentId == null) {
-                        dsmrTelegram.slaveEMeterEquipmentId         = mBusEvent.equipmentId;
-                        dsmrTelegram.slaveEMeterTimestamp           = mBusEvent.timestamp;
-                        dsmrTelegram.slaveEMeterkWh                 = mBusEvent.value;
+                    if (telegram.slaveEMeterEquipmentId == null) {
+                        telegram.slaveEMeterEquipmentId         = mBusEvent.equipmentId;
+                        telegram.slaveEMeterTimestamp           = mBusEvent.timestamp;
+                        telegram.slaveEMeterkWh                 = mBusEvent.value;
                     }
                     break;
 
                 case 0x03: // Gas                                                                   0000 0011  03
-                    if (dsmrTelegram.gasEquipmentId== null) {
-                        dsmrTelegram.gasEquipmentId                 = mBusEvent.equipmentId;
-                        dsmrTelegram.gasTimestamp                   = mBusEvent.timestamp;
-                        dsmrTelegram.gasM3                          = mBusEvent.value;
+                    if (telegram.gasEquipmentId== null) {
+                        telegram.gasEquipmentId                 = mBusEvent.equipmentId;
+                        telegram.gasTimestamp                   = mBusEvent.timestamp;
+                        telegram.gasM3                          = mBusEvent.value;
                     }
                     break;
 
 //                case 0x05: // Steam                                                               0000 0101  05
-//                case 0x06: // Warm Water (30-90 Celcius)                                          0000 0110  06
+                case 0x06: // Warm Water (30-90 Celcius)                                            0000 0110  06
                 case 0x07: // Water                                                                 0000 0111  07
-                    if (dsmrTelegram.waterEquipmentId == null) {
-                        dsmrTelegram.waterEquipmentId               = mBusEvent.equipmentId;
-                        dsmrTelegram.waterTimestamp                 = mBusEvent.timestamp;
-                        dsmrTelegram.waterM3                        = mBusEvent.value;
+                    if (telegram.waterEquipmentId == null) {
+                        telegram.waterEquipmentId               = mBusEvent.equipmentId;
+                        telegram.waterTimestamp                 = mBusEvent.timestamp;
+                        telegram.waterM3                        = mBusEvent.value;
                     }
                     break;
 
@@ -191,20 +201,20 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
 //                case 0x09: // Compressed Air                                                      0000 1001  09
 
                 case 0x04: // Heat (Volume measured at return temperature: outlet)                  0000 0100  04
-//                case 0x0C: // Heat (Volume measured at flow temperature: inlet)                   0000 1100  0C
-                    if (dsmrTelegram.thermalHeatEquipmentId == null) {
-                        dsmrTelegram.thermalHeatEquipmentId         = mBusEvent.equipmentId;
-                        dsmrTelegram.thermalHeatTimestamp           = mBusEvent.timestamp;
-                        dsmrTelegram.thermalHeatGJ                  = mBusEvent.value;
+                case 0x0C: // Heat (Volume measured at flow temperature: inlet)                     0000 1100  0C
+                    if (telegram.thermalHeatEquipmentId == null) {
+                        telegram.thermalHeatEquipmentId         = mBusEvent.equipmentId;
+                        telegram.thermalHeatTimestamp           = mBusEvent.timestamp;
+                        telegram.thermalHeatGJ                  = mBusEvent.value;
                     }
                     break;
 
                 case 0x0A: // Cooling load meter (Volume measured at return temperature: outlet)    0000 1010  0A
                 case 0x0B: // Cooling load meter (Volume measured at flow temperature: inlet)       0000 1011  0B
-                    if (dsmrTelegram.thermalColdEquipmentId == null) {
-                        dsmrTelegram.thermalColdEquipmentId         = mBusEvent.equipmentId;
-                        dsmrTelegram.thermalColdTimestamp           = mBusEvent.timestamp;
-                        dsmrTelegram.thermalColdGJ                  = mBusEvent.value;
+                    if (telegram.thermalColdEquipmentId == null) {
+                        telegram.thermalColdEquipmentId         = mBusEvent.equipmentId;
+                        telegram.thermalColdTimestamp           = mBusEvent.timestamp;
+                        telegram.thermalColdGJ                  = mBusEvent.value;
                     }
                     break;
 
@@ -221,9 +231,6 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
                 default: // We simply do not map the ones we do not understand
             }
         }
-
-        dsmrTelegram.isValid = !hasSyntaxError && dsmrTelegram.validCRC;
-        return dsmrTelegram;
     }
 
     // https://stackoverflow.com/questions/50712987/hex-string-to-byte-array-conversion-java
@@ -271,6 +278,31 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
         return null;
     }
 
+    @Override
+    public Void visitPowerFailureEventLog(PowerFailureEventLogContext ctx) {
+        dsmrTelegram.powerFailureEventLogSize =  Long.valueOf(ctx.count.getText());
+        dsmrTelegram.powerFailureEventLog = new ArrayList<>();
+        visitChildren(ctx);
+        return null;
+    }
+
+    @Override
+    public Void visitPowerFailureEvent(DsmrParser.PowerFailureEventContext ctx) {
+        PowerFailureEvent powerFailureEvent = new PowerFailureEvent();
+
+        // The provided timestamp is the end of the failure
+        powerFailureEvent.endTime = timestampParser.parse(ctx.eventTime.getText());
+
+        // The parser ONLY allows a eventDurationUnit of seconds because the specification explicitly states that.
+        powerFailureEvent.duration =  Duration.ofSeconds(Long.parseLong(ctx.eventDuration.getText()));
+
+        // For convenience we calculate the start time
+        powerFailureEvent.startTime = powerFailureEvent.endTime.minus(powerFailureEvent.duration);
+
+        dsmrTelegram.powerFailureEventLog.add(powerFailureEvent);
+        return null;
+    }
+
     @Override public Void visitElectricityTariffIndicator       (ElectricityTariffIndicatorContext       ctx) { dsmrTelegram.electricityTariffIndicator      = Long.valueOf(ctx.value.getText()); return null; } // Tariff indicator electricity
     @Override public Void visitElectricityReceivedLowTariff     (ElectricityReceivedLowTariffContext     ctx) { dsmrTelegram.electricityReceivedLowTariff    = Double.valueOf(ctx.value.getText()); return null; } // Meter Reading electricity delivered to client (low tariff) in 0,001 kWh
     @Override public Void visitElectricityReceivedNormalTariff  (ElectricityReceivedNormalTariffContext  ctx) { dsmrTelegram.electricityReceivedNormalTariff = Double.valueOf(ctx.value.getText()); return null; } // Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh
@@ -281,8 +313,6 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
 
     @Override public Void visitPowerFailures                    (PowerFailuresContext                    ctx) { dsmrTelegram.powerFailures                   = Long.valueOf(ctx.count.getText());   return null; } // Number of power failures in any phases
     @Override public Void visitLongPowerFailures                (LongPowerFailuresContext                ctx) { dsmrTelegram.longPowerFailures               = Long.valueOf(ctx.count.getText());   return null; } // Number of long power failures in any phases
-
-    @Override public Void visitPowerFailureEventLog             (PowerFailureEventLogContext             ctx) { /* TODO: Implement Power failure event log */                                       return null; } // Power failure event log
 
     @Override public Void visitVoltageSagsPhaseL1               (VoltageSagsPhaseL1Context               ctx) { dsmrTelegram.voltageSagsPhaseL1              = Long.valueOf(ctx.count.getText());   return null; } // Number of voltage sags in phase L1
     @Override public Void visitVoltageSagsPhaseL2               (VoltageSagsPhaseL2Context               ctx) { dsmrTelegram.voltageSagsPhaseL2              = Long.valueOf(ctx.count.getText());   return null; } // Number of voltage sags in phase L2

@@ -447,6 +447,60 @@ public class TestDsmrParser {
         assertEquals(      0.0, dsmrTelegram.getPowerReturnedL3(),  0.001);
         assertEquals(        0, dsmrTelegram.getMBusEvents().size());
 
+        assertEquals(10, dsmrTelegram.getPowerFailureEventLogSize());
+        assertEquals(10, dsmrTelegram.getPowerFailureEventLog().size());
+        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-11-22T08:24:19+01:00, " +
+                                                      "endTime=2018-12-01T03:08:14+01:00, " +
+                                                     "duration=PT210H43M55S)",
+            dsmrTelegram.getPowerFailureEventLog().get(0).toString());
+
+        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-09-04T17:09:03+02:00, " +
+                                                      "endTime=2018-09-04T17:39:23+02:00, " +
+                                                     "duration=PT30M20S)",
+            dsmrTelegram.getPowerFailureEventLog().get(1).toString());
+
+        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-07-07T15:19:52+02:00, " +
+                                                      "endTime=2018-07-07T22:04:40+02:00, " +
+                                                     "duration=PT6H44M48S)",
+            dsmrTelegram.getPowerFailureEventLog().get(2).toString());
+
+        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-05-16T20:39:43+02:00, " +
+                                                      "endTime=2018-06-11T20:44:09+02:00, " +
+                                                     "duration=PT624H4M26S)",
+            dsmrTelegram.getPowerFailureEventLog().get(3).toString());
+
+        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-04-25T17:04:31+02:00, " +
+                                                      "endTime=2018-04-25T17:52:48+02:00, " +
+                                                     "duration=PT48M17S)",
+            dsmrTelegram.getPowerFailureEventLog().get(4).toString());
+
+        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-04-20T21:59:06+02:00, " +
+                                                      "endTime=2018-04-20T22:16:54+02:00, " +
+                                                     "duration=PT17M48S)",
+            dsmrTelegram.getPowerFailureEventLog().get(5).toString());
+
+        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-02-15T20:05:31+01:00, " +
+                                                      "endTime=2018-02-26T20:34:38+01:00, " +
+                                                     "duration=PT264H29M7S)",
+            dsmrTelegram.getPowerFailureEventLog().get(6).toString());
+
+        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-02-12T16:42:35+01:00, " +
+                                                      "endTime=2018-02-15T19:23:56+01:00, " +
+                                                     "duration=PT74H41M21S)",
+            dsmrTelegram.getPowerFailureEventLog().get(7).toString());
+
+        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-02-09T17:48:30+01:00, " +
+                                                      "endTime=2018-02-09T18:43:37+01:00, " +
+                                                     "duration=PT55M7S)",
+            dsmrTelegram.getPowerFailureEventLog().get(8).toString());
+
+        assertEquals("DSMRTelegram.PowerFailureEvent(startTime=2018-02-08T20:02:51+01:00, " +
+                                                      "endTime=2018-02-08T20:07:17+01:00, " +
+                                                     "duration=PT4M26S)",
+            dsmrTelegram.getPowerFailureEventLog().get(9).toString());
+
+
+
         assertNull(dsmrTelegram.getGasEquipmentId());
 
         assertTrue(dsmrTelegram.isValidCRC());

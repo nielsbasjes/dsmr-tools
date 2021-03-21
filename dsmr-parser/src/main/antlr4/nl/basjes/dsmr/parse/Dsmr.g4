@@ -61,6 +61,10 @@ telegram
     : ident=IDENT field+ crc=CRC
     ;
 
+powerFailureEvent: '(' eventTime=TIMESTAMP ')'
+                   '(' eventDuration=INT '*' eventDurationUnit='s' ')'
+                   ;
+
 field
     : cosemid='1-3:0.2.8'    '(' version=INT                             ')' #p1Version                        // P1 Version information
     | cosemid='0-0:1.0.0'    '(' timestamp=TIMESTAMP                     ')' #timestamp                        // Timestamp
@@ -74,10 +78,9 @@ field
     | cosemid='1-0:2.7.0'    '(' value=(FLOAT|INT) '*' unit='kW'         ')' #electricityPowerReturned         // Actual electricity power received (-P) in 1 Watt resolution
     | cosemid='0-0:96.7.21'  '(' count=INT                               ')' #powerFailures                    // Number of power failures in any phases
     | cosemid='0-0:96.7.9'   '(' count=INT                               ')' #longPowerFailures                // Number of long power failures in any phases
-    | cosemid='1-0:99.97.0'  '(' count=INT ')' '(' eventTypeId=COSEMID ')'
-                                ( '(' eventTime=TIMESTAMP ')'
-                                  '(' eventDuration=INT '*' eventDurationUnit='s' ')'
-                                )+                                           #powerFailureEventLog             // Power failure event log
+    | cosemid='1-0:99.97.0'  '(' count=INT ')'                               // The number of events in the log.
+                             '(' eventTypeId='0-0:96.7.19' ')'               // According to the specs the format can only be this value
+                             (   powerFailureEvent   )*                      #powerFailureEventLog             // Power failure event log
 
     | cosemid='1-0:32.32.0'  '(' count=INT  ')'                              #voltageSagsPhaseL1               // Number of voltage sags in phase L1
     | cosemid='1-0:52.32.0'  '(' count=INT  ')'                              #voltageSagsPhaseL2               // Number of voltage sags in phase L2
