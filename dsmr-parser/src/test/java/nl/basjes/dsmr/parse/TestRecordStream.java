@@ -32,13 +32,13 @@ import java.io.IOException;
 import static nl.basjes.dsmr.CheckCRC.crcIsValid;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestRecordStream {
+class TestRecordStream {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestRecordStream.class);
 
     @Disabled // FIXME: For currently unknown reasons this passes locally and fails on Travis-ci.
     @Test
-    public void runTest() throws IOException {
+    void runTest() throws IOException {
         // This file has a bad 'first' record and the rest are all good.
         FileInputStream inputStream = new FileInputStream("../testfiles/ttyUSB0-raw.txt");
 
@@ -54,7 +54,7 @@ public class TestRecordStream {
 
     @Disabled // This test can only run in conjunction with the local simulator.
     @Test
-    public void runTestWithSimulator() throws IOException {
+    void runTestWithSimulator() throws IOException {
         FileInputStream inputStream = new FileInputStream("../simulator/ttyDSMR");
 
         ReadUTF8RecordStream reader = new ReadUTF8RecordStream(inputStream, "\r\n![0-9A-F]{4}\r\n");

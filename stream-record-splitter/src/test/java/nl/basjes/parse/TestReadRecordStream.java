@@ -19,8 +19,6 @@
 package nl.basjes.parse;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.PipedInputStream;
@@ -32,12 +30,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestReadRecordStream {
-
-    private static final Logger LOG = LoggerFactory.getLogger(TestReadRecordStream.class);
+class TestReadRecordStream {
 
     @Test
-    public void testSingleLineRecords() throws IOException, InterruptedException {
+    void testSingleLineRecords() throws IOException, InterruptedException {
         String[] recordFragments = {
             "on",
             "e\nt",
@@ -59,7 +55,7 @@ public class TestReadRecordStream {
     }
 
     @Test
-    public void testSingleLineRecordsMissingEndMarker() throws IOException, InterruptedException {
+    void testSingleLineRecordsMissingEndMarker() throws IOException, InterruptedException {
         String[] recordFragments = {
             "on",
             "e\nt",
@@ -81,7 +77,7 @@ public class TestReadRecordStream {
     }
 
     @Test
-    public void testMultiLineRecords() throws IOException, InterruptedException {
+    void testMultiLineRecords() throws IOException, InterruptedException {
 
         String[] recordFragments = {
             "one\n",
@@ -104,7 +100,7 @@ public class TestReadRecordStream {
     }
 
     @Test
-    public void testTooLargeRecords() throws IOException, InterruptedException {
+    void testTooLargeRecords() throws IOException, InterruptedException {
 
         StringBuilder input = new StringBuilder(10240);
 
@@ -129,7 +125,7 @@ public class TestReadRecordStream {
 
     volatile boolean keepRunning = true;
 
-    public void testRecordReassemblyInBurstyStream(String[] recordFragments, String[] records, String endPattern)
+    void testRecordReassemblyInBurstyStream(String[] recordFragments, String[] records, String endPattern)
         throws IOException, InterruptedException {
 
         final PipedInputStream  pipedInputStream  = new PipedInputStream();

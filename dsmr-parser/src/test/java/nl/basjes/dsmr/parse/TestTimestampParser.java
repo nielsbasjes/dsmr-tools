@@ -25,10 +25,10 @@ import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class TestTimestampParser {
+class TestTimestampParser {
 
     @Test
-    public void testReferenceExample(){
+    void testReferenceExample(){
         TimestampParser timestampParser = new TimestampParser();
 
         // "0-0:1.0.0(101209113020W)"
@@ -50,19 +50,19 @@ public class TestTimestampParser {
     }
 
     @Test
-    public void testNull() {
+    void testNull() {
         TimestampParser timestampParser = new TimestampParser();
         assertNull(timestampParser.parse(null));
     }
 
     @Test
-    public void testEmpty() {
+    void testEmpty() {
         TimestampParser timestampParser = new TimestampParser();
         assertNull(timestampParser.parse(""));
     }
 
     @Test
-    public void testBad() {
+    void testBad() {
         TimestampParser timestampParser = new TimestampParser();
         assertNull(timestampParser.parse("Not a date string at all"));
         assertNull(timestampParser.parse("190324151444"));

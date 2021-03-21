@@ -32,9 +32,9 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestCRCValidator {
+class TestCRCValidator {
 
-    private String dsmrTelegram = "/ISK5\\2M550T-1012\r\n" +
+    private static final String DSMR_TELEGRAM = "/ISK5\\2M550T-1012\r\n" +
         "\r\n" +
         "1-3:0.2.8(50)\r\n" +
         "0-0:1.0.0(190324151445W)\r\n" +
@@ -71,48 +71,48 @@ public class TestCRCValidator {
         "!478B\r\n";
 
     @Test
-    public void testCrc(){
-        assertTrue(crcIsValid(dsmrTelegram), "CRC is not valid");
+    void testCrc(){
+        assertTrue(crcIsValid(DSMR_TELEGRAM), "CRC is not valid");
     }
 
     @Test
-    public void testCaculateCrc(){
-        String hexCrc = String.format("%04X", calculatedCrc(dsmrTelegram));
+    void testCaculateCrc(){
+        String hexCrc = String.format("%04X", calculatedCrc(DSMR_TELEGRAM));
 
         assertEquals("478B", hexCrc);
-        assertTrue(crcIsValid(dsmrTelegram + hexCrc), "CRC is not valid");
+        assertTrue(crcIsValid(DSMR_TELEGRAM + hexCrc), "CRC is not valid");
     }
 
     @Test
-    public void testBadInputCalculatedCrc() {
+    void testBadInputCalculatedCrc() {
         assertNull(calculatedCrc(null));
         assertNull(calculatedCrc(""));
         assertNull(calculatedCrc("Bla bla bla"));
     }
 
     @Test
-    public void testBadInputExtractCrcFromTelegram() {
+    void testBadInputExtractCrcFromTelegram() {
         assertNull(extractCrcFromTelegram(null));
         assertNull(extractCrcFromTelegram(""));
         assertNull(extractCrcFromTelegram("Bla bla bla"));
     }
 
     @Test
-    public void testBadInputFixCrc() {
+    void testBadInputFixCrc() {
         assertNull(fixCrc(null));
         assertEquals("", fixCrc(""));
         assertEquals("Bla bla bla", fixCrc("Bla bla bla"));
     }
 
     @Test
-    public void testBadInputCrcIsValid(){
+    void testBadInputCrcIsValid(){
         assertFalse(crcIsValid(null));
         assertFalse(crcIsValid(""));
         assertFalse(crcIsValid("Bla bla bla"));
     }
 
     @Test
-    public void testRepairingCrc(){
+    void testRepairingCrc(){
         String record = "/ISK5\\2M550T-1012\r\n" +
             "\r\n" +
             "1-3:0.2.8(50)\r\n" +
@@ -128,7 +128,7 @@ public class TestCRCValidator {
     }
 
     @Test
-    public void testHandlingBadInput() {
+    void testHandlingBadInput() {
         assertNull(calculatedCrc(null));
         assertNull(calculatedCrc("Bla"));
         assertNull(extractCrcFromTelegram(null));

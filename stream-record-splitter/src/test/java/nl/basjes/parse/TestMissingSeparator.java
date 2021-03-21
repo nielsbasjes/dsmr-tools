@@ -30,14 +30,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestMissingSeparator {
+class TestMissingSeparator {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestMissingSeparator.class);
 
     volatile boolean runWriter = true;
 
     @Test
-    public void testMissingSeparatorAbort() throws IOException, InterruptedException {
+    void testMissingSeparatorAbort() throws IOException, InterruptedException {
 
         final PipedInputStream pipedInputStream = new PipedInputStream();
         final PipedOutputStream pipedOutputStream = new PipedOutputStream();

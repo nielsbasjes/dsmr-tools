@@ -32,8 +32,7 @@ import static nl.basjes.iot.nifi.SensorStreamCutterProcessor.SUCCESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
-public class SensorStreamCutterProcessorTest {
+class SensorStreamCutterProcessorTest {
 
     private TestRunner runner;
 
@@ -43,7 +42,7 @@ public class SensorStreamCutterProcessorTest {
     }
 
     @Test
-    public void testProcessor() {
+    void testProcessor() {
 
         runner.setProperty(END_OF_RECORD_REGEX,       "\\r?\\n");
         runner.setProperty(FILE_NAME,                 "src/test/data/testinput.txt");
@@ -66,7 +65,7 @@ public class SensorStreamCutterProcessorTest {
     }
 
     @Test
-    public void testTooLarge() {
+    void testTooLarge() {
 
         runner.setProperty(END_OF_RECORD_REGEX,       "\\r\\n![0-9A-F]{4}\\r\\n");
         runner.setProperty(FILE_NAME,                 "src/test/data/TooLargeRecord.txt");

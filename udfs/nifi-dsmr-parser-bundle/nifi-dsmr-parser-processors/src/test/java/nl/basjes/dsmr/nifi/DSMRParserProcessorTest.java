@@ -32,17 +32,17 @@ import static nl.basjes.dsmr.nifi.DSMRParserProcessor.INVALID_CRC;
 import static nl.basjes.dsmr.nifi.DSMRParserProcessor.VALID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DSMRParserProcessorTest {
+class DSMRParserProcessorTest {
 
     private TestRunner runner;
 
     @BeforeEach
-    public void init() {
+    void init() {
         runner = TestRunners.newTestRunner(DSMRParserProcessor.class);
     }
 
     @Test
-    public void testValidRecord() {
+    void testValidRecord() {
         // Test content
         String content =
             "\r\n" + // Stray newline that should be ignored.
@@ -223,7 +223,7 @@ public class DSMRParserProcessorTest {
     }
 
     @Test
-    public void testInValidCRCRecord() {
+    void testInValidCRCRecord() {
         // Test content
         String content =
             "\r\n" + // Stray newline that should be ignored.
@@ -332,7 +332,7 @@ public class DSMRParserProcessorTest {
     }
 
     @Test
-    public void testNoContentRecord() {
+    void testNoContentRecord() {
         // Test content
         String content = "                                  "; // Big, but no data
 
@@ -360,7 +360,7 @@ public class DSMRParserProcessorTest {
     }
 
     @Test
-    public void testTooSmallRecord() {
+    void testTooSmallRecord() {
         // Test content
         String content = "  "; // Almost empty
 
@@ -389,7 +389,7 @@ public class DSMRParserProcessorTest {
 
 
     @Test
-    public void testTooLargeRecord() {
+    void testTooLargeRecord() {
         // Test content
         StringBuilder stringBuilder = new StringBuilder(10000000);
         for (int i = 0; i < 2000; i++) {
@@ -438,7 +438,7 @@ public class DSMRParserProcessorTest {
     }
 
 
-    public void assertAttributeEquals(MockFlowFile flowFile, String attributeName, String expectedValue) {
+    void assertAttributeEquals(MockFlowFile flowFile, String attributeName, String expectedValue) {
         assertEquals(expectedValue, flowFile.getAttribute(attributeName),
             "Attribute \"" + attributeName + "\" has the wrong value.");
     }
