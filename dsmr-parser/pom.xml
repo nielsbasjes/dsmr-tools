@@ -34,7 +34,7 @@
   <url>https://dsmr.basjes.nl</url>
 
   <properties>
-    <antlr.version>4.7.2</antlr.version>
+    <antlr.version>4.9.2</antlr.version>
   </properties>
 
   <dependencies>
@@ -47,16 +47,17 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.10</version>
+      <version>1.18.18</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
-      <groupId>com.esotericsoftware.kryo</groupId>
+      <groupId>com.esotericsoftware</groupId>
       <artifactId>kryo</artifactId>
-      <version>2.24.0</version>
+      <version>5.0.4</version>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>nl.basjes.iot</groupId>
       <artifactId>stream-record-splitter</artifactId>
@@ -74,8 +75,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.0.0</version>
-
         <configuration>
           <minimizeJar>true</minimizeJar>
           <relocations>
@@ -141,7 +140,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.8</version>
+        <version>3.2.0</version>
         <executions>
           <execution>
             <id>add-source</id>
@@ -163,7 +162,7 @@
       <plugin>
         <groupId>org.pitest</groupId>
         <artifactId>pitest-maven</artifactId>
-        <version>1.2.2</version>
+        <version>1.5.2</version>
         <configuration>
 
           <threads>4</threads>

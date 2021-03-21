@@ -551,7 +551,8 @@ public class TestDsmrParser {
             "1-0:62.7.0(06.666*kW)\r\n" +
 
             // NOTE: These values are created from what I understand of the specs.
-            // FIXME: I really NEED a REAL example of these values !!!
+            // NOTE: I really NEED a REAL example of these values !!!
+            // NOTE: There won't be any examples because these are not used
 
             "0-1:24.1.0(002)\r\n" +
             "0-1:96.1.0(5f5f5f5f4f4e455f5f5f5f)\r\n" +
