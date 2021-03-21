@@ -19,8 +19,6 @@
 package nl.basjes.parse;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.PipedInputStream;
@@ -31,8 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TestMissingSeparator {
-
-    private static final Logger LOG = LoggerFactory.getLogger(TestMissingSeparator.class);
 
     volatile boolean runWriter = true;
 

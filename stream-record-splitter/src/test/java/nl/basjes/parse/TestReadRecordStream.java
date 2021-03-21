@@ -100,7 +100,7 @@ class TestReadRecordStream {
     }
 
     @Test
-    void testTooLargeRecords() throws IOException, InterruptedException {
+    void testTooLargeRecords() {
 
         StringBuilder input = new StringBuilder(10240);
 
