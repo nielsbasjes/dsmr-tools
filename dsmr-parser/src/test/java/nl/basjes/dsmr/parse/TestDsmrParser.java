@@ -501,6 +501,96 @@ class TestDsmrParser {
 //        LOG.info("{}", dsmrTelegram);
     }
 
+    @Test
+    void testDSMR42Telegram(){
+        // Output of a Landis+Gyr E350 (DSMR 4.2)
+        DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(
+            "/XMX5LGBBFG1009089532\r\n" +
+            "\r\n" +
+            "1-3:0.2.8(42)\r\n" +
+            "0-0:1.0.0(000101010000W)\r\n" +
+            "0-0:96.1.1(4530303330303033313131393539373135)\r\n" +
+            "1-0:1.8.1(000024.487*kWh)\r\n" +
+            "1-0:1.8.2(000030.536*kWh)\r\n" +
+            "1-0:2.8.1(000000.528*kWh)\r\n" +
+            "1-0:2.8.2(000000.000*kWh)\r\n" +
+            "0-0:96.14.0(0002)\r\n" +
+            "1-0:1.7.0(00.000*kW)\r\n" +
+            "1-0:2.7.0(00.000*kW)\r\n" +
+            "0-0:96.7.21(00116)\r\n" +
+            "0-0:96.7.9(00000)\r\n" +
+            "1-0:99.97.0(0)(0-0:96.7.19)\r\n" +
+            "1-0:32.32.0(00011)\r\n" +
+            "1-0:52.32.0(00028)\r\n" +
+            "1-0:72.32.0(00028)\r\n" +
+            "1-0:32.36.0(00000)\r\n" +
+            "1-0:52.36.0(00000)\r\n" +
+            "1-0:72.36.0(00000)\r\n" +
+            "0-0:96.13.1()\r\n" +
+            "0-0:96.13.0()\r\n" +
+            "1-0:31.7.0(000*A)\r\n" +
+            "1-0:51.7.0(000*A)\r\n" +
+            "1-0:71.7.0(000*A)\r\n" +
+            "1-0:21.7.0(00.004*kW)\r\n" +
+            "1-0:41.7.0(00.000*kW)\r\n" +
+            "1-0:61.7.0(00.000*kW)\r\n" +
+            "1-0:22.7.0(00.000*kW)\r\n" +
+            "1-0:42.7.0(00.000*kW)\r\n" +
+            "1-0:62.7.0(00.000*kW)\r\n" +
+            "0-1:24.1.0(003)\r\n" +
+            "0-1:96.1.0(4730303032333430313537323637333134)\r\n" +
+            "0-1:24.2.1(000101010000W)(0000000000)\r\n" +
+            "!6D3C\r\n"
+        );
+
+        assertEquals("/XMX5LGBBFG1009089532", dsmrTelegram.getIdent());
+        assertEquals("42", dsmrTelegram.getP1Version());
+        assertEquals(ZonedDateTime.parse("2000-01-01T01:00+01:00"), dsmrTelegram.getTimestamp());
+
+        assertEquals("E0030003111959715", dsmrTelegram.getEquipmentId());
+        assertEquals("", dsmrTelegram.getMessage());
+
+        assertEquals(        2, dsmrTelegram.getElectricityTariffIndicator());
+        assertEquals(   24.487, dsmrTelegram.getElectricityReceivedLowTariff(),    0.001);
+        assertEquals(   30.536, dsmrTelegram.getElectricityReceivedNormalTariff(), 0.001);
+        assertEquals(    0.528, dsmrTelegram.getElectricityReturnedLowTariff(),    0.001);
+        assertEquals(      0.0, dsmrTelegram.getElectricityReturnedNormalTariff(), 0.001);
+        assertEquals(      0.0, dsmrTelegram.getElectricityPowerReceived(),        0.001);
+        assertEquals(      0.0, dsmrTelegram.getElectricityPowerReturned(),        0.001);
+        assertEquals(      116, dsmrTelegram.getPowerFailures());
+        assertEquals(        0, dsmrTelegram.getLongPowerFailures());
+        assertEquals(       11, dsmrTelegram.getVoltageSagsPhaseL1());
+        assertEquals(       28, dsmrTelegram.getVoltageSagsPhaseL2());
+        assertEquals(       28, dsmrTelegram.getVoltageSagsPhaseL3());
+        assertEquals(        0, dsmrTelegram.getVoltageSwellsPhaseL1());
+        assertEquals(        0, dsmrTelegram.getVoltageSwellsPhaseL2());
+        assertEquals(        0, dsmrTelegram.getVoltageSwellsPhaseL3());
+        assertNull(dsmrTelegram.getVoltageL1());
+        assertNull(dsmrTelegram.getVoltageL2());
+        assertNull(dsmrTelegram.getVoltageL3());
+        assertEquals(      0.0, dsmrTelegram.getCurrentL1(),       0.001);
+        assertEquals(      0.0, dsmrTelegram.getCurrentL2());
+        assertEquals(      0.0, dsmrTelegram.getCurrentL3());
+        assertEquals(    0.004, dsmrTelegram.getPowerReceivedL1(), 0.001);
+        assertEquals(      0.0, dsmrTelegram.getPowerReceivedL2(),  0.001);
+        assertEquals(      0.0, dsmrTelegram.getPowerReceivedL3(),  0.001);
+        assertEquals(      0.0, dsmrTelegram.getPowerReturnedL1(), 0.001);
+        assertEquals(      0.0, dsmrTelegram.getPowerReturnedL2(),  0.001);
+        assertEquals(      0.0, dsmrTelegram.getPowerReturnedL3(),  0.001);
+        assertEquals(        1, dsmrTelegram.getMBusEvents().size());
+
+        assertEquals(        0, dsmrTelegram.getPowerFailureEventLogSize());
+        assertEquals(        0, dsmrTelegram.getPowerFailureEventLog().size());
+
+        assertEquals("G0002340157267314", dsmrTelegram.getGasEquipmentId());
+
+        assertTrue(dsmrTelegram.isValidCRC());
+        assertEquals("6D3C", dsmrTelegram.getCrc());
+        assertTrue(dsmrTelegram.isValid());
+
+        LOG.info("{}", dsmrTelegram);
+    }
+
     private void assertPowerFailureEvent(PowerFailureEvent powerFailureEvent, String startTime, String endTime, String duration) {
         String actualStartTime  = powerFailureEvent.getStartTime().toString();
         String actualEndTime    = powerFailureEvent.getEndTime().toString();
