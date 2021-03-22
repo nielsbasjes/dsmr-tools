@@ -227,6 +227,7 @@ public class DSMRParserProcessor extends AbstractProcessor {
         put(parseResults, "powerReturnedL1",                  record.getPowerReturnedL1());                  // Instantaneous active power L1 (-P)
         put(parseResults, "powerReturnedL2",                  record.getPowerReturnedL2());                  // Instantaneous active power L2 (-P)
         put(parseResults, "powerReturnedL3",                  record.getPowerReturnedL3());                  // Instantaneous active power L3 (-P)
+        put(parseResults, "messageCodes",                     record.getMessageCodes());                     // Text message codes: numeric 8 digits.
         put(parseResults, "message",                          record.getMessage());                          // Text message max 1024 characters.
 
         put(parseResults, "mBusEvents",                       record.getMBusEvents().size());                // The number of available MBus entries
