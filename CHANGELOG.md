@@ -1,8 +1,13 @@
 This is intended as an overview of the major changes
 
-v0.5-SNAPSHOT
+v0.6-SNAPSHOT
 ===
 - ...
+
+v0.5
+===
+- MBus handle absent unit
+- Support DSMR 4.2 message codes i.e. 0-0:96.13.1..
 
 v0.4
 ===
