@@ -1,10 +1,11 @@
 # Specification
 
 ## Main document
-Download via
+I downloaded via
 https://www.netbeheernederland.nl/dossiers/slimme-meter-15/documenten
-the file
-https://www.netbeheernederland.nl/_upload/Files/Slimme_meter_15_a727fce1f1.pdf
+these files of for "P1 Companion Standard"
+- Version 4.2.2 : https://www.netbeheernederland.nl/_upload/Files/Slimme_meter_15_32ffe3cc38.pdf
+- Version 5.0.2 : https://www.netbeheernederland.nl/_upload/Files/Slimme_meter_15_a727fce1f1.pdf
 
 ## MBus Device type
 
