@@ -126,8 +126,8 @@ class TestDsmrParser {
         assertEquals( 123456.789,  dsmrTelegram.getElectricityReturnedNormalTariff(), 0.001);
         assertEquals(      1.193,  dsmrTelegram.getElectricityPowerReceived(),        0.001);
         assertEquals(      0.0,    dsmrTelegram.getElectricityPowerReturned(),        0.001);
-        assertEquals(      4,      dsmrTelegram.getPowerFailures().longValue());
-        assertEquals(      2,      dsmrTelegram.getLongPowerFailures().longValue());
+        assertEquals(      4,      dsmrTelegram.getPowerFailures());
+        assertEquals(      2,      dsmrTelegram.getLongPowerFailures());
 
         assertEquals(2, dsmrTelegram.getPowerFailureEventLogSize());
 
@@ -136,12 +136,12 @@ class TestDsmrParser {
         assertPowerFailureEvent(powerFailureEventLog.get(0), "2010-12-08T15:20:15+01:00", "2010-12-08T15:24:15+01:00", "PT4M");
         assertPowerFailureEvent(powerFailureEventLog.get(1), "2010-12-08T15:05:03+01:00", "2010-12-08T15:10:04+01:00", "PT5M1S");
 
-        assertEquals(      2,      dsmrTelegram.getVoltageSagsPhaseL1().longValue());
-        assertEquals(      1,      dsmrTelegram.getVoltageSagsPhaseL2().longValue());
-        assertEquals(      0,      dsmrTelegram.getVoltageSagsPhaseL3().longValue());
-        assertEquals(      0,      dsmrTelegram.getVoltageSwellsPhaseL1().longValue());
-        assertEquals(      3,      dsmrTelegram.getVoltageSwellsPhaseL2().longValue());
-        assertEquals(      0,      dsmrTelegram.getVoltageSwellsPhaseL3().longValue());
+        assertEquals(      2,      dsmrTelegram.getVoltageSagsPhaseL1());
+        assertEquals(      1,      dsmrTelegram.getVoltageSagsPhaseL2());
+        assertEquals(      0,      dsmrTelegram.getVoltageSagsPhaseL3());
+        assertEquals(      0,      dsmrTelegram.getVoltageSwellsPhaseL1());
+        assertEquals(      3,      dsmrTelegram.getVoltageSwellsPhaseL2());
+        assertEquals(      0,      dsmrTelegram.getVoltageSwellsPhaseL3());
         assertEquals(    220.1,    dsmrTelegram.getVoltageL1(),       0.001);
         assertEquals(    220.2,    dsmrTelegram.getVoltageL2(),       0.001);
         assertEquals(    220.3,    dsmrTelegram.getVoltageL3(),       0.001);
@@ -260,8 +260,8 @@ class TestDsmrParser {
         assertEquals( 123456.789,  dsmrTelegram.getElectricityReturnedNormalTariff(), 0.001);
         assertEquals(      1.193,  dsmrTelegram.getElectricityPowerReceived(),        0.001);
         assertEquals(      0.0,    dsmrTelegram.getElectricityPowerReturned(),        0.001);
-        assertEquals(      4,      dsmrTelegram.getPowerFailures().longValue());
-        assertEquals(      2,      dsmrTelegram.getLongPowerFailures().longValue());
+        assertEquals(      4,      dsmrTelegram.getPowerFailures());
+        assertEquals(      2,      dsmrTelegram.getLongPowerFailures());
 
         assertEquals(2, dsmrTelegram.getPowerFailureEventLogSize());
 
@@ -363,8 +363,8 @@ class TestDsmrParser {
         assertEquals(      0.0, dsmrTelegram.getElectricityReturnedNormalTariff(), 0.001);
         assertEquals(    0.433, dsmrTelegram.getElectricityPowerReceived(),        0.001);
         assertEquals(      0.0, dsmrTelegram.getElectricityPowerReturned(),        0.001);
-        assertEquals(        5, dsmrTelegram.getPowerFailures().longValue());
-        assertEquals(        3, dsmrTelegram.getLongPowerFailures().longValue());
+        assertEquals(        5, dsmrTelegram.getPowerFailures());
+        assertEquals(        3, dsmrTelegram.getLongPowerFailures());
 
         assertEquals(1, dsmrTelegram.getPowerFailureEventLogSize());
 
@@ -372,12 +372,12 @@ class TestDsmrParser {
         assertEquals(1, powerFailureEventLog.size());
         assertPowerFailureEvent(powerFailureEventLog.get(0), "2018-04-17T20:11:02+02:00", "2018-04-17T20:14:58+02:00", "PT3M56S");
 
-        assertEquals(        1, dsmrTelegram.getVoltageSagsPhaseL1().longValue());
-        assertEquals(        1, dsmrTelegram.getVoltageSagsPhaseL2().longValue());
-        assertEquals(        1, dsmrTelegram.getVoltageSagsPhaseL3().longValue());
-        assertEquals(        1, dsmrTelegram.getVoltageSwellsPhaseL1().longValue());
-        assertEquals(        1, dsmrTelegram.getVoltageSwellsPhaseL2().longValue());
-        assertEquals(        1, dsmrTelegram.getVoltageSwellsPhaseL3().longValue());
+        assertEquals(        1, dsmrTelegram.getVoltageSagsPhaseL1());
+        assertEquals(        1, dsmrTelegram.getVoltageSagsPhaseL2());
+        assertEquals(        1, dsmrTelegram.getVoltageSagsPhaseL3());
+        assertEquals(        1, dsmrTelegram.getVoltageSwellsPhaseL1());
+        assertEquals(        1, dsmrTelegram.getVoltageSwellsPhaseL2());
+        assertEquals(        1, dsmrTelegram.getVoltageSwellsPhaseL3());
         assertEquals(    236.7, dsmrTelegram.getVoltageL1(),       0.001);
         assertEquals(    234.5, dsmrTelegram.getVoltageL2(),       0.001);
         assertEquals(    236.0, dsmrTelegram.getVoltageL3(),       0.001);
@@ -483,7 +483,7 @@ class TestDsmrParser {
         assertEquals(      0.0, dsmrTelegram.getElectricityReturnedNormalTariff(), 0.001);
         assertEquals(    0.374, dsmrTelegram.getElectricityPowerReceived(),        0.001);
         assertEquals(      0.0, dsmrTelegram.getElectricityPowerReturned(),        0.001);
-        assertEquals(        3, dsmrTelegram.getPowerFailures().longValue());
+        assertEquals(        3, dsmrTelegram.getPowerFailures());
 
         assertEquals(        1, dsmrTelegram.getPowerFailureEventLogSize());
 
@@ -491,11 +491,11 @@ class TestDsmrParser {
         assertEquals(1, powerFailureEventLog.size());
         assertPowerFailureEvent(powerFailureEventLog.get(0), "2017-01-17T04:19:06+01:00", "2017-01-17T06:59:12+01:00", "PT2H40M6S");
 
-        assertEquals(        1, dsmrTelegram.getLongPowerFailures().longValue());
-        assertEquals(        0, dsmrTelegram.getVoltageSagsPhaseL1().longValue());
+        assertEquals(        1, dsmrTelegram.getLongPowerFailures());
+        assertEquals(        0, dsmrTelegram.getVoltageSagsPhaseL1());
         assertNull(             dsmrTelegram.getVoltageSagsPhaseL2());
         assertNull(             dsmrTelegram.getVoltageSagsPhaseL3());
-        assertEquals(        0, dsmrTelegram.getVoltageSwellsPhaseL1().longValue());
+        assertEquals(        0, dsmrTelegram.getVoltageSwellsPhaseL1());
         assertNull(             dsmrTelegram.getVoltageSwellsPhaseL2());
         assertNull(             dsmrTelegram.getVoltageSwellsPhaseL3());
         assertNull(             dsmrTelegram.getVoltageL1());
@@ -589,12 +589,12 @@ class TestDsmrParser {
         assertEquals(      0.0, dsmrTelegram.getElectricityReturnedNormalTariff(), 0.001);
         assertEquals(    0.004, dsmrTelegram.getElectricityPowerReceived(),        0.001);
         assertEquals(      0.0, dsmrTelegram.getElectricityPowerReturned(),        0.001);
-        assertEquals(      933, dsmrTelegram.getPowerFailures().longValue());
-        assertEquals(      108, dsmrTelegram.getLongPowerFailures().longValue());
-        assertEquals(       60, dsmrTelegram.getVoltageSagsPhaseL1().longValue());
+        assertEquals(      933, dsmrTelegram.getPowerFailures());
+        assertEquals(      108, dsmrTelegram.getLongPowerFailures());
+        assertEquals(       60, dsmrTelegram.getVoltageSagsPhaseL1());
         assertEquals(       44, dsmrTelegram.getVoltageSagsPhaseL2());
         assertEquals(       45, dsmrTelegram.getVoltageSagsPhaseL3());
-        assertEquals(        0, dsmrTelegram.getVoltageSwellsPhaseL1().longValue());
+        assertEquals(        0, dsmrTelegram.getVoltageSwellsPhaseL1());
         assertEquals(        0, dsmrTelegram.getVoltageSwellsPhaseL2());
         assertEquals(        0, dsmrTelegram.getVoltageSwellsPhaseL3());
         assertEquals(    227.0, dsmrTelegram.getVoltageL1());
@@ -815,14 +815,14 @@ class TestDsmrParser {
         assertEquals( 123456.789,  dsmrTelegram.getElectricityReturnedNormalTariff(), 0.001);
         assertEquals(      1.193,  dsmrTelegram.getElectricityPowerReceived(),        0.001);
         assertEquals(      0.0,    dsmrTelegram.getElectricityPowerReturned(),        0.001);
-        assertEquals(      4,      dsmrTelegram.getPowerFailures().longValue());
-        assertEquals(      2,      dsmrTelegram.getLongPowerFailures().longValue());
-        assertEquals(      2,      dsmrTelegram.getVoltageSagsPhaseL1().longValue());
-        assertEquals(      1,      dsmrTelegram.getVoltageSagsPhaseL2().longValue());
-        assertEquals(      0,      dsmrTelegram.getVoltageSagsPhaseL3().longValue());
-        assertEquals(      0,      dsmrTelegram.getVoltageSwellsPhaseL1().longValue());
-        assertEquals(      3,      dsmrTelegram.getVoltageSwellsPhaseL2().longValue());
-        assertEquals(      0,      dsmrTelegram.getVoltageSwellsPhaseL3().longValue());
+        assertEquals(      4,      dsmrTelegram.getPowerFailures());
+        assertEquals(      2,      dsmrTelegram.getLongPowerFailures());
+        assertEquals(      2,      dsmrTelegram.getVoltageSagsPhaseL1());
+        assertEquals(      1,      dsmrTelegram.getVoltageSagsPhaseL2());
+        assertEquals(      0,      dsmrTelegram.getVoltageSagsPhaseL3());
+        assertEquals(      0,      dsmrTelegram.getVoltageSwellsPhaseL1());
+        assertEquals(      3,      dsmrTelegram.getVoltageSwellsPhaseL2());
+        assertEquals(      0,      dsmrTelegram.getVoltageSwellsPhaseL3());
         assertEquals(    220.1,    dsmrTelegram.getVoltageL1(),       0.001);
         assertEquals(    220.2,    dsmrTelegram.getVoltageL2(),       0.001);
         assertEquals(    220.3,    dsmrTelegram.getVoltageL3(),       0.001);
