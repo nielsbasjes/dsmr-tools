@@ -89,24 +89,10 @@ public class DSMRTelegram {
     // NOTE: This assumes only AT MOST ONE attached thing per type of meter.
     // Doing two 'gas meters' will only map the first one (i.e. with the lowest MBus id)!!!
 
-    // Water
-    String        waterEquipmentId;
-    ZonedDateTime waterTimestamp;    // Water measurement timestamp
-    Double        waterM3;           // Water consumption in cubic meters
-
     // Gas
     String        gasEquipmentId;
     ZonedDateTime gasTimestamp;      // Gas measurement timestamp
     Double        gasM3;             // Gas consumption in cubic meters
-
-    // Thermal: Heat or Cold
-    String        thermalHeatEquipmentId;
-    ZonedDateTime thermalHeatTimestamp;  // Thermal Timestamp
-    Double        thermalHeatGJ;         // Thermal GigaJoule
-
-    String        thermalColdEquipmentId;
-    ZonedDateTime thermalColdTimestamp;  // Thermal Timestamp
-    Double        thermalColdGJ;         // Thermal GigaJoule
 
     // Electricity via a slave
     String        slaveEMeterEquipmentId;

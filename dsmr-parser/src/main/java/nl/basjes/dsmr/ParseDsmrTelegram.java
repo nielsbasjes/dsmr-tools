@@ -162,22 +162,26 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
         return dsmrTelegram;
     }
 
+    private void mustHaveUnit(MBusEvent mBusEvent, String unit) {
+        if (!mBusEvent.unit.isEmpty() && !unit.equals(mBusEvent.unit)) {
+            hasSyntaxError = true;
+        }
+    }
+
     private void fillMBusDataToAttributes(DSMRTelegram telegram) {
         for (Map.Entry<Integer, MBusEvent> mBusEventEntry: telegram.mBusEvents.entrySet()) {
             MBusEvent mBusEvent = mBusEventEntry.getValue();
 
             // This mapping is based on the documentation found on http://www.m-bus.com/
             switch (mBusEvent.deviceType) {
-//                case 0x00: // Other                                                               0000 0000  00
-//                case 0x01: // Oil                                                                 0000 0001  01
+//                   0x00: // Other                                                                 0000 0000  00
+//                   0x01: // Oil                                                                   0000 0001  01
                 case 0x02: // Electricity via a slave                                               0000 0010  02
                     if (telegram.slaveEMeterEquipmentId == null) {
                         telegram.slaveEMeterEquipmentId         = mBusEvent.equipmentId;
                         telegram.slaveEMeterTimestamp           = mBusEvent.timestamp;
                         telegram.slaveEMeterkWh                 = mBusEvent.value;
-                        if (!mBusEvent.unit.isEmpty() && !"kWh".equals(mBusEvent.unit)) {
-                            hasSyntaxError = true;
-                        }
+                        mustHaveUnit(mBusEvent, "kWh");
                     }
                     break;
 
@@ -186,62 +190,29 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
                         telegram.gasEquipmentId                 = mBusEvent.equipmentId;
                         telegram.gasTimestamp                   = mBusEvent.timestamp;
                         telegram.gasM3                          = mBusEvent.value;
-                        if (!mBusEvent.unit.isEmpty() && !"m3".equals(mBusEvent.unit)) {
-                            hasSyntaxError = true;
-                        }
+                        mustHaveUnit(mBusEvent, "m3");
                     }
                     break;
 
-//                case 0x05: // Steam                                                               0000 0101  05
-                case 0x06: // Warm Water (30-90 Celcius)                                            0000 0110  06
-                case 0x07: // Water                                                                 0000 0111  07
-                    if (telegram.waterEquipmentId == null) {
-                        telegram.waterEquipmentId               = mBusEvent.equipmentId;
-                        telegram.waterTimestamp                 = mBusEvent.timestamp;
-                        telegram.waterM3                        = mBusEvent.value;
-                        if (!mBusEvent.unit.isEmpty() && !"m3".equals(mBusEvent.unit)) {
-                            hasSyntaxError = true;
-                        }
-                    }
-                    break;
-
-//                case 0x08: // Heat Cost Allocator                                                 0000 1000  08
-//                case 0x09: // Compressed Air                                                      0000 1001  09
-
-                case 0x04: // Heat (Volume measured at return temperature: outlet)                  0000 0100  04
-                case 0x0C: // Heat (Volume measured at flow temperature: inlet)                     0000 1100  0C
-                    if (telegram.thermalHeatEquipmentId == null) {
-                        telegram.thermalHeatEquipmentId         = mBusEvent.equipmentId;
-                        telegram.thermalHeatTimestamp           = mBusEvent.timestamp;
-                        telegram.thermalHeatGJ                  = mBusEvent.value;
-                        if (!mBusEvent.unit.isEmpty() && !"GJ".equals(mBusEvent.unit)) {
-                            hasSyntaxError = true;
-                        }
-                    }
-                    break;
-
-                case 0x0A: // Cooling load meter (Volume measured at return temperature: outlet)    0000 1010  0A
-                case 0x0B: // Cooling load meter (Volume measured at flow temperature: inlet)       0000 1011  0B
-                    if (telegram.thermalColdEquipmentId == null) {
-                        telegram.thermalColdEquipmentId         = mBusEvent.equipmentId;
-                        telegram.thermalColdTimestamp           = mBusEvent.timestamp;
-                        telegram.thermalColdGJ                  = mBusEvent.value;
-                        if (!mBusEvent.unit.isEmpty() && !"GJ".equals(mBusEvent.unit)) {
-                            hasSyntaxError = true;
-                        }
-                    }
-                    break;
-
-//                case 0xOD: // Heat / Cooling load meter                                           0000 1101  OD
-//                case 0x0E: // Bus / System                                                        0000 1110  0E
-//                case 0x0F: // Unknown Medium                                                      0000 1111  0F
-//                case 0x10: // Reserve                                                             .......... 10 - 14
-//                case 0x15: // Hot Water (>90 Celsius)                                             0001 0101  15
-//                case 0x16: // Cold Water                                                          0001 0110  16
-//                case 0x17: // Dual register (hot/cold) Water                                      0001 0111  17
-//                case 0x18: // Pressure                                                            0001 1000  18
-//                case 0x19: // A/D Converter                                                       0001 1001  19
-//                case 0x20: // Reserve                                                             .......... 20 - FF
+//                   0x04: // Heat (Volume measured at return temperature: outlet)                  0000 0100  04
+//                   0x05: // Steam                                                                 0000 0101  05
+//                   0x06: // Warm Water (30-90 Celcius)                                            0000 0110  06
+//                   0x07: // Water                                                                 0000 0111  07
+//                   0x08: // Heat Cost Allocator                                                   0000 1000  08
+//                   0x09: // Compressed Air                                                        0000 1001  09
+//                   0x0A: // Cooling load meter (Volume measured at return temperature: outlet)    0000 1010  0A
+//                   0x0B: // Cooling load meter (Volume measured at flow temperature: inlet)       0000 1011  0B
+//                   0x0C: // Heat (Volume measured at flow temperature: inlet)                     0000 1100  0C
+//                   0xOD: // Heat / Cooling load meter                                             0000 1101  OD
+//                   0x0E: // Bus / System                                                          0000 1110  0E
+//                   0x0F: // Unknown Medium                                                        0000 1111  0F
+//                   0x10: // Reserve                                                               .......... 10 - 14
+//                   0x15: // Hot Water (>90 Celsius)                                               0001 0101  15
+//                   0x16: // Cold Water                                                            0001 0110  16
+//                   0x17: // Dual register (hot/cold) Water                                        0001 0111  17
+//                   0x18: // Pressure                                                              0001 1000  18
+//                   0x19: // A/D Converter                                                         0001 1001  19
+//                   0x20: // Reserve                                                               .......... 20 - FF
                 default: // We simply do not map the ones we do not understand
             }
         }

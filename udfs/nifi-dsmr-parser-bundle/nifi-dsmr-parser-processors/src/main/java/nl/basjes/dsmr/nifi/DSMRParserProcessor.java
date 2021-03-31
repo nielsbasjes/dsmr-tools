@@ -238,24 +238,10 @@ public class DSMRParserProcessor extends AbstractProcessor {
         // NOTE: This assumes only AT MOST ONE attached thing per type of meter.
         // Doing two 'gas meters' will only map the first one (i.e. with the lowest MBus id)!!!
 
-        // Water
-        put(parseResults, "waterEquipmentId",                 record.getWaterEquipmentId());                 // Water measuring equipment id
-        put(parseResults, "waterTimestamp",                   record.getWaterTimestamp());                   // Water measurement timestamp
-        put(parseResults, "waterM3",                          record.getWaterM3());                          // Measured Water quantity in M3
-
         // Gas
         put(parseResults, "gasEquipmentId",                   record.getGasEquipmentId());                   // Gas measuring equipment id
         put(parseResults, "gasTimestamp",                     record.getGasTimestamp());                     // Gas measurement timestamp
         put(parseResults, "gasM3",                            record.getGasM3());                            // Measured Gas quantity in M3
-
-        // Thermal: Heat or Cold
-        put(parseResults, "thermalHeatEquipmentId",           record.getThermalHeatEquipmentId());           // Heat measuring equipment id
-        put(parseResults, "thermalHeatTimestamp",             record.getThermalHeatTimestamp());             // Heat measurement timestamp
-        put(parseResults, "thermalHeatGJ",                    record.getThermalHeatGJ());                    // Measured Heat quantity in GigaJoule
-
-        put(parseResults, "thermalColdEquipmentId",           record.getThermalColdEquipmentId());           // Cold measuring equipment id
-        put(parseResults, "thermalColdTimestamp",             record.getThermalColdTimestamp());             // Cold measurement timestamp
-        put(parseResults, "thermalColdGJ",                    record.getThermalColdGJ());                    // Measured Cold quantity in GigaJoule
 
         // Electricity via a slave
         put(parseResults, "slaveEMeterEquipmentId",           record.getSlaveEMeterEquipmentId());           // Slave e-meter equipment id

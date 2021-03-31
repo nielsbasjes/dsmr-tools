@@ -272,13 +272,13 @@ class TestDsmrParser {
 
         assertEquals(      2,      dsmrTelegram.getVoltageSagsPhaseL1());
         assertEquals(      1,      dsmrTelegram.getVoltageSagsPhaseL2());
-        assertEquals(      null,      dsmrTelegram.getVoltageSagsPhaseL3());
+        assertNull(                dsmrTelegram.getVoltageSagsPhaseL3());
         assertEquals(      0,      dsmrTelegram.getVoltageSwellsPhaseL1());
         assertEquals(      3,      dsmrTelegram.getVoltageSwellsPhaseL2());
         assertEquals(      0,      dsmrTelegram.getVoltageSwellsPhaseL3());
-//        assertEquals(    220.1,    dsmrTelegram.getVoltageL1(),       0.001);
-//        assertEquals(    220.2,    dsmrTelegram.getVoltageL2(),       0.001);
-        assertEquals(    null,    dsmrTelegram.getVoltageL3());
+        assertNull(                dsmrTelegram.getVoltageL1());
+        assertNull(                dsmrTelegram.getVoltageL2());
+        assertNull(                dsmrTelegram.getVoltageL3());
         assertEquals(      1,      dsmrTelegram.getCurrentL1(),       0.001);
         assertEquals(      2,      dsmrTelegram.getCurrentL2(),       0.001);
         assertEquals(      3,      dsmrTelegram.getCurrentL3(),       0.001);

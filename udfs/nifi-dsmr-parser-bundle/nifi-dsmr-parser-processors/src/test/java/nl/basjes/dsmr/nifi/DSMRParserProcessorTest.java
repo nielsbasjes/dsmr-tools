@@ -218,17 +218,6 @@ class DSMRParserProcessorTest {
         assertAttributeEquals(result, "dsmr.gasTimestamp",                        "2010-12-09T11:22:00+01:00");
         assertAttributeEquals(result, "dsmr.gasTimestamp.epochSecond",            "1291890120");
 
-        assertAttributeEquals(result, "dsmr.thermalHeatEquipmentId",              "____THREE__");
-        assertAttributeEquals(result, "dsmr.thermalHeatGJ",                       "12785.333");
-        assertAttributeEquals(result, "dsmr.thermalHeatTimestamp",                "2010-12-09T11:23:00+01:00");
-        assertAttributeEquals(result, "dsmr.thermalHeatTimestamp.epochSecond",    "1291890180");
-
-        assertAttributeEquals(result, "dsmr.thermalColdEquipmentId",              "____FOUR___");
-        assertAttributeEquals(result, "dsmr.thermalColdGJ",                       "12785.444");
-        assertAttributeEquals(result, "dsmr.thermalColdTimestamp",                "2010-12-09T11:24:00+01:00");
-        assertAttributeEquals(result, "dsmr.thermalColdTimestamp.epochSecond",    "1291890240");
-
-
         // Test attributes and content
         result.assertContentEquals(content);
     }

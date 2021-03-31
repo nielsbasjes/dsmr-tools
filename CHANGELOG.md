@@ -2,7 +2,7 @@ This is intended as an overview of the major changes
 
 v0.6-SNAPSHOT
 ===
-- ...
+- Drop the water/cold/heat fields as they are not used.
 
 v0.5
 ===
