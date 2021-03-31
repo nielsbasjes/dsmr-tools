@@ -19,7 +19,7 @@ Based mainly on the answers from Netbeheer Nederland only these values actually 
 
 ### Answer from netbeheernederland.nl in december 2019 (in Dutch)
 
-In December 2019 I sent an email to Netbeheer Nederland and they kindly clarified this issue (in Dutch)
+In December 2019 I emailed Netbeheer Nederland, and they kindly clarified this issue (in Dutch)
 
     De mogelijke waarden voor device types staan de in achterliggende standaard EN-13757-3 tabel 6 (M-Bus).
     In gebruik in de Nederlandse slimme meter zijn:
