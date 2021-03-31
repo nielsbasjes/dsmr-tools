@@ -36,7 +36,7 @@ public final class P1Simulator {
 
     public static void main(String...  args) throws InterruptedException {
 
-        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYMMddHHmmss");
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMddHHmmss");
         final ZoneId            zone      = ZoneId.of("Europe/Amsterdam");
         double sinPeriodScaler = 60000.0/(PI*2.0);
 
