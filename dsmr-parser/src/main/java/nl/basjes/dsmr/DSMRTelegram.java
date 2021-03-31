@@ -41,12 +41,14 @@ public class DSMRTelegram {
     String equipmentId;                      // Equipment identifier
 
     Long   electricityTariffIndicator;       // Tariff indicator electricity
+
     Double electricityReceivedLowTariff;     // Meter Reading electricity delivered to client (low tariff) in 0,001 kWh
     Double electricityReceivedNormalTariff;  // Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh
-    Double electricityReturnedLowTariff;     // Meter Reading electricity delivered by client (low tariff) in 0,001 kWh
-    Double electricityReturnedNormalTariff;  // Meter Reading electricity delivered by client (normal tariff) in 0,001 kWh
     Double electricityPowerReceived;         // Actual electricity power delivered (+P) in 1 Watt resolution
-    Double electricityPowerReturned;         // Actual electricity power received (-P) in 1 Watt resolution
+
+    Double electricityReturnedLowTariff;     // Meter Reading electricity returned by client (low tariff) in 0,001 kWh
+    Double electricityReturnedNormalTariff;  // Meter Reading electricity returned by client (normal tariff) in 0,001 kWh
+    Double electricityPowerReturned;         // Actual electricity power returned (-P) in 1 Watt resolution
 
     Long powerFailures;                      // Number of power failures in any phases
     Long longPowerFailures;                  // Number of long power failures in any phases
@@ -54,9 +56,9 @@ public class DSMRTelegram {
     @Getter
     @ToString
     public static final class PowerFailureEvent {
-        ZonedDateTime startTime;             // When did the powerfailure start
-        ZonedDateTime endTime;               // When did the powerfailure end
-        Duration duration;                   // How long did the failure last
+        ZonedDateTime startTime;             // When did the power failure start
+        ZonedDateTime endTime;               // When did the power failure end
+        Duration duration;                   // How long did the power failure last
     }
 
     Long powerFailureEventLogSize = 0L;      // Power failure event log size (as indicated in the output)
@@ -65,6 +67,7 @@ public class DSMRTelegram {
     Long voltageSagsPhaseL1;                 // Number of voltage sags in phase L1
     Long voltageSagsPhaseL2;                 // Number of voltage sags in phase L2
     Long voltageSagsPhaseL3;                 // Number of voltage sags in phase L3
+
     Long voltageSwellsPhaseL1;               // Number of voltage swells in phase L1
     Long voltageSwellsPhaseL2;               // Number of voltage swells in phase L2
     Long voltageSwellsPhaseL3;               // Number of voltage swells in phase L3
@@ -72,15 +75,19 @@ public class DSMRTelegram {
     Double voltageL1;                        // Instantaneous voltage L1
     Double voltageL2;                        // Instantaneous voltage L2
     Double voltageL3;                        // Instantaneous voltage L3
+
     Double currentL1;                        // Instantaneous current L1
     Double currentL2;                        // Instantaneous current L2
     Double currentL3;                        // Instantaneous current L3
+
     Double powerReceivedL1;                  // Instantaneous active power L1 (+P)
     Double powerReceivedL2;                  // Instantaneous active power L2 (+P)
     Double powerReceivedL3;                  // Instantaneous active power L3 (+P)
+
     Double powerReturnedL1;                  // Instantaneous active power L1 (-P)
     Double powerReturnedL2;                  // Instantaneous active power L2 (-P)
     Double powerReturnedL3;                  // Instantaneous active power L3 (-P)
+
     String messageCodes;                     // Text message codes: numeric 8 digits.
     String message;                          // Text message max 1024 characters.
 
@@ -91,11 +98,11 @@ public class DSMRTelegram {
 
     // Gas
     String        gasEquipmentId;
-    ZonedDateTime gasTimestamp;      // Gas measurement timestamp
-    Double        gasM3;             // Gas consumption in cubic meters
+    ZonedDateTime gasTimestamp;              // Gas measurement timestamp
+    Double        gasM3;                     // Gas consumption in cubic meters
 
     // Electricity via a slave
     String        slaveEMeterEquipmentId;
-    ZonedDateTime slaveEMeterTimestamp;  // Slave e-meter measurement timestamp
-    Double        slaveEMeterkWh;        // Slave e-meter consumption in kWh
+    ZonedDateTime slaveEMeterTimestamp;      // Slave e-meter measurement timestamp
+    Double        slaveEMeterkWh;            // Slave e-meter consumption in kWh
 }
