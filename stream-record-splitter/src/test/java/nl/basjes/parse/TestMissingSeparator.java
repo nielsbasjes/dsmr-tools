@@ -44,16 +44,14 @@ class TestMissingSeparator {
         runWriter = true;
 
         /* Thread for writing data to pipe */
-        Thread pipeWriter = new Thread(new Runnable() { // NOTE: This CANNOT be a Lambda !
-            @Override
-            public void run() {
-                byte[] output = "Something that does not contain the end marker".getBytes(UTF_8);
-                while (runWriter) {
-                    try {
-                        pipedOutputStream.write(output);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        // NOTE: This CANNOT be a Lambda !
+        Thread pipeWriter = new Thread(() -> {
+            byte[] output = "Something that does not contain the end marker".getBytes(UTF_8);
+            while (runWriter) {
+                try {
+                    pipedOutputStream.write(output);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         });

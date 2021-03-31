@@ -84,7 +84,7 @@ public class DSMRTelegram {
     String messageCodes;                     // Text message codes: numeric 8 digits.
     String message;                          // Text message max 1024 characters.
 
-    Map<Integer, MBusEvent> mBusEvents = new TreeMap<>();
+    final Map<Integer, MBusEvent> mBusEvents = new TreeMap<>();
 
     // NOTE: This assumes only AT MOST ONE attached thing per type of meter.
     // Doing two 'gas meters' will only map the first one (i.e. with the lowest MBus id)!!!

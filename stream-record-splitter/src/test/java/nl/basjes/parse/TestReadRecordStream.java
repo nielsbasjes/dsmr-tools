@@ -116,9 +116,7 @@ class TestReadRecordStream {
             "Ignored, should fail, no record expected."
         };
 
-        IOException exception = assertThrows(IOException.class, () -> {
-            testRecordReassemblyInBurstyStream(recordFragments, records, "====\n");
-        });
+        IOException exception = assertThrows(IOException.class, () -> testRecordReassemblyInBurstyStream(recordFragments, records, "====\n"));
 
         assertTrue(exception.getMessage().matches("After [0-9]+ bytes the end-of-record pattern has not been found yet."));
     }

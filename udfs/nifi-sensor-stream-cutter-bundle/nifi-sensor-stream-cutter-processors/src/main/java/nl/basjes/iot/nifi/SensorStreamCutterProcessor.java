@@ -33,13 +33,11 @@ import org.apache.nifi.processor.ProcessSession;
 import org.apache.nifi.processor.ProcessorInitializationContext;
 import org.apache.nifi.processor.Relationship;
 import org.apache.nifi.processor.exception.ProcessException;
-import org.apache.nifi.processor.io.OutputStreamCallback;
 import org.apache.nifi.processor.util.StandardValidators;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -110,13 +108,13 @@ public class SensorStreamCutterProcessor extends AbstractProcessor {
 
     @Override
     protected void init(final ProcessorInitializationContext context) {
-        final List<PropertyDescriptor> descriptorList = new ArrayList<PropertyDescriptor>();
+        final List<PropertyDescriptor> descriptorList = new ArrayList<>();
         descriptorList.add(FILE_NAME);
         descriptorList.add(END_OF_RECORD_REGEX);
         descriptorList.add(MAX_CHARACTERS_PER_RECORD);
         this.descriptors = Collections.unmodifiableList(descriptorList);
 
-        final Set<Relationship> relationshipSet = new HashSet<Relationship>();
+        final Set<Relationship> relationshipSet = new HashSet<>();
         relationshipSet.add(SUCCESS);
         this.relationships = Collections.unmodifiableSet(relationshipSet);
     }
@@ -154,12 +152,9 @@ public class SensorStreamCutterProcessor extends AbstractProcessor {
         }
 
         FlowFile flowFile = session.create();
-        flowFile = session.write(flowFile, new OutputStreamCallback() {
-            @Override
-            public void process(final OutputStream out) throws IOException {
-                if (content != null) {
-                    out.write(content.getBytes(UTF_8));
-                }
+        flowFile = session.write(flowFile, out -> {
+            if (content != null) {
+                out.write(content.getBytes(UTF_8));
             }
         });
 

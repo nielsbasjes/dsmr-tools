@@ -36,11 +36,8 @@ import org.apache.nifi.processor.ProcessContext;
 import org.apache.nifi.processor.ProcessSession;
 import org.apache.nifi.processor.ProcessorInitializationContext;
 import org.apache.nifi.processor.Relationship;
-import org.apache.nifi.processor.io.InputStreamCallback;
 import org.apache.nifi.stream.io.StreamUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
@@ -79,7 +76,7 @@ public class DSMRParserProcessor extends AbstractProcessor {
 
     @Override
     protected void init(final ProcessorInitializationContext context) {
-        final Set<Relationship> relationshipSet = new HashSet<Relationship>();
+        final Set<Relationship> relationshipSet = new HashSet<>();
         relationshipSet.add(VALID);
         relationshipSet.add(INVALID_CRC);
         relationshipSet.add(BAD_RECORDS);
@@ -153,12 +150,7 @@ public class DSMRParserProcessor extends AbstractProcessor {
         }
 
         final byte[] byteBuffer = new byte[(int)size];
-        session.read(flowFile, new InputStreamCallback() {
-            @Override
-            public void process(InputStream in) throws IOException {
-                StreamUtils.fillBuffer(in, byteBuffer, false);
-            }
-        });
+        session.read(flowFile, in -> StreamUtils.fillBuffer(in, byteBuffer, false));
         final long len = Math.min(byteBuffer.length, flowFile.getSize());
         String contentString = new String(byteBuffer, 0, (int) len, UTF_8);
 
