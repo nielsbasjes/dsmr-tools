@@ -155,6 +155,7 @@
             <exclude>docs/**</exclude>
             <!-- Files that cannot be 'polluted' -->
             <exclude>.github/**</exclude>
+            <exclude>*.json</exclude>
             <exclude>CNAME</exclude>
             <!-- Test and demo input files -->
             <exclude>**/testfiles/**</exclude>
