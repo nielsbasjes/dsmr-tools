@@ -1,4 +1,4 @@
-[![Travis Build status](https://api.travis-ci.org/nielsbasjes/dsmr-tools.png?branch=master)](https://travis-ci.org/nielsbasjes/dsmr-tools)
+[![Travis Build status](https://api.travis-ci.com/nielsbasjes/dsmr-tools.png?branch=master)](https://travis-ci.com/nielsbasjes/dsmr-tools)
 [![Coverage Status](https://coveralls.io/repos/github/nielsbasjes/dsmr-tools/badge.svg?branch=master)](https://coveralls.io/github/nielsbasjes/dsmr-tools?branch=master)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=nielsbasjes_dsmrtools&metric=alert_status)](https://sonarcloud.io/dashboard?id=nielsbasjes_dsmrtools)
 [![License](https://img.shields.io/:license-apache-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
