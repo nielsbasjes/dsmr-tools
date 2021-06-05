@@ -54,7 +54,7 @@
     <checkstyle.version>8.43</checkstyle.version>
     <slf4j.version>1.7.30</slf4j.version>
     <rat.version>0.13</rat.version>
-    <jacoco.version>0.8.6</jacoco.version>
+    <jacoco.version>0.8.7</jacoco.version>
     <junit5.version>5.7.2</junit5.version>
 
     <!-- See http://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html-->
