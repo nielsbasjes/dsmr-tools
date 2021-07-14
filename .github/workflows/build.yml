@@ -53,7 +53,7 @@ jobs:
     - name: Build Logparser
       run: mvn -B clean package
 
-#    - name: Codecov
-#      uses: codecov/codecov-action@v1.5.2
-#      with:
-#        token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Codecov
+      uses: codecov/codecov-action@v1.5.2
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
