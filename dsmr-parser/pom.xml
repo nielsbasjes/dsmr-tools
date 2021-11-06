@@ -34,7 +34,7 @@
   <url>https://dsmr.basjes.nl</url>
 
   <properties>
-    <antlr.version>4.9.2</antlr.version>
+    <antlr.version>4.9.3</antlr.version>
   </properties>
 
   <dependencies>
