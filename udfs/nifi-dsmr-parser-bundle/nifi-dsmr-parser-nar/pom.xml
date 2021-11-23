@@ -23,11 +23,11 @@
   <parent>
     <groupId>nl.basjes.dsmr</groupId>
     <artifactId>nifi-dsmr-parser-bundle</artifactId>
-    <version>0.6-SNAPSHOT</version>
+    <version>0.6</version>
   </parent>
 
   <artifactId>nifi-dsmr-parser</artifactId>
-  <version>0.6-SNAPSHOT</version>
+  <version>0.6</version>
   <packaging>nar</packaging>
   <name>DSMR : UDF : Nifi : DSMR Parser : Nar</name>
   <description>A toolkit for reading and parsing the data conforming to the Dutch Smart Meter Requirements (DSMR).</description>
@@ -42,7 +42,7 @@
     <dependency>
       <groupId>nl.basjes.dsmr</groupId>
       <artifactId>nifi-dsmr-parser-processors</artifactId>
-      <version>0.6-SNAPSHOT</version>
+      <version>0.6</version>
     </dependency>
   </dependencies>
 

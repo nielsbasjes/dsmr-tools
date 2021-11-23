@@ -1,9 +1,13 @@
 This is intended as an overview of the major changes
 
-v0.6-SNAPSHOT
+v0.7-SNAPSHOT
+===
+- ...
+
+v0.6
 ===
 - Drop the water/cold/heat fields as they are not used.
-- Support for very old style records (no P1 version, no timestamp, no CRC, different way of including gas measurements).
+- Partial support for DMSR 2.2 style records (no P1 version, no timestamp, no CRC, different way of including gas measurements).
 - Update to (Mi)NiFi 1.15.0
 
 v0.5
