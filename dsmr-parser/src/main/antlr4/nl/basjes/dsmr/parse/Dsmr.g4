@@ -36,7 +36,7 @@ COSEMID     : [01] '-' [0-9] ':' [0-9][0-9]? '.' [0-9][0-9]? '.' [0-9][0-9]? ;
 // and an indication whether DST is active (X=S) or DST is not active (X=W).
 // S=Summertime W=Wintertime
 // Format       Y    Y     M   M     D    D     h    h     m    m     s    s      S or W
-TIMESTAMP   : [0-9][0-9] [01][0-9] [0-3][0-9] [0-2][0-9] [0-5][0-9] [0-5][0-9]  ('S'|'W');
+TIMESTAMP   : [0-9][0-9] [01][0-9] [0-3][0-9] [0-2][0-9] [0-5][0-9] [0-5][0-9]  ('S'|'W')?;
 
 fragment HEXDIGIT: [0-9A-Fa-f][0-9A-Fa-f];
 
@@ -103,23 +103,60 @@ field
     | cosemid='0-0:96.13.1'  '(' (text=HEXSTRING)? ')'                       #messageCodes                     // Text message codes: numeric 8 digits.
     | cosemid='0-0:96.13.0'  '(' (text=HEXSTRING)? ')'                       #message                          // Text message max 1024 characters.
 
+    // Removed from DSMR since version 4.0.7 but does occur in production systems.
+    // Parsing this and then ignore the result.
+    | cosemid='0-0:17.0.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #electricityThreshold             // The actual threshold Electricity in kW
+
     | cosemid='0-1:24.1.0'   '(' type=INT ')'                                #mBus1Type                        // MBus channel 1: Device type.
     | cosemid='0-1:96.1.0'   '(' id=HEXSTRING ')'                            #mBus1EquipmentId                 // MBus channel 1: Equipment Identifier.
     | cosemid='0-1:24.2.1'   '(' timestamp=TIMESTAMP ')'
                              '(' value=(FLOAT|INT) ('*' unit=('m3'|'GJ'|'kWh'))? ')'  #mBus1Usage              // MBus channel 1: Last 5 minute reading.
+
+    | cosemid='0-1:24.3.0'   '(' timestamp=TIMESTAMP  ')'
+                             '(' unknownValue1=INT ')'
+                             '(' unknownValue2=INT ')'
+                             '(' unknownValue3=INT ')'
+                             '(0-1:24.2.' INT ')'
+                             '(' unit=('m3'|'GJ'|'kWh') ')'
+                             '(' value=(FLOAT|INT) ')'                       #mBus1UsageAlternative            // MBus channel 2: Last 5 minute reading.
 
     | cosemid='0-2:24.1.0'   '(' type=INT ')'                                #mBus2Type                        // MBus channel 2: Device type.
     | cosemid='0-2:96.1.0'   '(' id=HEXSTRING ')'                            #mBus2EquipmentId                 // MBus channel 2: Equipment Identifier.
     | cosemid='0-2:24.2.1'   '(' timestamp=TIMESTAMP ')'
                              '(' value=(FLOAT|INT) ('*' unit=('m3'|'GJ'|'kWh'))? ')'  #mBus2Usage              // MBus channel 2: Last 5 minute reading.
 
+    | cosemid='0-2:24.3.0'   '(' timestamp=TIMESTAMP  ')'
+                             '(' unknownValue1=INT ')'
+                             '(' unknownValue2=INT ')'
+                             '(' unknownValue3=INT ')'
+                             '(0-2:24.2.' INT ')'
+                             '(' unit=('m3'|'GJ'|'kWh') ')'
+                             '(' value=(FLOAT|INT) ')'                       #mBus2UsageAlternative            // MBus channel 2: Last 5 minute reading.
+
     | cosemid='0-3:24.1.0'   '(' type=INT ')'                                #mBus3Type                        // MBus channel 3: Device type.
     | cosemid='0-3:96.1.0'   '(' id=HEXSTRING ')'                            #mBus3EquipmentId                 // MBus channel 3: Equipment Identifier.
     | cosemid='0-3:24.2.1'   '(' timestamp=TIMESTAMP ')'
                              '(' value=(FLOAT|INT) ('*' unit=('m3'|'GJ'|'kWh'))? ')'  #mBus3Usage              // MBus channel 3: Last 5 minute reading.
 
+    | cosemid='0-3:24.3.0'   '(' timestamp=TIMESTAMP  ')'
+                             '(' unknownValue1=INT ')'
+                             '(' unknownValue2=INT ')'
+                             '(' unknownValue3=INT ')'
+                             '(0-3:24.2.' INT ')'
+                             '(' unit=('m3'|'GJ'|'kWh') ')'
+                             '(' value=(FLOAT|INT) ')'                       #mBus3UsageAlternative            // MBus channel 2: Last 5 minute reading.
+
     | cosemid='0-4:24.1.0'   '(' type=INT ')'                                #mBus4Type                        // MBus channel 4: Device type.
     | cosemid='0-4:96.1.0'   '(' id=HEXSTRING ')'                            #mBus4EquipmentId                 // MBus channel 4: Equipment Identifier.
     | cosemid='0-4:24.2.1'   '(' timestamp=TIMESTAMP ')'
                              '(' value=(FLOAT|INT) ('*' unit=('m3'|'GJ'|'kWh'))? ')'  #mBus4Usage              // MBus channel 4: Last 5 minute reading.
+
+    | cosemid='0-4:24.3.0'   '(' timestamp=TIMESTAMP  ')'
+                             '(' unknownValue1=INT ')'
+                             '(' unknownValue2=INT ')'
+                             '(' unknownValue3=INT ')'
+                             '(0-4:24.2.' INT ')'
+                             '(' unit=('m3'|'GJ'|'kWh') ')'
+                             '(' value=(FLOAT|INT) ')'                       #mBus4UsageAlternative            // MBus channel 2: Last 5 minute reading.
+
     ;

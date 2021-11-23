@@ -19,6 +19,7 @@
 package nl.basjes.dsmr;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.regex.Matcher;
@@ -34,7 +35,7 @@ public class TimestampParser {
     // Dutch ! means Netherlands which assumes timezone "Europe/Amsterdam"
 
     // Format                                     Y    Y     M   M      D    D      h    h      m    m      s    s      S or W
-    private static final String TIME_FORMAT = "([0-9][0-9])([01][0-9])([0-3][0-9])([0-2][0-9])([0-5][0-9])([0-5][0-9])([SsWw])";
+    private static final String TIME_FORMAT = "([0-9][0-9])([01][0-9])([0-3][0-9])([0-2][0-9])([0-5][0-9])([0-5][0-9])([SsWw]?)";
 
     private static final Pattern DATE_TIME_PATTERN = Pattern.compile(TIME_FORMAT);
 
@@ -59,21 +60,24 @@ public class TimestampParser {
             .withMinute(      Integer.parseInt(matcher.group(5)) )
             .withSecond(      Integer.parseInt(matcher.group(6)) );
 
-        String zoneOffset;
+        ZoneId zoneId;
 
         switch(matcher.group(7)) {
-            default:
             case "S": // Dutch Summertime
             case "s":
-                zoneOffset = "+02:00";
+                zoneId = ZoneOffset.of("+02:00");
                 break;
 
             case "W": // Dutch Wintertime
             case "w":
-                zoneOffset = "+01:00";
+                zoneId = ZoneOffset.of("+01:00");
+                break;
+
+            default:
+                zoneId = ZoneId.of("Europe/Amsterdam");
                 break;
         }
-        zonedDateTime = zonedDateTime.withZoneSameLocal(ZoneOffset.of(zoneOffset));
+        zonedDateTime = zonedDateTime.withZoneSameLocal(zoneId);
 
         return zonedDateTime;
     }

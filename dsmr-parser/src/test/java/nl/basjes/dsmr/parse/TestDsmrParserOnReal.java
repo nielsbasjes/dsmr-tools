@@ -31,6 +31,7 @@ import java.util.List;
 import static nl.basjes.dsmr.parse.Utils.assertPowerFailureEvent;
 import static nl.basjes.dsmr.parse.Utils.checkMbus;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -452,6 +453,85 @@ class TestDsmrParserOnReal {
         assertEquals("6D3C", dsmrTelegram.getCrc());
         assertTrue(dsmrTelegram.isValid());
 
+        LOG.info("{}", dsmrTelegram);
+    }
+
+    // As reported https://github.com/nielsbasjes/dsmr-tools/issues/54
+    @Test
+    void testDSMRTelegramIssue54() {
+        DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(
+            "/ISk5\\2MT382-1003\r\n" +
+            "\r\n" +
+            "0-0:96.1.1(5A424556303035313036383434393132)\r\n" +
+            "1-0:1.8.1(16719.940*kWh)\r\n" +
+            "1-0:1.8.2(19403.220*kWh)\r\n" +
+            "1-0:2.8.1(00859.681*kWh)\r\n" +
+            "1-0:2.8.2(01817.057*kWh)\r\n" +
+            "0-0:96.14.0(0002)\r\n" +
+            "1-0:1.7.0(0000.89*kW)\r\n" +
+            "1-0:2.7.0(0000.00*kW)\r\n" +
+            "0-0:17.0.0(0999.00*kW)\r\n" +
+            "0-0:96.3.10(1)\r\n" +
+            "0-0:96.13.1()\r\n" +
+            "0-0:96.13.0()\r\n" +
+            "0-2:24.1.0(3)\r\n" +
+            "0-2:96.1.0(3238303131303038333036343239303133)\r\n" +
+            "0-2:24.3.0(211122210000)(00)(60)(1)(0-2:24.2.1)(m3)\r\n" +
+            "(13368.864)\r\n" +
+            "0-2:24.4.0(1)\r\n" +
+            "!\r\n"
+        );
+
+        assertEquals("/ISk5\\2MT382-1003", dsmrTelegram.getIdent());
+        assertNull(dsmrTelegram.getP1Version());
+        assertNull(dsmrTelegram.getTimestamp());
+
+        assertEquals("ZBEV005106844912", dsmrTelegram.getEquipmentId());
+
+        assertEquals(        2, dsmrTelegram.getElectricityTariffIndicator());
+        assertEquals( 16719.94, dsmrTelegram.getElectricityReceivedLowTariff(),    0.001);
+        assertEquals( 19403.22, dsmrTelegram.getElectricityReceivedNormalTariff(), 0.001);
+        assertEquals(  859.681, dsmrTelegram.getElectricityReturnedLowTariff(),    0.001);
+        assertEquals( 1817.057, dsmrTelegram.getElectricityReturnedNormalTariff(), 0.001);
+        assertEquals(     0.89, dsmrTelegram.getElectricityPowerReceived(),        0.001);
+        assertEquals(      0.0, dsmrTelegram.getElectricityPowerReturned(),        0.001);
+
+        assertEquals(        0, dsmrTelegram.getPowerFailureEventLogSize());
+        assertEquals(        0, dsmrTelegram.getPowerFailureEventLog().size());
+
+        assertEquals(        1, dsmrTelegram.getMBusEvents().size());
+        assertEquals("28011008306429013", dsmrTelegram.getGasEquipmentId());
+        assertEquals(ZonedDateTime.parse("2021-11-22T21:00+01:00[Europe/Amsterdam]"), dsmrTelegram.getGasTimestamp());
+        assertEquals( 13368.864, dsmrTelegram.getGasM3(), 0.001);
+
+        // There is no CRC
+        assertFalse(dsmrTelegram.isValidCRC());
+
+        assertFalse(dsmrTelegram.isValid());
+
+        LOG.info("{}", dsmrTelegram);
+    }
+
+    @Test
+    void testDSMRTelegramAlternativeGas() {
+        DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(
+            "/XMX5XMXABCE100103855\r\n" +
+            "\r\n" +
+            "0-0:96.1.1(30313233343536373839)\r\n" +
+            "1-0:1.8.1(03687.771*kWh)\r\n" +
+            "1-0:1.8.2(04456.167*kWh)\r\n" +
+            "1-0:2.8.1(01450.360*kWh)\r\n" +
+            "1-0:2.8.2(03098.554*kWh)\r\n" +
+            "0-0:96.14.0(0002)\r\n" +
+            "1-0:1.7.0(0000.00*kW)\r\n" +
+            "1-0:2.7.0(0000.62*kW)\r\n" +
+            "0-0:96.13.1()\r\n" +
+            "0-0:96.13.0()\r\n" +
+            "0-1:96.1.0(30313233343536373839)\r\n" +
+            "0-1:24.1.0(03)\r\n" +
+            "0-1:24.3.0(190218120000)(00)(60)(1)(0-1:24.2.0)(m3)\r\n" +
+            "(05271.144)\r\n" +
+            "!\r\n");
         LOG.info("{}", dsmrTelegram);
     }
 

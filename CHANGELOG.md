@@ -3,6 +3,7 @@ This is intended as an overview of the major changes
 v0.6-SNAPSHOT
 ===
 - Drop the water/cold/heat fields as they are not used.
+- Support for very old style records (no P1 version, no timestamp, no CRC, different way of including gas measurements).
 
 v0.5
 ===

@@ -50,6 +50,13 @@ class TestTimestampParser {
     }
 
     @Test
+    void testOldFormat() {
+        TimestampParser timestampParser = new TimestampParser();
+        assertEquals("2019-03-24T15:14:44+01:00", timestampParser.parse("190324151444").format(ISO_OFFSET_DATE_TIME));
+        assertEquals("2019-03-24T15:14:44+01:00", timestampParser.parse("190324151444xxx").format(ISO_OFFSET_DATE_TIME));
+    }
+
+    @Test
     void testNull() {
         TimestampParser timestampParser = new TimestampParser();
         assertNull(timestampParser.parse(null));
@@ -65,8 +72,6 @@ class TestTimestampParser {
     void testBad() {
         TimestampParser timestampParser = new TimestampParser();
         assertNull(timestampParser.parse("Not a date string at all"));
-        assertNull(timestampParser.parse("190324151444"));
-        assertNull(timestampParser.parse("190324151444x"));
     }
 
 }

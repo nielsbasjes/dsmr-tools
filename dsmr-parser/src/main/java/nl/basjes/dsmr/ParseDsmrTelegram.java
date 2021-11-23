@@ -36,15 +36,19 @@ import nl.basjes.dsmr.parse.DsmrParser.EquipmentIdContext;
 import nl.basjes.dsmr.parse.DsmrParser.LongPowerFailuresContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus1EquipmentIdContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus1TypeContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus1UsageAlternativeContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus1UsageContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus2EquipmentIdContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus2TypeContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus2UsageAlternativeContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus2UsageContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus3EquipmentIdContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus3TypeContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus3UsageAlternativeContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus3UsageContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus4EquipmentIdContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus4TypeContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus4UsageAlternativeContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus4UsageContext;
 import nl.basjes.dsmr.parse.DsmrParser.MessageCodesContext;
 import nl.basjes.dsmr.parse.DsmrParser.MessageContext;
@@ -75,6 +79,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
 
@@ -326,7 +331,6 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
     @Override public Void visitPowerReturnedL2                  (PowerReturnedL2Context                  ctx) { dsmrTelegram.powerReturnedL2                 = Double.valueOf(ctx.value.getText()); return null; } // Instantaneous active power L2 (-P)
     @Override public Void visitPowerReturnedL3                  (PowerReturnedL3Context                  ctx) { dsmrTelegram.powerReturnedL3                 = Double.valueOf(ctx.value.getText()); return null; } // Instantaneous active power L3 (-P)
 
-
     private MBusEvent getMBusEvent(int index) {
         return dsmrTelegram.mBusEvents.computeIfAbsent(index, i -> new MBusEvent());
     }
@@ -351,15 +355,20 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
     @Override public Void visitMBus3EquipmentId(MBus3EquipmentIdContext ctx) { setMBusEquipmentId(3, ctx.id.getText()); return null; }
     @Override public Void visitMBus4EquipmentId(MBus4EquipmentIdContext ctx) { setMBusEquipmentId(4, ctx.id.getText()); return null; }
 
-    private void setMBusUsage(int index, String timestampText, String value, String unit) {
+    private void setMBusUsage(int index, Token timestamp, Token value, Token unit) {
         MBusEvent mBusEvent = getMBusEvent(index);
-        mBusEvent.timestamp = timestampParser.parse(timestampText);
-        mBusEvent.value = Double.valueOf(value);
-        mBusEvent.unit = unit;
+        mBusEvent.timestamp = timestamp == null ? null : timestampParser.parse(timestamp.getText());
+        mBusEvent.value     = value     == null ? null : Double.valueOf(value.getText());
+        mBusEvent.unit      = unit      == null ? ""   : unit.getText();
     }
 
-    @Override public Void visitMBus1Usage(MBus1UsageContext ctx) { setMBusUsage(1, ctx.timestamp.getText(), ctx.value.getText(), ctx.unit == null ? "" : ctx.unit.getText()); return null; }
-    @Override public Void visitMBus2Usage(MBus2UsageContext ctx) { setMBusUsage(2, ctx.timestamp.getText(), ctx.value.getText(), ctx.unit == null ? "" : ctx.unit.getText()); return null; }
-    @Override public Void visitMBus3Usage(MBus3UsageContext ctx) { setMBusUsage(3, ctx.timestamp.getText(), ctx.value.getText(), ctx.unit == null ? "" : ctx.unit.getText()); return null; }
-    @Override public Void visitMBus4Usage(MBus4UsageContext ctx) { setMBusUsage(4, ctx.timestamp.getText(), ctx.value.getText(), ctx.unit == null ? "" : ctx.unit.getText()); return null; }
+    @Override public Void visitMBus1Usage(MBus1UsageContext ctx) { setMBusUsage(1, ctx.timestamp, ctx.value, ctx.unit); return null; }
+    @Override public Void visitMBus2Usage(MBus2UsageContext ctx) { setMBusUsage(2, ctx.timestamp, ctx.value, ctx.unit); return null; }
+    @Override public Void visitMBus3Usage(MBus3UsageContext ctx) { setMBusUsage(3, ctx.timestamp, ctx.value, ctx.unit); return null; }
+    @Override public Void visitMBus4Usage(MBus4UsageContext ctx) { setMBusUsage(4, ctx.timestamp, ctx.value, ctx.unit); return null; }
+
+    @Override public Void visitMBus1UsageAlternative(MBus1UsageAlternativeContext ctx) { setMBusUsage(1, ctx.timestamp, ctx.value, ctx.unit); return null; }
+    @Override public Void visitMBus2UsageAlternative(MBus2UsageAlternativeContext ctx) { setMBusUsage(2, ctx.timestamp, ctx.value, ctx.unit); return null; }
+    @Override public Void visitMBus3UsageAlternative(MBus3UsageAlternativeContext ctx) { setMBusUsage(3, ctx.timestamp, ctx.value, ctx.unit); return null; }
+    @Override public Void visitMBus4UsageAlternative(MBus4UsageAlternativeContext ctx) { setMBusUsage(4, ctx.timestamp, ctx.value, ctx.unit); return null; }
 }
