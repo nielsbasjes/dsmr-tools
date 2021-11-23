@@ -163,12 +163,20 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
         // Final step cross map the MBus events into usable attributes.
         fillMBusDataToAttributes(dsmrTelegram);
 
-        dsmrTelegram.isValid = !hasSyntaxError && dsmrTelegram.validCRC;
+        // Really old records do not have a P1 version AND do not have a CRC.
+        // which makes these records valid.
+        if (!hasSyntaxError &&
+            (dsmrTelegram.crc       == null || dsmrTelegram.crc.isEmpty()) &&
+            (dsmrTelegram.p1Version == null || dsmrTelegram.p1Version.isEmpty())) {
+            dsmrTelegram.isValid = true;
+        } else {
+            dsmrTelegram.isValid = !hasSyntaxError && dsmrTelegram.validCRC;
+        }
         return dsmrTelegram;
     }
 
     private void mustHaveUnit(MBusEvent mBusEvent, String unit) {
-        if (!mBusEvent.unit.isEmpty() && !unit.equals(mBusEvent.unit)) {
+        if (mBusEvent.unit != null && !mBusEvent.unit.isEmpty() && !unit.equals(mBusEvent.unit)) {
             hasSyntaxError = true;
         }
     }
@@ -240,7 +248,11 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
     @Override
     public Void visitTelegram(TelegramContext ctx) {
         dsmrTelegram.ident = ctx.ident.getText();
-        dsmrTelegram.crc = ctx.crc.getText().substring(1); // Skip the '!' at the start
+        if (ctx.crc == null || ctx.crc.getText().isEmpty()) {
+            dsmrTelegram.crc = null;
+        } else {
+            dsmrTelegram.crc = ctx.crc.getText().substring(1); // Skip the '!' at the start
+        }
         return visitChildren(ctx);
     }
 

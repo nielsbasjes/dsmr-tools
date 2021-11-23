@@ -35,6 +35,7 @@ COSEMID     : [01] '-' [0-9] ':' [0-9][0-9]? '.' [0-9][0-9]? '.' [0-9][0-9]? ;
 // Year, Month, Day, Hour, Minute, Second,
 // and an indication whether DST is active (X=S) or DST is not active (X=W).
 // S=Summertime W=Wintertime
+// Because this is the DSMR (Dutch ...) we assume this means Europe/Amsterdam
 // Format       Y    Y     M   M     D    D     h    h     m    m     s    s      S or W
 TIMESTAMP   : [0-9][0-9] [01][0-9] [0-3][0-9] [0-2][0-9] [0-5][0-9] [0-5][0-9]  ('S'|'W')?;
 
@@ -58,7 +59,7 @@ FLOAT       : DIGIT1_6 '.' DIGIT1_3 ;
 INT         : DIGIT1_10;
 
 telegram
-    : ident=IDENT field+ crc=CRC
+    : ident=IDENT field+ ( crc=CRC | '!\r\n' )
     ;
 
 powerFailureEvent: '(' eventTime=TIMESTAMP ')'
@@ -100,12 +101,17 @@ field
     | cosemid='1-0:22.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReturnedL1                  // Instantaneous active power L1 (-P)
     | cosemid='1-0:42.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReturnedL2                  // Instantaneous active power L2 (-P)
     | cosemid='1-0:62.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReturnedL3                  // Instantaneous active power L3 (-P)
+
+    // http://domoticx.com/p1-poort-slimme-meter-hardware/
+    // 0-0:96.3.10(1) (stand van de schakelaar)
+    | cosemid='0-0:96.3.10'   '(' type=INT ')'                               #switchSetting                    // FIXME: Need specification for this
+
     | cosemid='0-0:96.13.1'  '(' (text=HEXSTRING)? ')'                       #messageCodes                     // Text message codes: numeric 8 digits.
     | cosemid='0-0:96.13.0'  '(' (text=HEXSTRING)? ')'                       #message                          // Text message max 1024 characters.
 
     // Removed from DSMR since version 4.0.7 but does occur in production systems.
     // Parsing this and then ignore the result.
-    | cosemid='0-0:17.0.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #electricityThreshold             // The actual threshold Electricity in kW
+    | cosemid='0-0:17.0.0'   '(' value=(FLOAT|INT) '*' unit=('kW'|'A') ')'   #electricityThreshold             // The actual threshold Electricity in kW or Ampere
 
     | cosemid='0-1:24.1.0'   '(' type=INT ')'                                #mBus1Type                        // MBus channel 1: Device type.
     | cosemid='0-1:96.1.0'   '(' id=HEXSTRING ')'                            #mBus1EquipmentId                 // MBus channel 1: Equipment Identifier.
@@ -120,6 +126,10 @@ field
                              '(' unit=('m3'|'GJ'|'kWh') ')'
                              '(' value=(FLOAT|INT) ')'                       #mBus1UsageAlternative            // MBus channel 2: Last 5 minute reading.
 
+    // http://domoticx.com/p1-poort-slimme-meter-hardware/
+    // 0-1:24.4.0(1) (stand gasklep?)
+    | cosemid='0-1:24.4.0'   '(' type=INT ')'                                #mBus1GasSwitchSetting            // FIXME: Need specification for this
+
     | cosemid='0-2:24.1.0'   '(' type=INT ')'                                #mBus2Type                        // MBus channel 2: Device type.
     | cosemid='0-2:96.1.0'   '(' id=HEXSTRING ')'                            #mBus2EquipmentId                 // MBus channel 2: Equipment Identifier.
     | cosemid='0-2:24.2.1'   '(' timestamp=TIMESTAMP ')'
@@ -132,6 +142,7 @@ field
                              '(0-2:24.2.' INT ')'
                              '(' unit=('m3'|'GJ'|'kWh') ')'
                              '(' value=(FLOAT|INT) ')'                       #mBus2UsageAlternative            // MBus channel 2: Last 5 minute reading.
+    | cosemid='0-2:24.4.0'   '(' type=INT ')'                                #mBus2GasSwitchSetting            // FIXME: Need specification for this
 
     | cosemid='0-3:24.1.0'   '(' type=INT ')'                                #mBus3Type                        // MBus channel 3: Device type.
     | cosemid='0-3:96.1.0'   '(' id=HEXSTRING ')'                            #mBus3EquipmentId                 // MBus channel 3: Equipment Identifier.
@@ -145,6 +156,7 @@ field
                              '(0-3:24.2.' INT ')'
                              '(' unit=('m3'|'GJ'|'kWh') ')'
                              '(' value=(FLOAT|INT) ')'                       #mBus3UsageAlternative            // MBus channel 2: Last 5 minute reading.
+    | cosemid='0-3:24.4.0'   '(' type=INT ')'                                #mBus3GasSwitchSetting            // FIXME: Need specification for this
 
     | cosemid='0-4:24.1.0'   '(' type=INT ')'                                #mBus4Type                        // MBus channel 4: Device type.
     | cosemid='0-4:96.1.0'   '(' id=HEXSTRING ')'                            #mBus4EquipmentId                 // MBus channel 4: Equipment Identifier.
@@ -158,5 +170,6 @@ field
                              '(0-4:24.2.' INT ')'
                              '(' unit=('m3'|'GJ'|'kWh') ')'
                              '(' value=(FLOAT|INT) ')'                       #mBus4UsageAlternative            // MBus channel 2: Last 5 minute reading.
+    | cosemid='0-4:24.4.0'   '(' type=INT ')'                                #mBus4GasSwitchSetting            // FIXME: Need specification for this
 
     ;
