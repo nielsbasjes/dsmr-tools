@@ -43,37 +43,37 @@ Several of the components have been published to maven central and can now be ea
     <dependency>
         <groupId>nl.basjes.iot</groupId>
         <artifactId>stream-record-splitter</artifactId>
-        <version>0.5</version>
+        <version>0.6</version>
     </dependency>
 
     <dependency>
         <groupId>nl.basjes.dsmr</groupId>
         <artifactId>dsmr-parser</artifactId>
-        <version>0.5</version>
+        <version>0.6</version>
     </dependency>
 
 ## Apache (Mi)Nifi processors
-The corresponding Nifi NAR files (built against Nifi 1.7.0 to allow using it with MiNiFi 0.5.0) can be downloaded
+The corresponding Nifi NAR files (built against Nifi 1.15.0 which should be compatible with MiNiFi 1.15.0) can be downloaded
 from Maven central as well.
 
-    https://repo1.maven.org/maven2/nl/basjes/iot/nifi-sensor-stream-cutter/0.5/nifi-sensor-stream-cutter-0.5.nar
+    https://repo1.maven.org/maven2/nl/basjes/iot/nifi-sensor-stream-cutter/0.6/nifi-sensor-stream-cutter-0.6.nar
 
     <dependency>
         <groupId>nl.basjes.iot</groupId>
         <artifactId>nifi-sensor-stream-cutter</artifactId>
         <type>nar</type>
-        <version>0.5</version>
+        <version>0.6</version>
     </dependency>
 
 and
 
-    https://repo1.maven.org/maven2/nl/basjes/dsmr/nifi-dsmr-parser/0.5/nifi-dsmr-parser-0.5.nar
+    https://repo1.maven.org/maven2/nl/basjes/dsmr/nifi-dsmr-parser/0.6/nifi-dsmr-parser-0.6.nar
 
     <dependency>
         <groupId>nl.basjes.dsmr</groupId>
         <artifactId>nifi-dsmr-parser</artifactId>
         <type>nar</type>
-        <version>0.5</version>
+        <version>0.6</version>
     </dependency>
 
 
@@ -124,20 +124,20 @@ When I then hook Grafana to this Influx Db database and make a graph I get somet
 
 # Running on a Raspberry Pi
 
-I have a Raspberry Pi Model B Plus Rev 1.2 on which I have this running using Minifi 0.5.0.
+I have a Raspberry Pi Model B Plus Rev 1.2 on which I have this running using Minifi 1.15.0.
 In order to make it work I had to jump through some hoops.
 
 ## Dependencies
 Now MiNiFi is REALLY picky about versions of nar files.
 
-Because MiNiFi 0.5.0. is build against NiFi 1.7.0 you need to download that exact version because we need some additional libraries from it.
+Because MiNiFi 1.15.0 is build against NiFi 1.15.0 you need to download that exact version because we need some additional libraries from it.
 
 - Copy these from nifi to the minifi lib folder:
-    - nifi-influxdb-nar-1.7.0.nar
-    - nifi-standard-services-api-nar-1.7.0.nar
-- Copy the two nars from this project (also built against Nifi 1.7.0!!) to the minifi lib folder:
-    - nifi-sensor-stream-cutter-nar-0.1-SNAPSHOT.nar
-    - nifi-dsmr-parser-nar-0.1-SNAPSHOT.nar
+    - nifi-influxdb-nar-1.15.0.nar
+    - nifi-standard-services-api-nar-1.15.0.nar
+- Copy the two nars from this project (also built against Nifi 1.15.0!!) to the minifi lib folder:
+    - nifi-sensor-stream-cutter-nar-0.6.nar
+    - nifi-dsmr-parser-nar-0.6.nar
 
 ## There is no "disk"
 The problem with Raspberry Pi systems is that they have an SD card as 'disk'.
