@@ -31,65 +31,80 @@ import java.util.TreeMap;
 @Getter
 @ToString
 public class DSMRTelegram {
+    /** Is this record classified as a valid record. I.e. do we think you can use this data. */
     boolean isValid;
+    /** Does this record have a CRC and is it valid. Always false on DSMR 2.2 records. */
     boolean validCRC;
+    /** The identification of this device. */
     String ident;
+    /** The CRC of the record. Is null on DSMR 2.2 records. */
     String crc;
 
-    String p1Version;                        // P1 Version information
-    ZonedDateTime timestamp;                 // Timestamp
-    String equipmentId;                      // Equipment identifier
+    /** P1 Version information. Is null on DSMR 2.2 records. */
+    String p1Version;
+    /** Timestamp of the measurement as recorded by the clock in the meter (which are usually quite inaccurate). */
+    ZonedDateTime timestamp;
+    /** Equipment identifier   */
+    String equipmentId;
 
-    Long   electricityTariffIndicator;       // Tariff indicator electricity
+    /** Tariff indicator electricity */
+    Long   electricityTariffIndicator;
+    /** Meter Reading electricity delivered to client (low tariff) in 0,001 kWh */
+    Double electricityReceivedLowTariff;
+    /** Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh */
+    Double electricityReceivedNormalTariff;
+    /** Actual electricity power delivered (+P) in 1 Watt resolution (value in kW) */
+    Double electricityPowerReceived;
 
-    Double electricityReceivedLowTariff;     // Meter Reading electricity delivered to client (low tariff) in 0,001 kWh
-    Double electricityReceivedNormalTariff;  // Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh
-    Double electricityPowerReceived;         // Actual electricity power delivered (+P) in 1 Watt resolution
+    /** Meter Reading electricity returned by client (low tariff) in 0,001 kWh */
+    Double electricityReturnedLowTariff;
+    /** Meter Reading electricity returned by client (normal tariff) in 0,001 kWh */
+    Double electricityReturnedNormalTariff;
+    /** Actual electricity power returned (-P) in 1 Watt resolution (value in kW) */
+    Double electricityPowerReturned;
 
-    Double electricityReturnedLowTariff;     // Meter Reading electricity returned by client (low tariff) in 0,001 kWh
-    Double electricityReturnedNormalTariff;  // Meter Reading electricity returned by client (normal tariff) in 0,001 kWh
-    Double electricityPowerReturned;         // Actual electricity power returned (-P) in 1 Watt resolution
-
-    Long powerFailures;                      // Number of power failures in any phases
-    Long longPowerFailures;                  // Number of long power failures in any phases
+    /** Number of power failures in any phases */
+    Long powerFailures;
+    /** Number of long power failures in any phases */
+    Long longPowerFailures;
 
     @Getter
     @ToString
     public static final class PowerFailureEvent {
-        ZonedDateTime startTime;             // When did the power failure start
-        ZonedDateTime endTime;               // When did the power failure end
-        Duration duration;                   // How long did the power failure last
+        /** When did the power failure start    */ ZonedDateTime startTime;
+        /** When did the power failure end      */ ZonedDateTime endTime;
+        /** How long did the power failure last */ Duration duration;
     }
 
     Long powerFailureEventLogSize = 0L;      // Power failure event log size (as indicated in the output)
     List<PowerFailureEvent> powerFailureEventLog = new ArrayList<>(); // Power failure event log
 
-    Long voltageSagsPhaseL1;                 // Number of voltage sags in phase L1
-    Long voltageSagsPhaseL2;                 // Number of voltage sags in phase L2
-    Long voltageSagsPhaseL3;                 // Number of voltage sags in phase L3
+    /** Number of voltage sags in phase L1    */ Long voltageSagsPhaseL1;
+    /** Number of voltage sags in phase L2    */ Long voltageSagsPhaseL2;
+    /** Number of voltage sags in phase L3    */ Long voltageSagsPhaseL3;
 
-    Long voltageSwellsPhaseL1;               // Number of voltage swells in phase L1
-    Long voltageSwellsPhaseL2;               // Number of voltage swells in phase L2
-    Long voltageSwellsPhaseL3;               // Number of voltage swells in phase L3
+    /** Number of voltage swells in phase L1  */ Long voltageSwellsPhaseL1;
+    /** Number of voltage swells in phase L2  */ Long voltageSwellsPhaseL2;
+    /** Number of voltage swells in phase L3  */ Long voltageSwellsPhaseL3;
 
-    Double voltageL1;                        // Instantaneous voltage L1
-    Double voltageL2;                        // Instantaneous voltage L2
-    Double voltageL3;                        // Instantaneous voltage L3
+    /** Instantaneous voltage L1              */ Double voltageL1;
+    /** Instantaneous voltage L2              */ Double voltageL2;
+    /** Instantaneous voltage L3              */ Double voltageL3;
 
-    Double currentL1;                        // Instantaneous current L1
-    Double currentL2;                        // Instantaneous current L2
-    Double currentL3;                        // Instantaneous current L3
+    /** Instantaneous current L1              */ Double currentL1;
+    /** Instantaneous current L2              */ Double currentL2;
+    /** Instantaneous current L3              */ Double currentL3;
 
-    Double powerReceivedL1;                  // Instantaneous active power L1 (+P)
-    Double powerReceivedL2;                  // Instantaneous active power L2 (+P)
-    Double powerReceivedL3;                  // Instantaneous active power L3 (+P)
+    /** Instantaneous active power L1 (+P)    */ Double powerReceivedL1;
+    /** Instantaneous active power L2 (+P)    */ Double powerReceivedL2;
+    /** Instantaneous active power L3 (+P)    */ Double powerReceivedL3;
 
-    Double powerReturnedL1;                  // Instantaneous active power L1 (-P)
-    Double powerReturnedL2;                  // Instantaneous active power L2 (-P)
-    Double powerReturnedL3;                  // Instantaneous active power L3 (-P)
+    /** Instantaneous active power L1 (-P)    */ Double powerReturnedL1;
+    /** Instantaneous active power L2 (-P)    */ Double powerReturnedL2;
+    /** Instantaneous active power L3 (-P)    */ Double powerReturnedL3;
 
-    String messageCodes;                     // Text message codes: numeric 8 digits.
-    String message;                          // Text message max 1024 characters.
+    /** Text message codes: numeric 8 digits. */ String messageCodes;
+    /** Text message max 1024 characters.     */ String message;
 
     final Map<Integer, MBusEvent> mBusEvents = new TreeMap<>();
 
@@ -97,12 +112,12 @@ public class DSMRTelegram {
     // Doing two 'gas meters' will only map the first one (i.e. with the lowest MBus id)!!!
 
     // Gas
-    String        gasEquipmentId;
-    ZonedDateTime gasTimestamp;              // Gas measurement timestamp
-    Double        gasM3;                     // Gas consumption in cubic meters
+    /** Gas measurement device id             */ String        gasEquipmentId;
+    /** Gas measurement timestamp             */ ZonedDateTime gasTimestamp;
+    /** Gas consumption in cubic meters       */ Double        gasM3;
 
     // Electricity via a slave
-    String        slaveEMeterEquipmentId;
-    ZonedDateTime slaveEMeterTimestamp;      // Slave e-meter measurement timestamp
-    Double        slaveEMeterkWh;            // Slave e-meter consumption in kWh
+    /** Slave e-meter device id               */ String        slaveEMeterEquipmentId;
+    /** Slave e-meter measurement timestamp   */ ZonedDateTime slaveEMeterTimestamp;
+    /** Slave e-meter consumption in kWh      */ Double        slaveEMeterkWh;
 }
