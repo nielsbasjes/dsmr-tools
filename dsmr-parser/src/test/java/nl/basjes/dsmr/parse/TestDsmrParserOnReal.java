@@ -514,6 +514,62 @@ class TestDsmrParserOnReal {
     }
 
     @Test
+    void testDSMRTelegramIssue54Extra() {
+        DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(
+            "/ISk5\\2MT382-1003\r\n" +
+            "\n" +
+            "0-0:96.1.1(5A424556303035313036383434393132)\r\n" +
+            "1-0:1.8.1(16722.627*kWh)\r\n" +
+            "1-0:1.8.2(19412.737*kWh)\r\n" +
+            "1-0:2.8.1(00859.681*kWh)\r\n" +
+            "1-0:2.8.2(01817.110*kWh)\r\n" +
+            "0-0:96.14.0(0002)\r\n" +
+            "1-0:1.7.0(0000.67*kW)\r\n" +
+            "1-0:2.7.0(0000.00*kW)\r\n" +
+            "0-0:17.0.0(0999.00*kW)\r\n" +
+            "0-0:96.3.10(1)\r\n" +
+            "0-0:96.13.1()\r\n" +
+            "0-0:96.13.0()\r\n" +
+            "0-2:24.1.0(3)\r\n" +
+            "0-2:96.1.0(3238303131303038333036343239303133)\r\n" +
+            "0-2:24.3.0(211123200000)(00)(60)(1)(0-2:24.2.1)(m3)\r\n" +
+            "(13376.292)\r\n" +
+            "0-2:24.4.0(1)\r\n" +
+            "!\r\n"
+        );
+
+        assertEquals("/ISk5\\2MT382-1003", dsmrTelegram.getIdent());
+        assertNull(dsmrTelegram.getP1Version());
+        assertNull(dsmrTelegram.getTimestamp());
+
+        assertEquals("ZBEV005106844912", dsmrTelegram.getEquipmentId());
+
+        assertEquals(        2, dsmrTelegram.getElectricityTariffIndicator());
+        assertEquals(16722.627, dsmrTelegram.getElectricityReceivedLowTariff(),    0.001);
+        assertEquals(19412.737, dsmrTelegram.getElectricityReceivedNormalTariff(), 0.001);
+        assertEquals(  859.681, dsmrTelegram.getElectricityReturnedLowTariff(),    0.001);
+        assertEquals( 1817.110, dsmrTelegram.getElectricityReturnedNormalTariff(), 0.001);
+        assertEquals(     0.67, dsmrTelegram.getElectricityPowerReceived(),        0.001);
+        assertEquals(      0.0, dsmrTelegram.getElectricityPowerReturned(),        0.001);
+
+        assertEquals(        0, dsmrTelegram.getPowerFailureEventLogSize());
+        assertEquals(        0, dsmrTelegram.getPowerFailureEventLog().size());
+
+        assertEquals(        1, dsmrTelegram.getMBusEvents().size());
+        assertEquals("28011008306429013", dsmrTelegram.getGasEquipmentId());
+        assertEquals(ZonedDateTime.parse("2021-11-23T20:00+01:00[Europe/Amsterdam]"), dsmrTelegram.getGasTimestamp());
+        assertEquals( 13376.292, dsmrTelegram.getGasM3(), 0.001);
+
+        // There is no CRC
+        assertFalse(dsmrTelegram.isValidCRC());
+
+        // Really old record --> is valid.
+        assertTrue(dsmrTelegram.isValid());
+
+        LOG.info("{}", dsmrTelegram);
+    }
+
+    @Test
     void testDSMRTelegramOld1() {
         DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(
             "/XMX5XMXABCE100103855\r\n" +
