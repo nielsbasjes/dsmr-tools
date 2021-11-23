@@ -33,10 +33,6 @@
   <description>A toolkit for reading and parsing the data conforming to the Dutch Smart Meter Requirements (DSMR).</description>
   <url>https://dsmr.basjes.nl</url>
 
-  <properties>
-    <antlr.version>4.9.3</antlr.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.antlr</groupId>
@@ -54,7 +50,7 @@
     <dependency>
       <groupId>com.esotericsoftware</groupId>
       <artifactId>kryo</artifactId>
-      <version>5.2.0</version>
+      <version>${kryo.version}</version>
       <scope>provided</scope>
     </dependency>
 

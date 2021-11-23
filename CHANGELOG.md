@@ -4,6 +4,7 @@ v0.6-SNAPSHOT
 ===
 - Drop the water/cold/heat fields as they are not used.
 - Support for very old style records (no P1 version, no timestamp, no CRC, different way of including gas measurements).
+- Update to (Mi)NiFi 1.15.0
 
 v0.5
 ===
