@@ -100,7 +100,7 @@ class TestDsmrParserOnRealDSMR2 {
     void testDSMRTelegramIssue54Extra() {
         DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(
             "/ISk5\\2MT382-1003\r\n" +
-            "\n" +
+            "\r\n" +
             "0-0:96.1.1(5A424556303035313036383434393132)\r\n" +
             "1-0:1.8.1(16722.627*kWh)\r\n" +
             "1-0:1.8.2(19412.737*kWh)\r\n" +

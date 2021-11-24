@@ -35,20 +35,20 @@ import nl.basjes.dsmr.parse.DsmrParser.ElectricityTariffIndicatorContext;
 import nl.basjes.dsmr.parse.DsmrParser.EquipmentIdContext;
 import nl.basjes.dsmr.parse.DsmrParser.LongPowerFailuresContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus1EquipmentIdContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus1ProfileGenericContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus1TypeContext;
-import nl.basjes.dsmr.parse.DsmrParser.MBus1UsageAlternativeContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus1UsageContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus2EquipmentIdContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus2ProfileGenericContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus2TypeContext;
-import nl.basjes.dsmr.parse.DsmrParser.MBus2UsageAlternativeContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus2UsageContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus3EquipmentIdContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus3ProfileGenericContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus3TypeContext;
-import nl.basjes.dsmr.parse.DsmrParser.MBus3UsageAlternativeContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus3UsageContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus4EquipmentIdContext;
+import nl.basjes.dsmr.parse.DsmrParser.MBus4ProfileGenericContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus4TypeContext;
-import nl.basjes.dsmr.parse.DsmrParser.MBus4UsageAlternativeContext;
 import nl.basjes.dsmr.parse.DsmrParser.MBus4UsageContext;
 import nl.basjes.dsmr.parse.DsmrParser.MessageCodesContext;
 import nl.basjes.dsmr.parse.DsmrParser.MessageContext;
@@ -413,10 +413,10 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
     @Override public Void visitMBus3Usage(MBus3UsageContext ctx) { setMBusUsage(3, ctx.timestamp, ctx.value, ctx.unit); return null; }
     @Override public Void visitMBus4Usage(MBus4UsageContext ctx) { setMBusUsage(4, ctx.timestamp, ctx.value, ctx.unit); return null; }
 
-    @Override public Void visitMBus1UsageAlternative(MBus1UsageAlternativeContext ctx) { setMBusUsage(1, ctx.timestamp, ctx.value, ctx.unit); return null; }
-    @Override public Void visitMBus2UsageAlternative(MBus2UsageAlternativeContext ctx) { setMBusUsage(2, ctx.timestamp, ctx.value, ctx.unit); return null; }
-    @Override public Void visitMBus3UsageAlternative(MBus3UsageAlternativeContext ctx) { setMBusUsage(3, ctx.timestamp, ctx.value, ctx.unit); return null; }
-    @Override public Void visitMBus4UsageAlternative(MBus4UsageAlternativeContext ctx) { setMBusUsage(4, ctx.timestamp, ctx.value, ctx.unit); return null; }
+    @Override public Void visitMBus1ProfileGeneric(MBus1ProfileGenericContext ctx) { setMBusUsage(1, ctx.timestamp, ctx.value, ctx.unit); return null; }
+    @Override public Void visitMBus2ProfileGeneric(MBus2ProfileGenericContext ctx) { setMBusUsage(2, ctx.timestamp, ctx.value, ctx.unit); return null; }
+    @Override public Void visitMBus3ProfileGeneric(MBus3ProfileGenericContext ctx) { setMBusUsage(3, ctx.timestamp, ctx.value, ctx.unit); return null; }
+    @Override public Void visitMBus4ProfileGeneric(MBus4ProfileGenericContext ctx) { setMBusUsage(4, ctx.timestamp, ctx.value, ctx.unit); return null; }
 
     @Override
     public Void visitUnknownCosemId(DsmrParser.UnknownCosemIdContext ctx) {

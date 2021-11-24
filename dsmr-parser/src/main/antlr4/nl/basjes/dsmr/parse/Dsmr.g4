@@ -67,111 +67,123 @@ powerFailureEvent: '(' eventTime=TIMESTAMP ')'
                    ;
 
 field
-    : cosemid='1-3:0.2.8'    '(' version=INT                             ')' #p1Version                        // P1 Version information
-    | cosemid='0-0:1.0.0'    '(' timestamp=TIMESTAMP                     ')' #timestamp                        // Timestamp
-    | cosemid='0-0:96.1.1'   '(' id=HEXSTRING                            ')' #equipmentId                      // Equipment identifier
-    | cosemid='0-0:96.14.0'  '(' value=INT                               ')' #electricityTariffIndicator       // Tariff indicator electricity
-    | cosemid='1-0:1.8.1'    '(' value=(FLOAT|INT) '*' unit='kWh'        ')' #electricityReceivedLowTariff     // Meter Reading electricity delivered to client (low tariff) in 0,001 kWh
-    | cosemid='1-0:1.8.2'    '(' value=(FLOAT|INT) '*' unit='kWh'        ')' #electricityReceivedNormalTariff  // Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh
-    | cosemid='1-0:2.8.1'    '(' value=(FLOAT|INT) '*' unit='kWh'        ')' #electricityReturnedLowTariff     // Meter Reading electricity delivered by client (low tariff) in 0,001 kWh
-    | cosemid='1-0:2.8.2'    '(' value=(FLOAT|INT) '*' unit='kWh'        ')' #electricityReturnedNormalTariff  // Meter Reading electricity delivered by client (normal tariff) in 0,001 kWh
-    | cosemid='1-0:1.7.0'    '(' value=(FLOAT|INT) '*' unit='kW'         ')' #electricityPowerReceived         // Actual electricity power delivered (+P) in 1 Watt resolution
-    | cosemid='1-0:2.7.0'    '(' value=(FLOAT|INT) '*' unit='kW'         ')' #electricityPowerReturned         // Actual electricity power received (-P) in 1 Watt resolution
-    | cosemid='0-0:96.7.21'  '(' count=INT                               ')' #powerFailures                    // Number of power failures in any phases
-    | cosemid='0-0:96.7.9'   '(' count=INT                               ')' #longPowerFailures                // Number of long power failures in any phases
-    | cosemid='1-0:99.97.0'  '(' count=INT ')'                               // The number of events in the log.
+    : '1-3:0.2.8'    '(' version=INT                             ')' #p1Version                        // P1 Version information
+    | '0-0:1.0.0'    '(' timestamp=TIMESTAMP                     ')' #timestamp                        // Timestamp
+    | '0-0:96.1.1'   '(' id=HEXSTRING                            ')' #equipmentId                      // Equipment identifier
+    | '0-0:96.14.0'  '(' value=INT                               ')' #electricityTariffIndicator       // Tariff indicator electricity
+    | '1-0:1.8.1'    '(' value=(FLOAT|INT) '*' unit='kWh'        ')' #electricityReceivedLowTariff     // Meter Reading electricity delivered to client (low tariff) in 0,001 kWh
+    | '1-0:1.8.2'    '(' value=(FLOAT|INT) '*' unit='kWh'        ')' #electricityReceivedNormalTariff  // Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh
+    | '1-0:2.8.1'    '(' value=(FLOAT|INT) '*' unit='kWh'        ')' #electricityReturnedLowTariff     // Meter Reading electricity delivered by client (low tariff) in 0,001 kWh
+    | '1-0:2.8.2'    '(' value=(FLOAT|INT) '*' unit='kWh'        ')' #electricityReturnedNormalTariff  // Meter Reading electricity delivered by client (normal tariff) in 0,001 kWh
+    | '1-0:1.7.0'    '(' value=(FLOAT|INT) '*' unit='kW'         ')' #electricityPowerReceived         // Actual electricity power delivered (+P) in 1 Watt resolution
+    | '1-0:2.7.0'    '(' value=(FLOAT|INT) '*' unit='kW'         ')' #electricityPowerReturned         // Actual electricity power received (-P) in 1 Watt resolution
+    | '0-0:96.7.21'  '(' count=INT                               ')' #powerFailures                    // Number of power failures in any phases
+    | '0-0:96.7.9'   '(' count=INT                               ')' #longPowerFailures                // Number of long power failures in any phases
+    | '1-0:99.97.0'  '(' count=INT ')'                               // The number of events in the log.
                              '(' eventTypeId='0-0:96.7.19' ')'               // According to the specs the format can only be this value
                              (   powerFailureEvent   )*                      #powerFailureEventLog             // Power failure event log
 
-    | cosemid='1-0:32.32.0'  '(' count=INT  ')'                              #voltageSagsPhaseL1               // Number of voltage sags in phase L1
-    | cosemid='1-0:52.32.0'  '(' count=INT  ')'                              #voltageSagsPhaseL2               // Number of voltage sags in phase L2
-    | cosemid='1-0:72.32.0'  '(' count=INT  ')'                              #voltageSagsPhaseL3               // Number of voltage sags in phase L3
-    | cosemid='1-0:32.36.0'  '(' count=INT  ')'                              #voltageSwellsPhaseL1             // Number of voltage swells in phase L1
-    | cosemid='1-0:52.36.0'  '(' count=INT  ')'                              #voltageSwellsPhaseL2             // Number of voltage swells in phase L2
-    | cosemid='1-0:72.36.0'  '(' count=INT  ')'                              #voltageSwellsPhaseL3             // Number of voltage swells in phase L3
-    | cosemid='1-0:32.7.0'   '(' value=(FLOAT|INT) '*' unit='V'  ')'         #voltageL1                        // Instantaneous voltage L1
-    | cosemid='1-0:52.7.0'   '(' value=(FLOAT|INT) '*' unit='V'  ')'         #voltageL2                        // Instantaneous voltage L2
-    | cosemid='1-0:72.7.0'   '(' value=(FLOAT|INT) '*' unit='V'  ')'         #voltageL3                        // Instantaneous voltage L3
-    | cosemid='1-0:31.7.0'   '(' value=(FLOAT|INT) '*' unit='A'  ')'         #currentL1                        // Instantaneous current L1
-    | cosemid='1-0:51.7.0'   '(' value=(FLOAT|INT) '*' unit='A'  ')'         #currentL2                        // Instantaneous current L2
-    | cosemid='1-0:71.7.0'   '(' value=(FLOAT|INT) '*' unit='A'  ')'         #currentL3                        // Instantaneous current L3
-    | cosemid='1-0:21.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReceivedL1                  // Instantaneous active power L1 (+P)
-    | cosemid='1-0:41.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReceivedL2                  // Instantaneous active power L2 (+P)
-    | cosemid='1-0:61.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReceivedL3                  // Instantaneous active power L3 (+P)
-    | cosemid='1-0:22.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReturnedL1                  // Instantaneous active power L1 (-P)
-    | cosemid='1-0:42.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReturnedL2                  // Instantaneous active power L2 (-P)
-    | cosemid='1-0:62.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReturnedL3                  // Instantaneous active power L3 (-P)
+    | '1-0:32.32.0'  '(' count=INT  ')'                              #voltageSagsPhaseL1               // Number of voltage sags in phase L1
+    | '1-0:52.32.0'  '(' count=INT  ')'                              #voltageSagsPhaseL2               // Number of voltage sags in phase L2
+    | '1-0:72.32.0'  '(' count=INT  ')'                              #voltageSagsPhaseL3               // Number of voltage sags in phase L3
+    | '1-0:32.36.0'  '(' count=INT  ')'                              #voltageSwellsPhaseL1             // Number of voltage swells in phase L1
+    | '1-0:52.36.0'  '(' count=INT  ')'                              #voltageSwellsPhaseL2             // Number of voltage swells in phase L2
+    | '1-0:72.36.0'  '(' count=INT  ')'                              #voltageSwellsPhaseL3             // Number of voltage swells in phase L3
+    | '1-0:32.7.0'   '(' value=(FLOAT|INT) '*' unit='V'  ')'         #voltageL1                        // Instantaneous voltage L1
+    | '1-0:52.7.0'   '(' value=(FLOAT|INT) '*' unit='V'  ')'         #voltageL2                        // Instantaneous voltage L2
+    | '1-0:72.7.0'   '(' value=(FLOAT|INT) '*' unit='V'  ')'         #voltageL3                        // Instantaneous voltage L3
+    | '1-0:31.7.0'   '(' value=(FLOAT|INT) '*' unit='A'  ')'         #currentL1                        // Instantaneous current L1
+    | '1-0:51.7.0'   '(' value=(FLOAT|INT) '*' unit='A'  ')'         #currentL2                        // Instantaneous current L2
+    | '1-0:71.7.0'   '(' value=(FLOAT|INT) '*' unit='A'  ')'         #currentL3                        // Instantaneous current L3
+    | '1-0:21.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReceivedL1                  // Instantaneous active power L1 (+P)
+    | '1-0:41.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReceivedL2                  // Instantaneous active power L2 (+P)
+    | '1-0:61.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReceivedL3                  // Instantaneous active power L3 (+P)
+    | '1-0:22.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReturnedL1                  // Instantaneous active power L1 (-P)
+    | '1-0:42.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReturnedL2                  // Instantaneous active power L2 (-P)
+    | '1-0:62.7.0'   '(' value=(FLOAT|INT) '*' unit='kW' ')'         #powerReturnedL3                  // Instantaneous active power L3 (-P)
 
-    // http://domoticx.com/p1-poort-slimme-meter-hardware/
-    // 0-0:96.3.10(1) (stand van de schakelaar)
-    | cosemid='0-0:96.3.10'   '(' type=INT ')'                               #switchSetting                    // FIXME: Need specification for this
+    | '0-0:96.3.10'   '(' type=INT ')'                               #switchSetting                    // Actual switch position Electricity (in/out/enabled).
 
-    | cosemid='0-0:96.13.1'  '(' (text=HEXSTRING)? ')'                       #messageCodes                     // Text message codes: numeric 8 digits.
-    | cosemid='0-0:96.13.0'  '(' (text=HEXSTRING)? ')'                       #message                          // Text message max 1024 characters.
+    | '0-0:96.13.1'  '(' (text=HEXSTRING)? ')'                       #messageCodes                     // Text message codes: numeric 8 digits.
+    | '0-0:96.13.0'  '(' (text=HEXSTRING)? ')'                       #message                          // Text message max 1024 characters.
 
-    // Removed from DSMR since version 4.0.7 but does occur in production systems.
-    // Parsing this and then ignore the result.
-    | cosemid='0-0:17.0.0'   '(' value=(FLOAT|INT) '*' unit=('kW'|'A') ')'   #electricityThreshold             // The actual threshold Electricity in kW or Ampere
+    // Removed from DSMR since version 4.0.7 but does occur in production systems that use DSMR 2.2 and 3.0.
+    | '0-0:17.0.0'   '(' value=(FLOAT|INT) '*' unit=('kW'|'A') ')'   #electricityThreshold             // The actual threshold Electricity in kW or Ampere
 
-    | cosemid='0-1:24.1.0'   '(' type=INT ')'                                #mBus1Type                        // MBus channel 1: Device type.
-    | cosemid='0-1:96.1.0'   '(' id=HEXSTRING ')'                            #mBus1EquipmentId                 // MBus channel 1: Equipment Identifier.
-    | cosemid='0-1:24.2.1'   '(' timestamp=TIMESTAMP ')'
-                             '(' value=(FLOAT|INT) ('*' unit=('m3'|'GJ'|'kWh'))? ')'  #mBus1Usage              // MBus channel 1: Last 5 minute reading.
+    // ========================= MBUS CHANNEL 1 =========================
+    | '0-1:24.1.0'  '(' type=INT ')'                #mBus1Type             // Device type.
+    | '0-1:96.1.0'  '(' id=HEXSTRING ')'            #mBus1EquipmentId      // Equipment Identifier.
+    | '0-1:24.2.1'  '(' timestamp=TIMESTAMP ')'
+                    '(' value=(FLOAT|INT) ('*' unit=('m3'|'GJ'|'kWh'))? ')'
+                                                    #mBus1Usage            // Last 5 minute reading.
 
-    | cosemid='0-1:24.3.0'   '(' timestamp=TIMESTAMP  ')'
-                             '(' unknownValue1=INT ')'
-                             '(' unknownValue2=INT ')'
-                             '(' unknownValue3=INT ')'
-                             '(0-1:24.2.' INT ')'
-                             '(' unit=('m3'|'GJ'|'kWh') ')'
-                             '(' value=(FLOAT|INT) ')'                       #mBus1UsageAlternative            // MBus channel 2: Last 5 minute reading.
+    | '0-1:24.3.0'  '(' timestamp=TIMESTAMP  ')'
+                    '(' profileStatus=INT ')'
+                    '(' recordingPeriod=INT ')' // Recording Period in Minutes.(capture period attribute).
+                    // TODO: The standard indicates there can be multiple of these.
+                    //  That is not yet supported as I do not have a real life example.
+                    '(' numberMeasurementValues=INT ')' //  : Only 1 is supported at this time.
+                    ( '(0-1:24.2.' INT ')' '(' unit=('m3'|'GJ'|'kWh') ')' ) // no '+': only exactly one here.
+                    ( '(' value=(FLOAT|INT) ')' )+  #mBus1ProfileGeneric
 
-    // http://domoticx.com/p1-poort-slimme-meter-hardware/
-    // 0-1:24.4.0(1) (stand gasklep?)
-    | cosemid='0-1:24.4.0'   '(' type=INT ')'                                #mBus1GasSwitchSetting            // FIXME: Need specification for this
+    | '0-1:24.4.0'  '(' type=INT ')'                #mBus1GasValvePosition // Valve position gas (on/off/released).
 
-    | cosemid='0-2:24.1.0'   '(' type=INT ')'                                #mBus2Type                        // MBus channel 2: Device type.
-    | cosemid='0-2:96.1.0'   '(' id=HEXSTRING ')'                            #mBus2EquipmentId                 // MBus channel 2: Equipment Identifier.
-    | cosemid='0-2:24.2.1'   '(' timestamp=TIMESTAMP ')'
-                             '(' value=(FLOAT|INT) ('*' unit=('m3'|'GJ'|'kWh'))? ')'  #mBus2Usage              // MBus channel 2: Last 5 minute reading.
+    // ========================= MBUS CHANNEL 2 =========================
+    | '0-2:24.1.0'  '(' type=INT ')'                #mBus2Type             // Device type.
+    | '0-2:96.1.0'  '(' id=HEXSTRING ')'            #mBus2EquipmentId      // Equipment Identifier.
+    | '0-2:24.2.1'  '(' timestamp=TIMESTAMP ')'
+                    '(' value=(FLOAT|INT) ('*' unit=('m3'|'GJ'|'kWh'))? ')'
+                                                    #mBus2Usage            // Last 5 minute reading.
 
-    | cosemid='0-2:24.3.0'   '(' timestamp=TIMESTAMP  ')'
-                             '(' unknownValue1=INT ')'
-                             '(' unknownValue2=INT ')'
-                             '(' unknownValue3=INT ')'
-                             '(0-2:24.2.' INT ')'
-                             '(' unit=('m3'|'GJ'|'kWh') ')'
-                             '(' value=(FLOAT|INT) ')'                       #mBus2UsageAlternative            // MBus channel 2: Last 5 minute reading.
-    | cosemid='0-2:24.4.0'   '(' type=INT ')'                                #mBus2GasSwitchSetting            // FIXME: Need specification for this
+    | '0-2:24.3.0'  '(' timestamp=TIMESTAMP  ')'
+                    '(' profileStatus=INT ')'
+                    '(' recordingPeriod=INT ')' // Recording Period in Minutes.(capture period attribute).
+                    // TODO: The standard indicates there can be multiple of these.
+                    //  That is not yet supported as I do not have a real life example.
+                    '(' numberMeasurementValues=INT ')' //  : Only 1 is supported at this time.
+                    ( '(0-2:24.2.' INT ')' '(' unit=('m3'|'GJ'|'kWh') ')' ) // no '+': only exactly one here.
+                    ( '(' value=(FLOAT|INT) ')' )+  #mBus2ProfileGeneric
 
-    | cosemid='0-3:24.1.0'   '(' type=INT ')'                                #mBus3Type                        // MBus channel 3: Device type.
-    | cosemid='0-3:96.1.0'   '(' id=HEXSTRING ')'                            #mBus3EquipmentId                 // MBus channel 3: Equipment Identifier.
-    | cosemid='0-3:24.2.1'   '(' timestamp=TIMESTAMP ')'
-                             '(' value=(FLOAT|INT) ('*' unit=('m3'|'GJ'|'kWh'))? ')'  #mBus3Usage              // MBus channel 3: Last 5 minute reading.
+    | '0-2:24.4.0'  '(' type=INT ')'                #mBus2GasValvePosition // Valve position gas (on/off/released).
 
-    | cosemid='0-3:24.3.0'   '(' timestamp=TIMESTAMP  ')'
-                             '(' unknownValue1=INT ')'
-                             '(' unknownValue2=INT ')'
-                             '(' unknownValue3=INT ')'
-                             '(0-3:24.2.' INT ')'
-                             '(' unit=('m3'|'GJ'|'kWh') ')'
-                             '(' value=(FLOAT|INT) ')'                       #mBus3UsageAlternative            // MBus channel 2: Last 5 minute reading.
-    | cosemid='0-3:24.4.0'   '(' type=INT ')'                                #mBus3GasSwitchSetting            // FIXME: Need specification for this
 
-    | cosemid='0-4:24.1.0'   '(' type=INT ')'                                #mBus4Type                        // MBus channel 4: Device type.
-    | cosemid='0-4:96.1.0'   '(' id=HEXSTRING ')'                            #mBus4EquipmentId                 // MBus channel 4: Equipment Identifier.
-    | cosemid='0-4:24.2.1'   '(' timestamp=TIMESTAMP ')'
-                             '(' value=(FLOAT|INT) ('*' unit=('m3'|'GJ'|'kWh'))? ')'  #mBus4Usage              // MBus channel 4: Last 5 minute reading.
+    // ========================= MBUS CHANNEL 3 =========================
+    | '0-3:24.1.0'  '(' type=INT ')'                #mBus3Type             // Device type.
+    | '0-3:96.1.0'  '(' id=HEXSTRING ')'            #mBus3EquipmentId      // Equipment Identifier.
+    | '0-3:24.2.1'  '(' timestamp=TIMESTAMP ')'
+                    '(' value=(FLOAT|INT) ('*' unit=('m3'|'GJ'|'kWh'))? ')'
+                                                    #mBus3Usage            // Last 5 minute reading.
 
-    | cosemid='0-4:24.3.0'   '(' timestamp=TIMESTAMP  ')'
-                             '(' unknownValue1=INT ')'
-                             '(' unknownValue2=INT ')'
-                             '(' unknownValue3=INT ')'
-                             '(0-4:24.2.' INT ')'
-                             '(' unit=('m3'|'GJ'|'kWh') ')'
-                             '(' value=(FLOAT|INT) ')'                       #mBus4UsageAlternative            // MBus channel 2: Last 5 minute reading.
-    | cosemid='0-4:24.4.0'   '(' type=INT ')'                                #mBus4GasSwitchSetting            // FIXME: Need specification for this
+    | '0-3:24.3.0'  '(' timestamp=TIMESTAMP  ')'
+                    '(' profileStatus=INT ')'
+                    '(' recordingPeriod=INT ')' // Recording Period in Minutes.(capture period attribute).
+                    // TODO: The standard indicates there can be multiple of these.
+                    //  That is not yet supported as I do not have a real life example.
+                    '(' numberMeasurementValues=INT ')' //  : Only 1 is supported at this time.
+                    ( '(0-3:24.2.' INT ')' '(' unit=('m3'|'GJ'|'kWh') ')' ) // no '+': only exactly one here.
+                    ( '(' value=(FLOAT|INT) ')' )+  #mBus3ProfileGeneric
 
-    | cosemid=COSEMID        ('(' (FLOAT|INT|TIMESTAMP|HEXSTRING) ')')*        #unknownCosemId
+    | '0-3:24.4.0'  '(' type=INT ')'                #mBus3GasValvePosition // Valve position gas (on/off/released).
+    // ========================= MBUS CHANNEL 4 =========================
+    | '0-4:24.1.0'  '(' type=INT ')'                #mBus4Type             // Device type.
+    | '0-4:96.1.0'  '(' id=HEXSTRING ')'            #mBus4EquipmentId      // Equipment Identifier.
+    | '0-4:24.2.1'  '(' timestamp=TIMESTAMP ')'
+                    '(' value=(FLOAT|INT) ('*' unit=('m3'|'GJ'|'kWh'))? ')'
+                                                    #mBus4Usage            // Last 5 minute reading.
+
+    | '0-4:24.3.0'  '(' timestamp=TIMESTAMP  ')'
+                    '(' profileStatus=INT ')'
+                    '(' recordingPeriod=INT ')' // Recording Period in Minutes.(capture period attribute).
+                    // TODO: The standard indicates there can be multiple of these.
+                    //  That is not yet supported as I do not have a real life example.
+                    '(' numberMeasurementValues=INT ')' //  : Only 1 is supported at this time.
+                    ( '(0-4:24.2.' INT ')' '(' unit=('m3'|'GJ'|'kWh') ')' ) // no '+': only exactly one here.
+                    ( '(' value=(FLOAT|INT) ')' )+  #mBus4ProfileGeneric
+
+    | '0-4:24.4.0'  '(' type=INT ')'                #mBus4GasValvePosition // Valve position gas (on/off/released).
+
+    // =========================
+
+    | COSEMID        ('(' (FLOAT|INT|TIMESTAMP|HEXSTRING) ')')*        #unknownCosemId
 
     ;
