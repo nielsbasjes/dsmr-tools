@@ -26,9 +26,9 @@ import java.time.ZonedDateTime;
 @Getter
 @ToString
 public class MBusEvent {
-    Integer deviceType;        // MBus event: Device type.
-    String equipmentId;        // MBus event: Equipment Identifier.
-    Double value;              // MBus event: Last 5 minute reading (the value).
-    String unit;               // MBus event: Last 5 minute reading (the unit: m3 or GJ).
-    ZonedDateTime timestamp;   // MBus event: Timestamp of last 5 minute reading.
+    /** MBus event: Device type.                                */ Integer deviceType;
+    /** MBus event: Equipment Identifier.                       */ String equipmentId;
+    /** MBus event: Last 5 minute reading (the value).          */ Double value;
+    /** MBus event: Last 5 minute reading (the unit: m3 or GJ). */ String unit;
+    /** MBus event: Timestamp of last 5 minute reading.         */ ZonedDateTime timestamp;
 }

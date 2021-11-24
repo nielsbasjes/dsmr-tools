@@ -158,7 +158,7 @@ public class DSMRParserProcessor extends AbstractProcessor {
         // At this point this can no longer be the case because of the size check earlier.
         DSMRTelegram record = ParseDsmrTelegram.parse(contentString);
 
-        if (record.getIdent() == null) {
+        if (record.getRawIdent() == null) {
             session.transfer(flowFile, BAD_RECORDS);
             return; // Garbage
         }
@@ -168,6 +168,8 @@ public class DSMRParserProcessor extends AbstractProcessor {
         // CHECKSTYLE.OFF: LineLength
         put(parseResults, "validCRC",                         record.isValidCRC());
 
+        put(parseResults, "rawIdent",                         record.getRawIdent());
+        put(parseResults, "equipmentBrandTag",                record.getEquipmentBrandTag());
         put(parseResults, "ident",                            record.getIdent());
         put(parseResults, "crc",                              record.getCrc());
 

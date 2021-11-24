@@ -127,15 +127,17 @@ class DSMRParserProcessorTest {
 
         MockFlowFile result = results.get(0);
 
-        assertAttributeEquals(result, "dsmr.validCRC",       "true");
-        assertAttributeEquals(result, "dsmr.crc",            "B053");
+        assertAttributeEquals(result, "dsmr.validCRC",              "true");
+        assertAttributeEquals(result, "dsmr.crc",                   "B053");
 
-        assertAttributeEquals(result, "dsmr.ident",          "/ISK5\\2M550T-1012");
-        assertAttributeEquals(result, "dsmr.p1Version",      "50");
-        assertAttributeEquals(result, "dsmr.timestamp",      "2019-03-24T15:05:41+01:00");
+        assertAttributeEquals(result, "dsmr.rawIdent",              "/ISK5\\2M550T-1012");
+        assertAttributeEquals(result, "dsmr.ident",                 "M550T-1012");
+        assertAttributeEquals(result, "dsmr.equipmentBrandTag",     "ISK");
+        assertAttributeEquals(result, "dsmr.p1Version",             "5.0");
+        assertAttributeEquals(result, "dsmr.timestamp",             "2019-03-24T15:05:41+01:00");
 
-        assertAttributeEquals(result, "dsmr.equipmentId",    "E0044007131650618");
-        assertAttributeEquals(result, "dsmr.message",        "");
+        assertAttributeEquals(result, "dsmr.equipmentId",           "E0044007131650618");
+        assertAttributeEquals(result, "dsmr.message",               "");
 
         assertAttributeEquals(result, "dsmr.electricityTariffIndicator",              "1");
         assertAttributeEquals(result, "dsmr.electricityReceivedLowTariff",     "3432.829");
@@ -291,9 +293,11 @@ class DSMRParserProcessorTest {
         assertAttributeEquals(result, "dsmr.validCRC",       "false");
         assertAttributeEquals(result, "dsmr.crc",            "0000");
 
-        assertAttributeEquals(result, "dsmr.ident",          "/ISK5\\2M550T-1012");
-        assertAttributeEquals(result, "dsmr.p1Version",      "50");
-        assertAttributeEquals(result, "dsmr.timestamp",      "2019-03-24T15:05:41+01:00");
+        assertAttributeEquals(result, "dsmr.rawIdent",          "/ISK5\\2M550T-1012");
+        assertAttributeEquals(result, "dsmr.equipmentBrandTag", "ISK");
+        assertAttributeEquals(result, "dsmr.ident",             "M550T-1012");
+        assertAttributeEquals(result, "dsmr.p1Version",         "5.0");
+        assertAttributeEquals(result, "dsmr.timestamp",         "2019-03-24T15:05:41+01:00");
 
         assertAttributeEquals(result, "dsmr.equipmentId",    "E0044007131650618");
         assertAttributeEquals(result, "dsmr.message",        "");

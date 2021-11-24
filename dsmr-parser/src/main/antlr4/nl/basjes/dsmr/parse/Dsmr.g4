@@ -25,7 +25,7 @@ SPACES: [ \t\r\n]+ -> skip;
 
 //    /ISK5\2M550T-1012
 //    /Ene5\SAGEMCOM CX2000-           <-- Note the space in the name !
-IDENT       : '/' [a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9] [0-9] [ \\a-zA-Z0-9_.-]+ ;
+IDENT       : '/' [a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9] '5' [ \\a-zA-Z0-9_.-]+ ;
 
 CRC         : '!' [0-9A-F][0-9A-F][0-9A-F][0-9A-F] ;
 
@@ -41,7 +41,7 @@ TIMESTAMP   : [0-9][0-9] [01][0-9] [0-3][0-9] [0-2][0-9] [0-5][0-9] [0-5][0-9]  
 
 fragment HEXDIGIT: [0-9A-Fa-f][0-9A-Fa-f];
 
-HEXSTRING : HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT+;
+HEXSTRING : HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT HEXDIGIT+;
 
 fragment DIGIT    : [0-9];
 fragment DIGIT1_2 : DIGIT    DIGIT?;
@@ -171,5 +171,7 @@ field
                              '(' unit=('m3'|'GJ'|'kWh') ')'
                              '(' value=(FLOAT|INT) ')'                       #mBus4UsageAlternative            // MBus channel 2: Last 5 minute reading.
     | cosemid='0-4:24.4.0'   '(' type=INT ')'                                #mBus4GasSwitchSetting            // FIXME: Need specification for this
+
+    | cosemid=COSEMID        ('(' (FLOAT|INT|TIMESTAMP|HEXSTRING) ')')*        #unknownCosemId
 
     ;

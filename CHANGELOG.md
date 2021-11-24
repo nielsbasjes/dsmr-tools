@@ -2,7 +2,9 @@ This is intended as an overview of the major changes
 
 v0.7-SNAPSHOT
 ===
-- ...
+- Several fields are cleaned
+  - `p1Version`: "42" --> "4.2"
+  - `ident` renamed to `rawIdent`, parsed into `equimpentBrandTag` and `ident`.
 
 v0.6
 ===

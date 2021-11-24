@@ -86,7 +86,10 @@ import org.antlr.v4.runtime.dfa.DFA;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -165,13 +168,24 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
 
         // Really old records do not have a P1 version AND do not have a CRC.
         // which makes these records valid.
-        if (!hasSyntaxError &&
-            (dsmrTelegram.crc       == null || dsmrTelegram.crc.isEmpty()) &&
-            (dsmrTelegram.p1Version == null || dsmrTelegram.p1Version.isEmpty())) {
-            dsmrTelegram.isValid = true;
+        if (hasSyntaxError) {
+            dsmrTelegram.isValid = false;
         } else {
-            dsmrTelegram.isValid = !hasSyntaxError && dsmrTelegram.validCRC;
+            if ((dsmrTelegram.crc == null || dsmrTelegram.crc.isEmpty()) &&
+                (dsmrTelegram.p1Version == null || dsmrTelegram.p1Version.isEmpty())) {
+                dsmrTelegram.isValid = true;
+            } else {
+                dsmrTelegram.isValid = dsmrTelegram.validCRC;
+            }
         }
+
+        // Sanitize the p1Version
+        if (dsmrTelegram.p1Version == null || dsmrTelegram.p1Version.isEmpty()) {
+            dsmrTelegram.p1Version = "2.2";
+        } else {
+            dsmrTelegram.p1Version = dsmrTelegram.p1Version.replaceAll("([0-9])([0-9]+)", "$1.$2");
+        }
+
         return dsmrTelegram;
     }
 
@@ -245,9 +259,29 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
         return new String(hexStringToByteArray(hexString), UTF_8);
     }
 
+    private static final Pattern IDENT_PATTERN = Pattern.compile("^/([a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9])5(.*)$");
+
     @Override
     public Void visitTelegram(TelegramContext ctx) {
-        dsmrTelegram.ident = ctx.ident.getText();
+        dsmrTelegram.rawIdent = ctx.ident.getText();
+        Matcher identMatcher = IDENT_PATTERN.matcher(dsmrTelegram.rawIdent);
+        if (identMatcher.find()) {
+            dsmrTelegram.equipmentBrandTag = identMatcher.group(1).toUpperCase(Locale.ROOT);
+            dsmrTelegram.ident = identMatcher.group(2);
+
+            // Some brands have a very unclean identification string.
+            if (dsmrTelegram.ident.startsWith("\\2")) {
+                dsmrTelegram.ident = dsmrTelegram.ident.substring(2);
+            } else {
+                if (dsmrTelegram.ident.startsWith("\\")) {
+                    dsmrTelegram.ident = dsmrTelegram.ident.substring(1);
+                }
+            }
+            dsmrTelegram.ident = dsmrTelegram.ident.trim();
+        } else {
+            // If it does not match the expected pattern just use the entire thing.
+            dsmrTelegram.ident = dsmrTelegram.rawIdent;
+        }
         if (ctx.crc == null || ctx.crc.getText().isEmpty()) {
             dsmrTelegram.crc = null;
         } else {
@@ -270,7 +304,7 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
 
     @Override
     public Void visitEquipmentId (EquipmentIdContext ctx) {
-        dsmrTelegram.equipmentId = hexStringToString(ctx.id.getText());
+        dsmrTelegram.equipmentId = hexStringToString(ctx.id.getText()).trim();
         return null;
     }
 
@@ -383,4 +417,10 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
     @Override public Void visitMBus2UsageAlternative(MBus2UsageAlternativeContext ctx) { setMBusUsage(2, ctx.timestamp, ctx.value, ctx.unit); return null; }
     @Override public Void visitMBus3UsageAlternative(MBus3UsageAlternativeContext ctx) { setMBusUsage(3, ctx.timestamp, ctx.value, ctx.unit); return null; }
     @Override public Void visitMBus4UsageAlternative(MBus4UsageAlternativeContext ctx) { setMBusUsage(4, ctx.timestamp, ctx.value, ctx.unit); return null; }
+
+    @Override
+    public Void visitUnknownCosemId(DsmrParser.UnknownCosemIdContext ctx) {
+        // Ignore
+        return null;
+    }
 }

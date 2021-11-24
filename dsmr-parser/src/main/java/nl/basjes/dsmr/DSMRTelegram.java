@@ -35,6 +35,10 @@ public class DSMRTelegram {
     boolean isValid;
     /** Does this record have a CRC and is it valid. Always false on DSMR 2.2 records. */
     boolean validCRC;
+    /** The raw identification of this device. */
+    String rawIdent;
+    /** The 3 letter brand identification of this device. */
+    String equipmentBrandTag;
     /** The identification of this device. */
     String ident;
     /** The CRC of the record. Is null on DSMR 2.2 records. */
