@@ -8,6 +8,7 @@ these files of for "P1 Companion Standard"
 - Version 5.0.2 : https://www.netbeheernederland.nl/_upload/Files/Slimme_meter_15_a727fce1f1.pdf
 
 Older versions (with some now deprecated fields):
+- Version 3.0 was sent to me by email by netbeheernederland.nl (Big thanks!) and is said to be the same as DSMR 2.2 with some bugfixes.
 - Version 4.0 was downloaded from http://files.domoticaforum.eu/uploads/Smartmetering/DSMR%20v4.0%20final%20P1.pdf
 
 ## MBus Device type
