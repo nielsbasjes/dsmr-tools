@@ -35,6 +35,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import static nl.basjes.dsmr.CheckCRC.crcIsValid;
+
 public final class FeedToInfluxDB {
 
     private FeedToInfluxDB() {
@@ -98,44 +100,57 @@ public final class FeedToInfluxDB {
                     LOG.info("End of stream detected");
                     break;
                 }
-                DSMRTelegram record   = ParseDsmrTelegram.parse(telegram);
 
-                if (record != null && record.isValid()) {
+                if (!crcIsValid(telegram)) {
+                    LOG.error("DROPPING INVALID Telegram:\nvvvvvvvvvv\n{}\n^^^^^^^^^^\n", telegram);
+                    continue;
+                }
+
+                DSMRTelegram dsmrTelegram = null;
+                try {
+                    dsmrTelegram = ParseDsmrTelegram.parse(telegram);
+                } catch (Exception e) {
+                    System.err.println("Exception: " + e);
+                    e.printStackTrace();
+                    throw e;
+                }
+
+                if (dsmrTelegram != null && dsmrTelegram.isValid()) {
                     Point point = Point
                         .measurement("electricity")
 
-                        .time(record.getTimestamp().toInstant().toEpochMilli(), TimeUnit.MILLISECONDS)
+                        .time(dsmrTelegram.getTimestamp().toInstant().toEpochMilli(), TimeUnit.MILLISECONDS)
 
-                        .tag("equipmentId", record.getEquipmentId())
-                        .tag("p1Version", record.getP1Version())
+                        .tag("equipmentId", dsmrTelegram.getEquipmentId())
+                        .tag("p1Version", dsmrTelegram.getP1Version())
 
-                        .addField("electricityReceivedLowTariff",    record.getElectricityReceivedLowTariff())
-                        .addField("electricityReceivedNormalTariff", record.getElectricityReceivedNormalTariff())
-                        .addField("electricityReturnedLowTariff",    record.getElectricityReturnedLowTariff())
-                        .addField("electricityReturnedNormalTariff", record.getElectricityReturnedNormalTariff())
-                        .addField("electricityTariffIndicator",      record.getElectricityTariffIndicator())
-                        .addField("electricityPowerReceived",        record.getElectricityPowerReceived())
-                        .addField("electricityPowerReturned",        record.getElectricityPowerReturned())
-                        .addField("powerFailures",                   record.getPowerFailures())
-                        .addField("longPowerFailures",               record.getLongPowerFailures())
-                        .addField("voltageSagsPhaseL1",              record.getVoltageSagsPhaseL1())
-                        .addField("voltageSagsPhaseL2",              record.getVoltageSagsPhaseL2())
-                        .addField("voltageSagsPhaseL3",              record.getVoltageSagsPhaseL3())
-                        .addField("voltageSwellsPhaseL1",            record.getVoltageSwellsPhaseL1())
-                        .addField("voltageSwellsPhaseL2",            record.getVoltageSwellsPhaseL2())
-                        .addField("voltageSwellsPhaseL3",            record.getVoltageSwellsPhaseL3())
-                        .addField("voltageL1",                       record.getVoltageL1())
-                        .addField("voltageL2",                       record.getVoltageL2())
-                        .addField("voltageL3",                       record.getVoltageL3())
-                        .addField("currentL1",                       record.getCurrentL1())
-                        .addField("currentL2",                       record.getCurrentL2())
-                        .addField("currentL3",                       record.getCurrentL3())
-                        .addField("powerReceivedL1",                 record.getPowerReceivedL1())
-                        .addField("powerReceivedL2",                 record.getPowerReceivedL2())
-                        .addField("powerReceivedL3",                 record.getPowerReceivedL3())
-                        .addField("powerReturnedL1",                 record.getPowerReturnedL1())
-                        .addField("powerReturnedL2",                 record.getPowerReturnedL2())
-                        .addField("powerReturnedL3",                 record.getPowerReturnedL3())
+                        .addField("electricityReceivedLowTariff",    dsmrTelegram.getElectricityReceivedLowTariff())
+                        .addField("electricityReceivedNormalTariff", dsmrTelegram.getElectricityReceivedNormalTariff())
+                        .addField("electricityReturnedLowTariff",    dsmrTelegram.getElectricityReturnedLowTariff())
+                        .addField("electricityReturnedNormalTariff", dsmrTelegram.getElectricityReturnedNormalTariff())
+                        .addField("electricityTariffIndicator",      dsmrTelegram.getElectricityTariffIndicator())
+                        .addField("electricityPowerReceived",        dsmrTelegram.getElectricityPowerReceived())
+                        .addField("electricityPowerReturned",        dsmrTelegram.getElectricityPowerReturned())
+                        .addField("powerFailures",                   dsmrTelegram.getPowerFailures())
+                        .addField("longPowerFailures",               dsmrTelegram.getLongPowerFailures())
+                        .addField("voltageSagsPhaseL1",              dsmrTelegram.getVoltageSagsPhaseL1())
+                        .addField("voltageSagsPhaseL2",              dsmrTelegram.getVoltageSagsPhaseL2())
+                        .addField("voltageSagsPhaseL3",              dsmrTelegram.getVoltageSagsPhaseL3())
+                        .addField("voltageSwellsPhaseL1",            dsmrTelegram.getVoltageSwellsPhaseL1())
+                        .addField("voltageSwellsPhaseL2",            dsmrTelegram.getVoltageSwellsPhaseL2())
+                        .addField("voltageSwellsPhaseL3",            dsmrTelegram.getVoltageSwellsPhaseL3())
+                        .addField("voltageL1",                       dsmrTelegram.getVoltageL1())
+                        .addField("voltageL2",                       dsmrTelegram.getVoltageL2())
+                        .addField("voltageL3",                       dsmrTelegram.getVoltageL3())
+                        .addField("currentL1",                       dsmrTelegram.getCurrentL1())
+                        .addField("currentL2",                       dsmrTelegram.getCurrentL2())
+                        .addField("currentL3",                       dsmrTelegram.getCurrentL3())
+                        .addField("powerReceivedL1",                 dsmrTelegram.getPowerReceivedL1())
+                        .addField("powerReceivedL2",                 dsmrTelegram.getPowerReceivedL2())
+                        .addField("powerReceivedL3",                 dsmrTelegram.getPowerReceivedL3())
+                        .addField("powerReturnedL1",                 dsmrTelegram.getPowerReturnedL1())
+                        .addField("powerReturnedL2",                 dsmrTelegram.getPowerReturnedL2())
+                        .addField("powerReturnedL3",                 dsmrTelegram.getPowerReturnedL3())
 
                         .build();
 
