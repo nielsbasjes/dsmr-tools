@@ -50,7 +50,7 @@
 
     <!-- ============================================== -->
 
-    <antlr.version>4.11.1</antlr.version>
+    <antlr.version>4.12.0</antlr.version>
     <slf4j.version>2.0.6</slf4j.version>
     <kryo.version>5.4.0</kryo.version>
 
