@@ -1,5 +1,5 @@
 [![Github actions Build status](https://img.shields.io/github/actions/workflow/status/nielsbasjes/dsmr-tools/build.yml?branch=main)](https://github.com/nielsbasjes/dsmr-tools/actions)
-[![Coverage Status](https://coveralls.io/repos/github/nielsbasjes/dsmr-tools/badge.svg?branch=main)](https://coveralls.io/github/nielsbasjes/dsmr-tools?branch=main)
+[![Coverage Status](https://img.shields.io/codecov/c/github/nielsbasjes/dsmr-tools)](https://app.codecov.io/gh/nielsbasjes/dsmr-tools)
 [![License](https://img.shields.io/:license-apache-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Maven Central](https://img.shields.io/maven-central/v/nl.basjes.dsmr/dsmr-parser.svg)](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22nl.basjes.dsmr%22)
 [![If this project has business value for you then don't hesitate to support me with a small donation.](https://img.shields.io/badge/Sponsor%20me-via%20Github-red.svg)](https://github.com/sponsors/nielsbasjes)
