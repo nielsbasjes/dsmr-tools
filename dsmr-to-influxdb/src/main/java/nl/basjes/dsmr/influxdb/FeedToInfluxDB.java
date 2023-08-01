@@ -119,7 +119,8 @@ public final class FeedToInfluxDB {
                     Point point = Point
                         .measurement("electricity")
 
-                        .time(dsmrTelegram.getTimestamp().toInstant().toEpochMilli(), TimeUnit.MILLISECONDS)
+//                        .time(dsmrTelegram.getTimestamp().toInstant().toEpochMilli(), TimeUnit.MILLISECONDS)
+                        .time((System.currentTimeMillis()/1000)*1000, TimeUnit.MILLISECONDS)
 
                         .tag("equipmentId", dsmrTelegram.getEquipmentId())
                         .tag("p1Version", dsmrTelegram.getP1Version())
@@ -128,7 +129,8 @@ public final class FeedToInfluxDB {
                         .addField("electricityReceivedNormalTariff", dsmrTelegram.getElectricityReceivedNormalTariff())
                         .addField("electricityReturnedLowTariff",    dsmrTelegram.getElectricityReturnedLowTariff())
                         .addField("electricityReturnedNormalTariff", dsmrTelegram.getElectricityReturnedNormalTariff())
-                        .addField("electricityTariffIndicator",      dsmrTelegram.getElectricityTariffIndicator())
+                        // DONOTCOMMIT: The cast to float is because  of my OWN influxDB ONLY !
+                        .addField("electricityTariffIndicator",      (float)dsmrTelegram.getElectricityTariffIndicator())
                         .addField("electricityPowerReceived",        dsmrTelegram.getElectricityPowerReceived())
                         .addField("electricityPowerReturned",        dsmrTelegram.getElectricityPowerReturned())
                         .addField("powerFailures",                   dsmrTelegram.getPowerFailures())
@@ -168,7 +170,7 @@ public final class FeedToInfluxDB {
         }
     }
 
-    private static class CommandOptions {
+    private static final class CommandOptions {
         @Option(name = "-tty", usage = "The tty device from which to read")
         private String tty = "/dev/ttyUSB0";
 
