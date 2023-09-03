@@ -51,7 +51,7 @@
     <!-- ============================================== -->
 
     <antlr.version>4.13.0</antlr.version>
-    <slf4j.version>2.0.7</slf4j.version>
+    <slf4j.version>2.0.9</slf4j.version>
     <kryo.version>5.5.0</kryo.version>
 
     <checkstyle-plugin.version>3.3.0</checkstyle-plugin.version>
