@@ -56,7 +56,7 @@
 
     <checkstyle-plugin.version>3.3.1</checkstyle-plugin.version>
     <checkstyle.version>10.12.7</checkstyle.version>
-    <rat.version>0.15</rat.version>
+    <rat.version>0.16</rat.version>
     <jacoco.version>0.8.11</jacoco.version>
     <junit5.version>5.10.1</junit5.version>
 
