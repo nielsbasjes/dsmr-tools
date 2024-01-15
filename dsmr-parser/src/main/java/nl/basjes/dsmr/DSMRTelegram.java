@@ -18,7 +18,6 @@
 
 package nl.basjes.dsmr;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 

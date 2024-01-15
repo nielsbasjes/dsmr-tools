@@ -31,8 +31,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import static nl.basjes.dsmr.CheckCRC.crcIsValid;
-
 @Component
 @Log4j2
 public class P1DeviceReader implements DisposableBean, Runnable {
