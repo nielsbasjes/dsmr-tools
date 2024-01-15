@@ -116,6 +116,7 @@ public class DSMRTelegram {
     final Map<Integer, MBusEvent> mBusEvents = new TreeMap<>();
 
     /** Also expose the mBusEvents as a List instead of a Map */
+    @SuppressWarnings("unused") // Use via reflection by the GraphQL service
     public List<MBusEventEntry> getMBusEventList() {
         return mBusEvents
             .entrySet().stream()
