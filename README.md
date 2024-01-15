@@ -24,6 +24,8 @@ Parts in this toolkit:
   - For the both the "Stream record splitter" and the "DSMR-Parser" a Nifi Processor has been created to allow using them inside Apache Nifi.
 - *DSMR to InfluxDb*
   - MiNifi is great in terms of flexibility and bad in terms of startup time on a Raspberry Pi. So in addition I created a very simple Java application that ONLY does the DSMR to InfluxDb flow in a hard coded way (starts in 5 seconds instead of 3 minutes).
+- *DSMR to GraphQL service*
+    - A service that exposes the DSMR data directly using GraphQL. This includes simply getting the latest records (it retains a bunch of them in memory ... so don't restart it) and it allows you to do a GraphQL subscription to receive the data a fraction of a second after the electicity meter has provided the data.
 
 # Project status
 I am using this software at home to read my own powermeter. So it works in my setup.
@@ -207,7 +209,7 @@ This script will effectively make MiNiFi read the 'immutable' stuff from the SD 
 
 # LICENSE: Apache 2.0
 
-    Copyright (C) 2019-2021 Niels Basjes
+    Copyright (C) 2019-2024 Niels Basjes
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
