@@ -18,6 +18,7 @@
 
 package nl.basjes.dsmr;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Getter
 @ToString
@@ -48,6 +50,8 @@ public class DSMRTelegram {
     String p1Version;
     /** Timestamp of the measurement as recorded by the clock in the meter (which are usually quite inaccurate). */
     ZonedDateTime timestamp;
+    /** Timestamp when the measurement was received by the server (usually very accurate because of NTP). */
+    ZonedDateTime receiveTimestamp;
     /** Equipment identifier   */
     String equipmentId;
 
@@ -111,6 +115,14 @@ public class DSMRTelegram {
     /** Text message max 1024 characters.     */ String message;
 
     final Map<Integer, MBusEvent> mBusEvents = new TreeMap<>();
+
+    /** Also expose the mBusEvents as a List instead of a Map */
+    public List<MBusEventEntry> getMBusEventList() {
+        return mBusEvents
+            .entrySet().stream()
+            .map(e -> new MBusEventEntry(e.getKey(), e.getValue()))
+            .collect(Collectors.toList());
+    }
 
     // NOTE: This assumes only AT MOST ONE attached thing per type of meter.
     // Doing two 'gas meters' will only map the first one (i.e. with the lowest MBus id)!!!

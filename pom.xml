@@ -82,6 +82,7 @@
     <module>stream-record-splitter</module>
     <module>udfs</module>
     <module>dsmr-to-influxdb</module>
+    <module>dsmr-graphql</module>
   </modules>
 
   <dependencyManagement>
@@ -97,14 +98,10 @@
 
       <dependency>
         <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
+        <artifactId>slf4j-bom</artifactId>
         <version>${slf4j.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-reload4j</artifactId>
-        <version>${slf4j.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
 
     </dependencies>
@@ -160,6 +157,7 @@
             <exclude>.github/**</exclude>
             <exclude>*.json</exclude>
             <exclude>CNAME</exclude>
+            <exclude>.run/*.run.xml</exclude>
             <!-- Test and demo input files -->
             <exclude>**/testfiles/**</exclude>
             <exclude>**/testinput.txt</exclude>

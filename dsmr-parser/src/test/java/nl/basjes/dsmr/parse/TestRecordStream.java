@@ -55,7 +55,7 @@ class TestRecordStream {
     @Disabled("This test can only run in conjunction with the local simulator.")
     @Test
     void runTestWithSimulator() throws IOException {
-        FileInputStream inputStream = new FileInputStream("../simulator/ttyDSMR");
+        FileInputStream inputStream = new FileInputStream("../dsmr-simulator/ttyDSMR");
 
         ReadUTF8RecordStream reader = new ReadUTF8RecordStream(inputStream, "\r\n![0-9A-F]{4}\r\n");
 

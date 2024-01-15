@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~
+  ~ Dutch Smart Meter Requirements (DSMR) Toolkit
+  ~ Copyright (C) 2019-2021 Niels Basjes
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>DSMR GraphQL service</title>
+</head>
+
+<body>
+<h1>DSMR GraphQL service</h1>
+<h2>Purpose</h2>
+<p>The purpose of this service is to have a GraphQL endpoint that makes consuming the P1 data a lot easier.</p>
+
+<p>The service keeps the last few days of valid measurements in memory. These are lost on restart of the service.</p>
+<p>You can query the last set of measurements using either a timestamp or the number of records.</p>
+<p>Invalid records (bad CRC for example) are dropped.</p>
+
+<h2>GraphiQL</h2>
+<p>When the application is running, you can use GraphiQL as a web based GraphiQL client: <a href="/graphiql">GraphiQL client</a></p>
+
+<h2>Query</h2>
+<p>Example to get the last 100 available:</p>
+<pre>
+query {
+  dsmrTelegram(count:100) {
+    receiveTimestamp
+    isValid
+    validCRC
+    rawIdent
+    equipmentBrandTag
+    ident
+    crc
+    p1Version
+    timestamp
+    equipmentId
+    electricityTariffIndicator
+    electricityReceivedLowTariff
+    electricityReceivedNormalTariff
+    electricityPowerReceived
+    electricityReturnedLowTariff
+    electricityReturnedNormalTariff
+    electricityPowerReturned
+    powerFailures
+    longPowerFailures
+    powerFailureEventLogSize
+    voltageSagsPhaseL1
+    voltageSagsPhaseL2
+    voltageSagsPhaseL3
+    voltageSwellsPhaseL1
+    voltageSwellsPhaseL2
+    voltageSwellsPhaseL3
+    voltageL1
+    voltageL2
+    voltageL3
+    currentL1
+    currentL2
+    currentL3
+    powerReceivedL1
+    powerReceivedL2
+    powerReceivedL3
+    powerReturnedL1
+    powerReturnedL2
+    powerReturnedL3
+    messageCodes
+    message
+    gasEquipmentId
+    gasTimestamp
+    gasM3
+    slaveEMeterEquipmentId
+    slaveEMeterTimestamp
+    slaveEMeterkWh
+  }
+}</pre>
+
+which will give you something like this
+
+<pre>
+{
+  "data": {
+    "dsmrTelegram": [
+      {
+        "receiveTimestamp": "2024-01-02T13:39:08.005+01:00",
+        "isValid": true,
+        "validCRC": true,
+        "rawIdent": "/ISk5\\2MT382-1000 FAKE",
+        "equipmentBrandTag": "ISK",
+        "ident": "MT382-1000 FAKE",
+        "crc": "309A",
+        "p1Version": "5.0",
+        "timestamp": "2024-01-02T13:39:18.000+01:00",
+        "equipmentId": "E1234567890",
+        "electricityTariffIndicator": 2,
+        "electricityReceivedLowTariff": 874.314,
+        "electricityReceivedNormalTariff": 771.097,
+        "electricityPowerReceived": 1.297,
+        "electricityReturnedLowTariff": 975.131,
+        "electricityReturnedNormalTariff": 1071.447,
+        "electricityPowerReturned": 0.884,
+        "powerFailures": 4,
+        "longPowerFailures": 2,
+        "powerFailureEventLogSize": 2,
+        "voltageSagsPhaseL1": 2,
+        "voltageSagsPhaseL2": 1,
+        "voltageSagsPhaseL3": 0,
+        "voltageSwellsPhaseL1": 0,
+        "voltageSwellsPhaseL2": 3,
+        "voltageSwellsPhaseL3": 0,
+        "voltageL1": 223.2,
+        "voltageL2": 221.1,
+        "voltageL3": 221.5,
+        "currentL1": 6,
+        "currentL2": 5,
+        "currentL3": 6,
+        "powerReceivedL1": 1.297,
+        "powerReceivedL2": 2.116,
+        "powerReceivedL3": 2.901,
+        "powerReturnedL1": 4.297,
+        "powerReturnedL2": 5.116,
+        "powerReturnedL3": 5.901,
+        "messageCodes": null,
+        "message": "This is fake data generated using the DSMR simulator created by Niels Basjes. See https://dsmr.basjes.nl for more information.",
+        "gasEquipmentId": "G1234567890",
+        "gasTimestamp": "2010-12-09T11:25:00.000+01:00",
+        "gasM3": 12785.123,
+        "slaveEMeterEquipmentId": null,
+        "slaveEMeterTimestamp": null,
+        "slaveEMeterkWh": null
+      },
+      {
+        "receiveTimestamp": "2024-01-02T13:39:09.008+01:00",
+        "isValid": true,
+        "validCRC": true,
+        "rawIdent": "/ISk5\\2MT382-1000 FAKE",
+...
+
+</pre>
+
+
+
+<h2>Subscriptions</h2>
+<p>You can open a GraphQL subscription to get the latest telegrams:</p>
+<pre>
+subscription {
+  dsmrTelegram {
+    receiveTimestamp
+    isValid
+    validCRC
+    rawIdent
+    equipmentBrandTag
+    ident
+    crc
+    p1Version
+    timestamp
+    equipmentId
+    electricityTariffIndicator
+    electricityReceivedLowTariff
+    electricityReceivedNormalTariff
+    electricityPowerReceived
+    electricityReturnedLowTariff
+    electricityReturnedNormalTariff
+    electricityPowerReturned
+    powerFailures
+    longPowerFailures
+    powerFailureEventLogSize
+    voltageSagsPhaseL1
+    voltageSagsPhaseL2
+    voltageSagsPhaseL3
+    voltageSwellsPhaseL1
+    voltageSwellsPhaseL2
+    voltageSwellsPhaseL3
+    voltageL1
+    voltageL2
+    voltageL3
+    currentL1
+    currentL2
+    currentL3
+    powerReceivedL1
+    powerReceivedL2
+    powerReceivedL3
+    powerReturnedL1
+    powerReturnedL2
+    powerReturnedL3
+    messageCodes
+    message
+    gasEquipmentId
+    gasTimestamp
+    gasM3
+    slaveEMeterEquipmentId
+    slaveEMeterTimestamp
+    slaveEMeterkWh
+  }
+}</pre>
+
+</body>
+</html>
+

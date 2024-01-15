@@ -1,0 +1,122 @@
+#
+# Dutch Smart Meter Requirements (DSMR) Toolkit
+# Copyright (C) 2019-2021 Niels Basjes
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+scalar Long
+scalar DateTime
+scalar Duration
+
+type Query {
+    "Get the recent DSMRTelegrams. The optional `since` is the number of milliseconds back the stream should start. The optional `count` is the maximum number of records."
+    dsmrTelegram(since: Long, count: Int): [DSMRTelegram]
+}
+
+type Subscription {
+    "Get the DSMRTelegrams as they occur."
+    dsmrTelegram: DSMRTelegram
+}
+
+type DSMRTelegram {
+    "Timestamp when the measurement was received by the server (usually very accurate because of NTP)."         receiveTimestamp:DateTime!
+
+    "Is this record classified as a valid record. I.e. do we think you can use this data."                      isValid: Boolean!
+    "Does this record have a CRC and is it valid. Always false on DSMR 2.2 records."                            validCRC: Boolean!
+    "The raw identification of this device."                                                                    rawIdent: String
+    "The 3 letter brand identification of this device."                                                         equipmentBrandTag: String
+    "The identification of this device."                                                                        ident: String
+    "The CRC of the record. Is null on DSMR 2.2 records."                                                       crc: String
+    "P1 Version information. Is null on DSMR 2.2 records."                                                      p1Version: String
+    "Timestamp of the measurement as recorded by the clock in the meter (which are usually quite inaccurate)."  timestamp: DateTime
+    "Equipment identifier"                                                                                      equipmentId: String
+
+    "Tariff indicator electricity"                                                                              electricityTariffIndicator:Long
+    "Meter Reading electricity delivered to client (low tariff) in 0,001 kWh"                                   electricityReceivedLowTariff:Float
+    "Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh"                                electricityReceivedNormalTariff: Float
+    "Actual electricity power delivered (+P) in 1 Watt resolution (value in kW)"                                electricityPowerReceived: Float
+
+    "Meter Reading electricity returned by client (low tariff) in 0,001 kWh"                                    electricityReturnedLowTariff: Float
+    "Meter Reading electricity returned by client (normal tariff) in 0,001 kWh"                                 electricityReturnedNormalTariff: Float
+    "Actual electricity power returned (-P) in 1 Watt resolution (value in kW)"                                 electricityPowerReturned: Float
+
+    "Number of power failures in any phases"                                                                    powerFailures: Long
+    "Number of long power failures in any phases"                                                               longPowerFailures: Long
+
+    "Power failure event log size (as indicated in the output)"                                                 powerFailureEventLogSize:Long
+    "Power failure event log"                                                                                   powerFailureEventLog:[PowerFailureEvent]
+
+    "Number of voltage sags in phase L1"                                                                        voltageSagsPhaseL1: Long
+    "Number of voltage sags in phase L2"                                                                        voltageSagsPhaseL2: Long
+    "Number of voltage sags in phase L3"                                                                        voltageSagsPhaseL3: Long
+
+    "Number of voltage swells in phase L1"                                                                      voltageSwellsPhaseL1: Long
+    "Number of voltage swells in phase L2"                                                                      voltageSwellsPhaseL2: Long
+    "Number of voltage swells in phase L3"                                                                      voltageSwellsPhaseL3: Long
+
+    "Instantaneous voltage L1"                                                                                  voltageL1: Float
+    "Instantaneous voltage L2"                                                                                  voltageL2: Float
+    "Instantaneous voltage L3"                                                                                  voltageL3: Float
+
+    "Instantaneous current L1"                                                                                  currentL1: Float
+    "Instantaneous current L2"                                                                                  currentL2: Float
+    "Instantaneous current L3"                                                                                  currentL3: Float
+
+    "Instantaneous active power L1 (+P)"                                                                        powerReceivedL1: Float
+    "Instantaneous active power L2 (+P)"                                                                        powerReceivedL2: Float
+    "Instantaneous active power L3 (+P)"                                                                        powerReceivedL3: Float
+
+    "Instantaneous active power L1 (-P)"                                                                        powerReturnedL1: Float
+    "Instantaneous active power L2 (-P)"                                                                        powerReturnedL2: Float
+    "Instantaneous active power L3 (-P)"                                                                        powerReturnedL3: Float
+
+    "Text message codes: numeric 8 digits."                                                                     messageCodes: String
+    "Text message max 1024 characters."                                                                         message: String
+
+    "The list of all available MBus events"                                                                     mBusEventList: [MBusEventEntry!]!
+
+    # NOTE: This assumes only AT MOST ONE attached thing per type of meter.
+    # Doing two 'gas meters' will only map the first one (i.e. with the lowest MBus id)!!!
+
+    # Gas
+    "Gas measurement device id"                                                                                 gasEquipmentId:String
+    "Gas measurement timestamp"                                                                                 gasTimestamp:DateTime
+    "Gas consumption in cubic meters"                                                                           gasM3:Float
+
+    # Electricity via a slave
+    "Slave e-meter device id"                                                                                   slaveEMeterEquipmentId:String
+    "Slave e-meter measurement timestamp"                                                                       slaveEMeterTimestamp:DateTime
+    "Slave e-meter consumption in kWh"                                                                          slaveEMeterkWh:Float
+
+}
+
+type PowerFailureEvent {
+    "When did the power failure start"                                                                          startTime: DateTime
+    "When did the power failure end"                                                                            endTime: DateTime
+    "How long did the power failure last (in seconds)"                                                          duration: Duration
+}
+
+type MBusEventEntry {
+    index:Int!
+    event:MBusEvent!
+}
+
+type MBusEvent {
+    "MBus event: Device type."                                  deviceType:Int
+    "MBus event: Equipment Identifier."                         equipmentId:String
+    "MBus event: Last 5 minute reading (the value)."            value:Float
+    "MBus event: Last 5 minute reading (the unit: m3 or GJ)."   unit:String
+    "MBus event: Timestamp of last 5 minute reading."           timestamp:DateTime
+}
+

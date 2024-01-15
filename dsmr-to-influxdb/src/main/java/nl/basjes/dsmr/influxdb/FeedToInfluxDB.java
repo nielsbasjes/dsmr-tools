@@ -119,11 +119,12 @@ public final class FeedToInfluxDB {
                     Point point = Point
                         .measurement("electricity")
 
-//                        .time(dsmrTelegram.getTimestamp().toInstant().toEpochMilli(), TimeUnit.MILLISECONDS)
-                        .time((System.currentTimeMillis()/1000)*1000, TimeUnit.MILLISECONDS)
+                        // We are rounding the timestamp to seconds to make the graphs in influxdb work a bit better
+//                        .time((System.currentTimeMillis()/1000)*1000, TimeUnit.MILLISECONDS)
+                        .time(dsmrTelegram.getReceiveTimestamp().toEpochSecond(), TimeUnit.SECONDS)
 
-                        .tag("equipmentId", dsmrTelegram.getEquipmentId())
-                        .tag("p1Version", dsmrTelegram.getP1Version())
+                        .tag("equipmentId",                          dsmrTelegram.getEquipmentId())
+                        .tag("p1Version",                            dsmrTelegram.getP1Version())
 
                         .addField("electricityReceivedLowTariff",    dsmrTelegram.getElectricityReceivedLowTariff())
                         .addField("electricityReceivedNormalTariff", dsmrTelegram.getElectricityReceivedNormalTariff())

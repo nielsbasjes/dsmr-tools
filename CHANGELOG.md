@@ -5,6 +5,8 @@ v0.7-SNAPSHOT
 - Several fields are cleaned
   - `p1Version`: "42" --> "4.2"
   - `ident` renamed to `rawIdent`, parsed into `equimpentBrandTag` and `ident`.
+  - Include the receive timestamp (of the server which is usually much more accurate).
+  - Added GraphQL service
 
 v0.6
 ===

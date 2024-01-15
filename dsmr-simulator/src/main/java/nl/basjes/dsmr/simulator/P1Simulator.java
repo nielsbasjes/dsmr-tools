@@ -24,6 +24,8 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 import static java.lang.Math.PI;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -33,6 +35,10 @@ public final class P1Simulator {
     private P1Simulator(){}
 
     private static volatile boolean running = true;
+
+    private static final String MESSAGE_HEX =
+        "This is fake data generated using the DSMR simulator created by Niels Basjes. See https://dsmr.basjes.nl for more information."
+        .chars().mapToObj(Integer::toHexString).collect(Collectors.joining()).toUpperCase(Locale.ROOT);
 
     public static void main(String...  args) throws InterruptedException {
 
@@ -46,6 +52,8 @@ public final class P1Simulator {
         String gasEquipmentId = stringToHex("G1234567890");
         System.err.println("WARNING: This is FAKE data that should only be used for testing purposes.");
 
+        long breakCounter = 0;
+
         while (running) {
 
             // Now wait for the next second to occur.
@@ -56,7 +64,8 @@ public final class P1Simulator {
             }
             previousNow = epochMillis;
 
-            final Instant       nowInstant  = Instant.ofEpochMilli(epochMillis);
+            // +10000 because the clocks of the smarts meters is usually OFF by several seconds.
+            final Instant       nowInstant  = Instant.ofEpochMilli(epochMillis+10000);
             final ZonedDateTime now         = ZonedDateTime.ofInstant(nowInstant, zone);
             final boolean       isDST       = zone.getRules().isDaylightSavings(now.toInstant());
             final String        nowString   = formatter.format(now) +  (isDST ? "S" : "W");
@@ -66,7 +75,7 @@ public final class P1Simulator {
             double sin3 = Math.sin(epochMillis / sinPeriodScaler * 1.2);
             double sin4 = Math.sin(epochMillis / sinPeriodScaler * 1.3);
 
-            String record =
+            String dsmrTelegram =
                 "/ISk5\\2MT382-1000 FAKE\r\n" +
                 "\r\n" +
                 "1-3:0.2.8(50)\r\n" +                 // DSMR Version
@@ -88,8 +97,7 @@ public final class P1Simulator {
                 "1-0:32.36.0(00000)\r\n" +
                 "1-0:52.36.0(00003)\r\n" +
                 "1-0:72.36.0(00000)\r\n" +
-                "0-0:96.13.0(44534D522073696D756C61746F722063726561746564206279204E69656C73204261736A65732E20536565" +
-                        "2068747470733A2F2F64736D722E6261736A65732E6E6C20666F72206D6F726520696E666F726D6174696F6E2E)\r\n" +
+                "0-0:96.13.0("+MESSAGE_HEX+")\r\n" +
                 "1-0:32.7.0("+String.format("%04.1f", 221. + (3 * sin1))+"*V)\r\n" +
                 "1-0:52.7.0("+String.format("%04.1f", 222. - (3 * sin2))+"*V)\r\n" +
                 "1-0:72.7.0("+String.format("%04.1f", 223. + (6 * sin3))+"*V)\r\n" +
@@ -102,14 +110,51 @@ public final class P1Simulator {
                 "1-0:22.7.0("+String.format("%05.3f", 4.0 + (0.400 * sin1))+"*kW)\r\n" +
                 "1-0:42.7.0("+String.format("%05.3f", 5.0 + (0.400 * sin2))+"*kW)\r\n" +
                 "1-0:62.7.0("+String.format("%05.3f", 6.0 + (0.400 * sin3))+"*kW)\r\n" +
-                "0-1:24.1.0(003)\r\n" +
-                "0-1:96.1.0("+gasEquipmentId+")\r\n" +
-                "0-1:24.2.1(101209112500W)(12785.123*m3)\r\n" +
+//                "0-1:24.1.0(003)\r\n" +
+//                "0-1:96.1.0("+gasEquipmentId+")\r\n" +
+//                "0-1:24.2.1(101209112500W)(12785.123*m3)\r\n" +
+
+                // NOTE: These values are created from what I understand of the specs.
+                // I have put them 'out-of-order' deliberately to test the code better
+                // 4
+                "0-4:24.1.0(010)\r\n" +
+                "0-4:96.1.0(5f5f5f5f464f55525f5f5f)\r\n" +
+                "0-4:24.2.1(101209112400W)(12785.444*GJ)\r\n" +
+                // 1
+                "0-1:24.1.0(002)\r\n" +
+                "0-1:96.1.0(5f5f5f5f4f4e455f5f5f5f)\r\n" +
+                "0-1:24.2.1(101209112100W)(12785.111*kWh)\r\n" +
+                // 3
+                "0-3:24.1.0(004)\r\n" +
+                "0-3:96.1.0(5f5f5f5f54485245455f5f)\r\n" +
+                "0-3:24.2.1(101209112300W)(12785.333*GJ)\r\n" +
+                // 2
+                "0-2:24.1.0(003)\r\n" +
+                "0-2:96.1.0(5f5f5f5f54574f5f5f5f5f)\r\n" +
+                "0-2:24.2.1(101209112200W)(12785.222*m3)\r\n" +
+
                 "!FFFF\r\n";
 
-            record =  CheckCRC.fixCrc(record);
-            System.out.print(record);
-            System.err.println("Wrote record for timestamp: " + nowString);
+            dsmrTelegram =  CheckCRC.fixCrc(dsmrTelegram);
+
+            // Now we periodically break records by cutting off the head or the tail
+            String broken = "";
+            breakCounter++;
+            if (breakCounter % 5 == 0) {
+                int cutAtChar = dsmrTelegram.length()/2;
+                if (breakCounter % 10 == 0) {
+                    // Cut off the head
+                    dsmrTelegram = dsmrTelegram.substring(cutAtChar);
+                    broken = "--> Broken: Missing HEAD";
+                } else {
+                    // Cut off the tail
+                    dsmrTelegram = dsmrTelegram.substring(0, cutAtChar);
+                    broken = "--> Broken: Missing TAIL";
+                }
+            }
+
+            System.out.print(dsmrTelegram);
+            System.err.println("Wrote record for timestamp: " + nowString + broken);
         }
     }
 

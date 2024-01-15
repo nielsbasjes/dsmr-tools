@@ -84,6 +84,8 @@ import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
 
 import java.time.Duration;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Locale;
@@ -130,9 +132,12 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
     private final DSMRTelegram    dsmrTelegram;
     private final TimestampParser timestampParser = new TimestampParser();
 
+    private static final ZoneId EUROPE_AMSTERDAM = ZoneId.of("Europe/Amsterdam");
+
     private ParseDsmrTelegram(String telegram) {
         telegramString = telegram;
         dsmrTelegram = new DSMRTelegram();
+        dsmrTelegram.receiveTimestamp = ZonedDateTime.now(EUROPE_AMSTERDAM);
         dsmrTelegram.validCRC = CheckCRC.crcIsValid(telegramString);
         dsmrTelegram.isValid = dsmrTelegram.validCRC;
     }

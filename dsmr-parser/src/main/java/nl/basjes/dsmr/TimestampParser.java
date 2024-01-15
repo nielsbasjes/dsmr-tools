@@ -32,9 +32,10 @@ public class TimestampParser {
 
     // IMPORTANT ASSUMPTION:
     // This is for the DSMR = Dutch Smart Meter Requirements.
-    // Dutch ! means Netherlands which assumes timezone "Europe/Amsterdam"
+    // Dutch ! means Netherlands which means timezone "Europe/Amsterdam"
 
-    // Format                                     Y    Y     M   M      D    D      h    h      m    m      s    s      S or W
+    //                                           Year        Month      Day         Hour        Minute      Second      Summer/Winter time
+    // Format                                    Y    Y      M   M      D    D      h    h      m    m      s    s      S or W
     private static final String TIME_FORMAT = "([0-9][0-9])([01][0-9])([0-3][0-9])([0-2][0-9])([0-5][0-9])([0-5][0-9])([SsWw]?)";
 
     private static final Pattern DATE_TIME_PATTERN = Pattern.compile(TIME_FORMAT);
