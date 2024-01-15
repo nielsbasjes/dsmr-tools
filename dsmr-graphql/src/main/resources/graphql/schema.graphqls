@@ -20,13 +20,13 @@ scalar DateTime
 scalar Duration
 
 type Query {
-    "Get the recent DSMRTelegrams. The optional `since` is the number of milliseconds back the stream should start. The optional `count` is the maximum number of records."
-    dsmrTelegram(since: Long, count: Int): [DSMRTelegram]
+    "Get the recent DSMRTelegrams. The optional `onlyValid` (default false) can be used to drop invalid records. The optional `since` is the number of milliseconds back the stream should start. The optional `count` is the maximum number of records."
+    dsmrTelegram(onlyValid: Boolean, since: Long, count: Int): [DSMRTelegram]
 }
 
 type Subscription {
-    "Get the DSMRTelegrams as they occur."
-    dsmrTelegram: DSMRTelegram
+    "Get the DSMRTelegrams as they occur. The optional `onlyValid` (default false) can be used to drop invalid records."
+    dsmrTelegram(onlyValid: Boolean): DSMRTelegram
 }
 
 type DSMRTelegram {

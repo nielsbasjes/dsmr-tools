@@ -33,6 +33,7 @@ import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @EnableScheduling
@@ -47,17 +48,32 @@ public class GraphQlRequestHandler {
 
     @QueryMapping("dsmrTelegram")
     public List<DSMRTelegram> queryMeasurement(
-            @Argument("since") Long since,
-            @Argument("count") Integer count
+            @Argument("onlyValid")  Boolean onlyValid,
+            @Argument("since")      Long since,
+            @Argument("count")      Integer count
     ) {
-        return output.getMeasurements(since, count);
+        List<DSMRTelegram> measurements = output.getMeasurements(since, count);
+        if (onlyValid == Boolean.TRUE) {
+            return measurements
+                .stream()
+                .filter(DSMRTelegram::isValid)
+                .collect(Collectors.toList());
+        }
+        return measurements;
     }
 
     @SubscriptionMapping("dsmrTelegram")
-    public Flux<DSMRTelegram> subscribeMeasurement() {
-        return output.asFlux();
+    public Flux<DSMRTelegram> subscribeMeasurement(
+        @Argument("onlyValid")  Boolean onlyValid
+    ) {
+        Flux<DSMRTelegram> dsmrTelegramFlux = output.asFlux();
+        if (onlyValid == Boolean.TRUE) {
+            dsmrTelegramFlux = dsmrTelegramFlux.filter(DSMRTelegram::isValid);
+        }
+        return dsmrTelegramFlux;
     }
 
+    @SuppressWarnings("unused") // Used via annotation
     @GraphQlExceptionHandler
     public GraphQLError handle(@NonNull Throwable ex, @NonNull DataFetchingEnvironment environment){
         return GraphQLError
