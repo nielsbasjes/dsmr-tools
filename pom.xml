@@ -41,6 +41,9 @@
     <!-- In order for everything to work correctly we need at least this version of maven. -->
     <maven.minimal.version>3.5.2</maven.minimal.version>
 
+    <!-- Needed to make the build reproducible https://reproducible-builds.org/ -->
+    <project.build.outputTimestamp>2024-01-15T18:32:01Z</project.build.outputTimestamp>
+
     <!-- ============================================== -->
     <!-- ================ UDF Versions ================ -->
     <!-- ============================================== -->
