@@ -34,7 +34,7 @@
   <url>https://dsmr.basjes.nl</url>
 
   <properties>
-    <java.version>21</java.version>
+    <java.version>17</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.release>${java.version}</maven.compiler.release>
     <main.class>nl.basjes.dsmr.graphql.DSMRService</main.class>
