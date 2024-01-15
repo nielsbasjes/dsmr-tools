@@ -13,6 +13,11 @@
       "description": "Disable strange versions of graphql-java",
       "matchPackagePrefixes": ["com.graphql-java"],
       "allowedVersions": "/^[0-9]{1,3}\\.[0-9]{1,3}(?:\\.[0-9]{1,3})?$/"
+    },
+    {
+      "description": "Disable broken maven-artifact-plugin version",
+      "matchDepNames": ["org.apache.maven.plugins:maven-artifact-plugin"],
+      "allowedVersions": "!/^3\\.5\\.0$/"
     }
   ]
 }
