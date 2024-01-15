@@ -1,59 +1,46 @@
-#
-# Dutch Smart Meter Requirements (DSMR) Toolkit
-# Copyright (C) 2019-2021 Niels Basjes
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-
-name: DSMR Toolkit
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
 jobs:
   build:
-    name: Build with Java ${{ matrix.java }}
+    name: 'Build and test'
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java:
-          - '11'
 
     steps:
-    - name: Checkout sourcecode
-      uses: actions/checkout@v4
+    - name: 'Checkout sourcecode'
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
-    - name: Cache Local Maven Repository
-      uses: actions/cache@v3
+    - name: 'Cache Local Maven Repository'
+      uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3.3.3
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
 
-    - name: Setup Java ${{ matrix.java }}
-      uses: actions/setup-java@v4
+    - name: 'Setup: Install JDK 8, 11, 17 & 21'
+      uses: actions/setup-java@387ac29b308b003ca37ba93a6cab5eb57c8f5f93 # v4.0.0
       with:
-        java-version: ${{ matrix.java }}
         distribution: 'temurin'
+        java-version: |
+          11
+          17
+          21
 
-    - name: Build Logparser
-      run: mvn -B clean package
+    - name: 'Build'
+      run: ./mvnw clean install -PdisableDockerHubUsages
 
-    - name: Codecov
-      uses: codecov/codecov-action@v3.1.4
+    - name: 'Codecov'
+      uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+
+    # Rebuild in a DIFFERENT directory as sometimes the build directory is persisted in a generated file.
+    # https://issues.apache.org/jira/browse/MSHADE-440
+    # https://issues.apache.org/jira/browse/MNG-7750
+    - name: 'Ensure build is reproducible'
+      run: |
+        mkdir -p ../PreproducibleRebuildInDifferentDirectory
+        cp -a . ../PreproducibleRebuildInDifferentDirectory
+        cd ../PreproducibleRebuildInDifferentDirectory
+        ./mvnw clean verify -PskipQuality -PartifactCompare
+        # Remove the just installed artifacts to avoid blowing up the ~/.m2 cache.
+        rm -rf ~/.m2/repository/nl/basjes/parse/useragent/
+
