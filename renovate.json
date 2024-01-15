@@ -8,6 +8,11 @@
       "packagePatterns": ["*"],
       "allowedVersions": "!/^(?i).*[-_\\.](Alpha|Beta|RC|M|EA|Snap|snapshot|jboss|atlassian)[-_\\.]?[0-9]?.*$/",
       "groupName": "all dependencies"
+    },
+    {
+      "description": "Disable strange versions of graphql-java",
+      "matchPackageNames": ["com.graphql-java:graphql-java"],
+      "allowedVersions": "/^[0-9]{1,3}\\.[0-9]{1,3}(?:\\.[0-9]{1,3})?$/"
     }
   ]
 }
