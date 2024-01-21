@@ -16,25 +16,19 @@
  *
  */
 
-package nl.basjes.dsmr.graphql;
+package nl.basjes.dsmr.service.device;
 
-import nl.basjes.dsmr.DSMRTelegram;
-import reactor.core.publisher.Flux;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
+@Configuration
+@Getter
+public class P1DeviceReaderConfig {
+    @Value("${dsmr.tty}")
+    private String tty;
 
-public interface DSMRTelegramPublisher {
-    /**
-     * Publish a new measurement
-     * @param measurement The measurement to be published
-     */
-    void publish(DSMRTelegram measurement);
+    @Value("${dsmr.delay:0}")
+    private Long delayRead = 0L;
 
-    /**
-     * Get all the future published measurements as a flux
-     * @return The flux
-     */
-    Flux<DSMRTelegram> asFlux();
-
-    List<DSMRTelegram> getMeasurements(Long epoch, Integer count);
 }

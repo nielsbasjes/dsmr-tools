@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @ToString
 public class DSMRTelegram {
     /** Is this record classified as a valid record. I.e. do we think you can use this data. */
-    boolean isValid;
+    boolean valid;
     /** Does this record have a CRC and is it valid. Always false on DSMR 2.2 records. */
     boolean validCRC;
     /** The raw identification of this device. */

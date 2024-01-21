@@ -32,7 +32,7 @@ type Subscription {
 type DSMRTelegram {
     "Timestamp when the measurement was received by the server (usually very accurate because of NTP)."         receiveTimestamp:DateTime!
 
-    "Is this record classified as a valid record. I.e. do we think you can use this data."                      isValid: Boolean!
+    "Is this record classified as a valid record. I.e. do we think you can use this data."                      valid: Boolean!
     "Does this record have a CRC and is it valid. Always false on DSMR 2.2 records."                            validCRC: Boolean!
     "The raw identification of this device."                                                                    rawIdent: String
     "The 3 letter brand identification of this device."                                                         equipmentBrandTag: String
@@ -114,6 +114,7 @@ type MBusEventEntry {
 
 type MBusEvent {
     "MBus event: Device type."                                  deviceType:Int
+    "MBus event: Device type name."                             deviceTypeName:String
     "MBus event: Equipment Identifier."                         equipmentId:String
     "MBus event: Last 5 minute reading (the value)."            value:Float
     "MBus event: Last 5 minute reading (the unit: m3 or GJ)."   unit:String

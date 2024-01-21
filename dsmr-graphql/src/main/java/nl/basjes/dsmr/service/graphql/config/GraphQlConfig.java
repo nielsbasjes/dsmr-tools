@@ -13,14 +13,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
-package nl.basjes.dsmr.graphql;
+package nl.basjes.dsmr.service.graphql.config;
 
 import graphql.scalars.ExtendedScalars;
 import nl.basjes.dsmr.DSMRTelegram;
-import nl.basjes.dsmr.graphql.scalars.DurationScalar;
+import nl.basjes.dsmr.service.graphql.scalars.DurationScalar;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.graphql.execution.RuntimeWiringConfigurer;

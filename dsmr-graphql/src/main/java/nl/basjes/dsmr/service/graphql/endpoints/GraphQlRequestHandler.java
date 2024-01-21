@@ -16,12 +16,13 @@
  *
  */
 
-package nl.basjes.dsmr.graphql;
+package nl.basjes.dsmr.service.graphql.endpoints;
 
 import graphql.GraphQLError;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.extern.log4j.Log4j2;
 import nl.basjes.dsmr.DSMRTelegram;
+import nl.basjes.dsmr.service.device.DSMRTelegramPublisher;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.GraphQlExceptionHandler;
 import org.springframework.graphql.data.method.annotation.QueryMapping;

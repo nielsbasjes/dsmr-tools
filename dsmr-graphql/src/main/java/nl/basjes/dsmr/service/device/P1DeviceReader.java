@@ -16,7 +16,7 @@
  *
  */
 
-package nl.basjes.dsmr.graphql;
+package nl.basjes.dsmr.service.device;
 
 import lombok.extern.log4j.Log4j2;
 import nl.basjes.dsmr.DSMRTelegram;
@@ -56,15 +56,19 @@ public class P1DeviceReader implements DisposableBean, Runnable {
         this.thread.start();
     }
 
+    public boolean isRunning() {
+        return running;
+    }
+
     @Override
     public void run(){
-        running = true;
         log.info("Using tty: {}", config.getTty());
         try(FileInputStream inputStream = new FileInputStream(config.getTty())) {
 
             ReadUTF8RecordStream reader = new ReadUTF8RecordStream(inputStream, "\r\n![0-9A-F]{4}\r\n");
 
             log.info("Starting read loop");
+            running = true;
 
             while (running) {
                 String telegram = reader.read();
@@ -88,9 +92,23 @@ public class P1DeviceReader implements DisposableBean, Runnable {
                     throw e;
                 }
 
-                log.info("Got DSMR Telegram @ {}", dsmrTelegram.getReceiveTimestamp());
+                if (dsmrTelegram == null) {
+                    log.error("Got a NULL instead of a DSMR Telegram");
+                } else {
+                    log.info("Got DSMR Telegram @ {}", dsmrTelegram.getReceiveTimestamp());
+                }
 
                 output.publish(dsmrTelegram);
+
+                Long delayRead = config.getDelayRead();
+                // Only a delay between 0 and 30 seconds is considered to be a valid value
+                if (delayRead != null && delayRead != 0) {
+                    if (delayRead > 0 && delayRead <= 30000) {
+                        Thread.sleep(delayRead);
+                    } else {
+                        log.warn("Ignoring the invalid delay value of {}", delayRead);
+                    }
+                }
             }
         } catch (FileNotFoundException e) {
             log.error("Got FileNotFoundException: {}", e.getMessage());
@@ -98,6 +116,8 @@ public class P1DeviceReader implements DisposableBean, Runnable {
             log.error("Got IOException: {}", e.getMessage());
         } catch (NullPointerException e) {
             log.error("Got NullPointerException: {}", e.getMessage());
+        } catch (InterruptedException e) {
+            log.error("Got InterruptedException: {}", e.getMessage());
         }
 
         // If this ends then the entire application must terminate.

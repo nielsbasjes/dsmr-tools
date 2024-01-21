@@ -106,7 +106,7 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object o, int i, int i1, String s, RecognitionException e) {
         hasSyntaxError = true;
-        dsmrTelegram.isValid = false;
+        dsmrTelegram.valid = false;
     }
 
     @Override
@@ -139,12 +139,12 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
         dsmrTelegram = new DSMRTelegram();
         dsmrTelegram.receiveTimestamp = ZonedDateTime.now(EUROPE_AMSTERDAM);
         dsmrTelegram.validCRC = CheckCRC.crcIsValid(telegramString);
-        dsmrTelegram.isValid = dsmrTelegram.validCRC;
+        dsmrTelegram.valid = dsmrTelegram.validCRC;
     }
 
     private DSMRTelegram parse() {
         if (telegramString == null || telegramString.isEmpty()) {
-            dsmrTelegram.isValid = false;
+            dsmrTelegram.valid = false;
             return null;
         }
 
@@ -174,13 +174,13 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
         // Really old records do not have a P1 version AND do not have a CRC.
         // which makes these records valid.
         if (hasSyntaxError) {
-            dsmrTelegram.isValid = false;
+            dsmrTelegram.valid = false;
         } else {
             if ((dsmrTelegram.crc == null || dsmrTelegram.crc.isEmpty()) &&
                 (dsmrTelegram.p1Version == null || dsmrTelegram.p1Version.isEmpty())) {
-                dsmrTelegram.isValid = true;
+                dsmrTelegram.valid = true;
             } else {
-                dsmrTelegram.isValid = dsmrTelegram.validCRC;
+                dsmrTelegram.valid = dsmrTelegram.validCRC;
             }
         }
 

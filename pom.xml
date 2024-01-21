@@ -72,9 +72,9 @@
     <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
     <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 
-    <git-commit-id-plugin.version>9.0.1</git-commit-id-plugin.version>
+    <git-commit-id-maven-plugin.version>9.0.1</git-commit-id-maven-plugin.version>
     <version.copyright>Copyright (C) 2019-2024 Niels Basjes</version.copyright>
-    <version.license>License Apache 2.0</version.license>
+    <version.license>Apache 2.0</version.license>
     <version.url>${project.url}</version.url>
   </properties>
 
@@ -117,20 +117,20 @@
         <artifactId>apache-rat-plugin</artifactId>
         <version>${rat.version}</version>
         <inherited>false</inherited>
-        <!-- https://issues.apache.org/jira/browse/RAT-158 -->
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.maven.doxia</groupId>
-            <artifactId>doxia-core</artifactId>
-            <version>1.12.0</version>
-            <exclusions>
-              <exclusion>
-                <groupId>xerces</groupId>
-                <artifactId>xercesImpl</artifactId>
-              </exclusion>
-            </exclusions>
-          </dependency>
-        </dependencies>
+<!--        &lt;!&ndash; https://issues.apache.org/jira/browse/RAT-158 &ndash;&gt;-->
+<!--        <dependencies>-->
+<!--          <dependency>-->
+<!--            <groupId>org.apache.maven.doxia</groupId>-->
+<!--            <artifactId>doxia-core</artifactId>-->
+<!--            <version>1.12.0</version>-->
+<!--            <exclusions>-->
+<!--              <exclusion>-->
+<!--                <groupId>xerces</groupId>-->
+<!--                <artifactId>xercesImpl</artifactId>-->
+<!--              </exclusion>-->
+<!--            </exclusions>-->
+<!--          </dependency>-->
+<!--        </dependencies>-->
         <executions>
           <execution>
             <phase>validate</phase>
@@ -166,6 +166,7 @@
             <exclude>**/testinput.txt</exclude>
             <exclude>**/*.log</exclude>
             <exclude>**/src/test/data/**</exclude>
+            <exclude>dsmr-graphql/src/test/resources/ttyUSB0-raw.txt</exclude>
             <!-- File generated during build -->
             <exclude>**/target/**</exclude>
             <exclude>**/dependency-reduced-pom.xml</exclude>
@@ -322,12 +323,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-reload4j</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>
@@ -467,7 +462,7 @@
             <!-- Description: https://github.com/git-commit-id/git-commit-id-maven-plugin -->
             <groupId>io.github.git-commit-id</groupId>
             <artifactId>git-commit-id-maven-plugin</artifactId>
-            <version>${git-commit-id-plugin.version}</version>
+            <version>${git-commit-id-maven-plugin.version}</version>
             <executions>
               <execution>
                 <id>Validate-Revision-Information</id>
@@ -502,7 +497,7 @@
             <!-- Description: https://github.com/git-commit-id/git-commit-id-maven-plugin -->
             <groupId>io.github.git-commit-id</groupId>
             <artifactId>git-commit-id-maven-plugin</artifactId>
-            <version>${git-commit-id-plugin.version}</version>
+            <version>${git-commit-id-maven-plugin.version}</version>
             <executions>
               <execution>
                 <id>Validate-Revision-Information</id>

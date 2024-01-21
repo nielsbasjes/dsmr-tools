@@ -16,10 +16,11 @@
  *
  */
 
-package nl.basjes.dsmr.graphql;
+package nl.basjes.dsmr.service.device;
 
 import lombok.extern.log4j.Log4j2;
 import nl.basjes.dsmr.DSMRTelegram;
+import nl.basjes.dsmr.service.graphql.config.GraphQlConfig;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;

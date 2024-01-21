@@ -37,7 +37,7 @@
     <java.version>17</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.release>${java.version}</maven.compiler.release>
-    <main.class>nl.basjes.dsmr.graphql.DSMRService</main.class>
+    <main.class>nl.basjes.dsmr.service.DSMRService</main.class>
     <spring-boot.version>3.3.4</spring-boot.version>
   </properties>
 
@@ -49,6 +49,11 @@
         <version>${spring-boot.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>2.3.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -118,7 +123,38 @@
           <groupId>com.graphql-java</groupId>
           <artifactId>graphql-java</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-text</artifactId>
+        </exclusion>
       </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+<!--      <exclusions>-->
+<!--        <exclusion>-->
+<!--          <groupId>org.slf4j</groupId>-->
+<!--          <artifactId>slf4j-api</artifactId>-->
+<!--        </exclusion>-->
+<!--        <exclusion>-->
+<!--          <groupId>org.springframework</groupId>-->
+<!--          <artifactId>spring-webmvc</artifactId>-->
+<!--        </exclusion>-->
+<!--        <exclusion>-->
+<!--          <groupId>org.springframework.boot</groupId>-->
+<!--          <artifactId>spring-boot-autoconfigure</artifactId>-->
+<!--        </exclusion>-->
+<!--        <exclusion>-->
+<!--          <groupId>org.apache.commons</groupId>-->
+<!--          <artifactId>commons-lang3</artifactId>-->
+<!--        </exclusion>-->
+<!--        <exclusion>-->
+<!--          <groupId>org.yaml</groupId>-->
+<!--          <artifactId>snakeyaml</artifactId>-->
+<!--        </exclusion>-->
+<!--      </exclusions>-->
     </dependency>
 
     <dependency>
@@ -140,9 +176,48 @@
       <version>24.1.0</version>
     </dependency>
 
+
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <version>${spring-boot.version}</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+    </dependency>
+
+
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>5.4.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
   </dependencies>
 
   <build>
+<!--    <outputDirectory>target/${project.artifactId}/WEB-INF/classes</outputDirectory>-->
+
     <plugins>
 
       <plugin>
@@ -226,8 +301,190 @@
               <skip>true</skip>
             </configuration>
           </execution>
+
+          <execution>
+            <id>enforce-quality</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+
+                <banDuplicateClasses>
+                  <scopes>
+                    <scope>compile</scope>
+                    <scope>runtime</scope>
+                    <scope>provided</scope>
+                  </scopes>
+                  <findAllDuplicates>true</findAllDuplicates>
+                  <ignoreWhenIdentical>true</ignoreWhenIdentical>
+                </banDuplicateClasses>
+
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+
         </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>extra-enforcer-rules</artifactId>
+            <version>1.7.0</version>
+          </dependency>
+        </dependencies>
       </plugin>
+
+
+<!--      &lt;!&ndash; Documentation: https://dmp.fabric8.io/ &ndash;&gt;-->
+<!--      <plugin>-->
+<!--        <groupId>io.fabric8</groupId>-->
+<!--        <artifactId>docker-maven-plugin</artifactId>-->
+<!--        <version>${docker-maven-plugin.version}</version>-->
+
+<!--        <configuration>-->
+<!--          <skip>${docker-based-tests.skip}</skip>-->
+<!--          <follow>false</follow>-->
+<!--          <sourceDirectory>src/test/resources</sourceDirectory>-->
+<!--          <images>-->
+<!--            <image>-->
+<!--              <name>nielsbasjes/yauaa:${project.version}</name>-->
+<!--              <build>-->
+<!--                <maintainer>Niels Basjes</maintainer>-->
+<!--                <from>openjdk:21-slim</from>-->
+<!--                <tags>-->
+<!--                  <tag>latest</tag>-->
+<!--                  <tag>${project.version}</tag>-->
+<!--                </tags>-->
+
+<!--                <labels>-->
+<!--                  <name>yauaa</name>-->
+<!--                  <org.opencontainers.image.created>${maven.build.timestamp}</org.opencontainers.image.created>-->
+<!--                  <org.opencontainers.image.authors>Niels Basjes</org.opencontainers.image.authors>-->
+<!--                  <org.opencontainers.image.url>https://yauaa.basjes.nl</org.opencontainers.image.url>-->
+<!--                  <org.opencontainers.image.documentation>https://yauaa.basjes.nl</org.opencontainers.image.documentation>-->
+<!--                  <org.opencontainers.image.source>https://github.com/nielsbasjes/yauaa</org.opencontainers.image.source>-->
+<!--                  <org.opencontainers.image.version>${project.version}</org.opencontainers.image.version>-->
+<!--                  &lt;!&ndash;suppress UnresolvedMavenProperty &ndash;&gt;-->
+<!--                  <org.opencontainers.image.revision>${git.commit.id}</org.opencontainers.image.revision>-->
+<!--                  <org.opencontainers.image.vendor>Niels Basjes</org.opencontainers.image.vendor>-->
+<!--                  <org.opencontainers.image.licenses>Apache-2.0</org.opencontainers.image.licenses>-->
+<!--                  <org.opencontainers.image.title>Yauaa: Yet Another UserAgent Analyzer</org.opencontainers.image.title>-->
+<!--                  <org.opencontainers.image.description>This is a java library that tries to parse and analyze the useragent string (and when available the User-Agent Client Hints) and extract as many relevant attributes as possible.</org.opencontainers.image.description>-->
+<!--                </labels>-->
+<!--                <assembly>-->
+<!--                  <name>${project.build.finalName}.war</name>-->
+<!--                  <targetDir>/</targetDir>-->
+<!--                  <mode>dir</mode>-->
+<!--                  <descriptorRef>artifact</descriptorRef>-->
+<!--                </assembly>-->
+<!--                <ports>-->
+<!--                  <port>8080</port>-->
+<!--                </ports>-->
+<!--                <entryPoint>-->
+<!--                  <exec>-->
+<!--                    <arg>java</arg>-->
+<!--                    <arg>-Djava.security.egd=file:/dev/./urandom</arg>-->
+<!--                    <arg>-jar</arg>-->
+<!--                    <arg>/${project.build.finalName}.war</arg>-->
+<!--                  </exec>-->
+<!--                </entryPoint>-->
+<!--              </build>-->
+
+<!--              <run>-->
+<!--                <skip>true</skip>-->
+<!--              </run>-->
+<!--            </image>-->
+
+<!--            <image>-->
+<!--              <name>nielsbasjes/yauaa:${project.version}-WITH-EXTRA-CONFIG</name>-->
+<!--              <build>-->
+<!--                <tags>-->
+<!--                  <tag>${project.version}-WITH-EXTRA-CONFIG</tag>-->
+<!--                </tags>-->
+<!--                <dockerFile>ITDockerfile</dockerFile>-->
+<!--              </build>-->
+
+<!--              <run>-->
+<!--                <containerNamePattern>yauaa-ittest-%i</containerNamePattern>-->
+<!--                <ports>-->
+<!--                  <port>yauaa.port:8080</port>-->
+<!--                </ports>-->
+<!--                <wait>-->
+<!--                  <http>-->
+<!--                    <url>http://localhost:${yauaa.port}/readiness</url>-->
+<!--                  </http>-->
+<!--                  <time>20000</time>-->
+<!--                </wait>-->
+<!--                <log>-->
+<!--                  <prefix>[ LOCAL TEST OF YAUAA WITH CONFIG ]::</prefix>-->
+<!--                  <color>yellow</color>-->
+<!--                </log>-->
+<!--              </run>-->
+<!--            </image>-->
+
+<!--          </images>-->
+<!--        </configuration>-->
+
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <id>build-docker</id>-->
+<!--            <configuration>-->
+<!--              <skip>${docker-based-tests.skip}</skip>-->
+<!--              <removeMode>build</removeMode>-->
+<!--            </configuration>-->
+<!--            <phase>${docker-based-package.phase}</phase>-->
+<!--            <goals>-->
+<!--              <goal>stop</goal>-->
+<!--              <goal>remove</goal>-->
+<!--              <goal>build</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+
+<!--          <execution>-->
+<!--            <id>start-docker-before-it</id>-->
+<!--            <phase>pre-integration-test</phase>-->
+<!--            <configuration>-->
+<!--              <skip>${docker-based-tests.skip}</skip>-->
+<!--            </configuration>-->
+<!--            <goals>-->
+<!--              <goal>stop</goal>-->
+<!--              <goal>start</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+
+<!--          <execution>-->
+<!--            <id>stop-docker-after-it</id>-->
+<!--            <configuration>-->
+<!--              <skip>${docker-based-tests.skip}</skip>-->
+<!--            </configuration>-->
+<!--            <phase>post-integration-test</phase>-->
+<!--            <goals>-->
+<!--              <goal>stop</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+
+<!--        </executions>-->
+<!--      </plugin>-->
+
+<!--      <plugin>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-failsafe-plugin</artifactId>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <id>run-tests</id>-->
+<!--            <configuration>-->
+<!--              <skip>${docker-based-tests.skip}</skip>-->
+<!--            </configuration>-->
+<!--            <phase>integration-test</phase>-->
+<!--            <goals>-->
+<!--              <goal>integration-test</goal>-->
+<!--              <goal>verify</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
 
     </plugins>
   </build>

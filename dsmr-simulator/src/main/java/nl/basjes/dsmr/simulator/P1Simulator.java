@@ -117,7 +117,7 @@ public final class P1Simulator {
                 // NOTE: These values are created from what I understand of the specs.
                 // I have put them 'out-of-order' deliberately to test the code better
                 // 4
-                "0-4:24.1.0(010)\r\n" +
+                "0-4:24.1.0(021)\r\n" +
                 "0-4:96.1.0(5f5f5f5f464f55525f5f5f)\r\n" +
                 "0-4:24.2.1(101209112400W)(12785.444*GJ)\r\n" +
                 // 1

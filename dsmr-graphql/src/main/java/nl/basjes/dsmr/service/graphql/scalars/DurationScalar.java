@@ -16,7 +16,7 @@
  *
  */
 
-package nl.basjes.dsmr.graphql.scalars;
+package nl.basjes.dsmr.service.graphql.scalars;
 
 import graphql.GraphQLContext;
 import graphql.schema.Coercing;

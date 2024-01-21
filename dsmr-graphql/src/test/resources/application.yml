@@ -14,34 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-server:
-  servlet:
-    context-path: /
-
-spring:
-  graphql:
-    path: /graphql
-    websocket:
-      path: /graphql # ws://localhost:8080/service
-      connection-init-timeout: 60s # defines the WebSocket connection initialization timeout to 60 sec
-    graphiql:
-      enabled: true
-      path: /graphiql
-    schema:
-      printer:
-        enabled: true
-    cors:
-      allowed-origins: '*'
-      allowed-methods: 'GET,POST'
-      max-age: '1800s'
 
 logging:
   level:
     root: INFO
-    graphql : INFO
+    graphql : DEBUG
     notprivacysafe : OFF
     nl.basjes.dsmr: INFO
 
 dsmr:
-# The tty value I normally see on my machine
-  tty: /dev/ttyUSB0
+  tty: src/test/resources/ttyUSB0-raw.txt
+  # Insert a delay between each record to slow it all down
+  delay: 1000
+

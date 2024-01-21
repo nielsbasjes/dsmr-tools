@@ -16,17 +16,15 @@
  *
  */
 
-package nl.basjes.dsmr.graphql;
+package nl.basjes.dsmr.service;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@Configuration
-public class P1DeviceReaderConfig {
-    @Value("${dsmr.tty}")
-    private String tty;
-
-    public String getTty() {
-        return tty;
+// CHECKSTYLE.OFF: HideUtilityClassConstructor
+@SpringBootApplication
+public class DSMRService {
+    public static void main(String[] args) {
+        SpringApplication.run(DSMRService.class, args);
     }
 }

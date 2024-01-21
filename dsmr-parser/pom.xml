@@ -65,6 +65,56 @@
   <build>
 
     <plugins>
+
+      <plugin>
+        <!-- Description: https://github.com/git-commit-id/git-commit-id-maven-plugin -->
+        <groupId>io.github.git-commit-id</groupId>
+        <artifactId>git-commit-id-maven-plugin</artifactId>
+        <version>${git-commit-id-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>get-the-git-infos</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <dateFormat>yyyy-MM-dd '@' HH:mm:ss z</dateFormat>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>nl.basjes.stringtemplate</groupId>
+        <artifactId>stringtemplate-maven-plugin</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <executions>
+          <execution>
+            <id>Generate Version class</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>render</goal>
+            </goals>
+            <configuration>
+              <templateFile>${project.basedir}/src/main/code-gen/version/Version.java.stg</templateFile>
+              <outputFile>${project.basedir}/target/generated-sources/java/nl/basjes/dsmr/Version.java</outputFile>
+              <properties>
+                <git.commit.id>${git.commit.id}</git.commit.id>
+                <git.commit.id.describe-short>${git.commit.id.describe-short}</git.commit.id.describe-short>
+                <project.build.outputTimestamp>${project.build.outputTimestamp}</project.build.outputTimestamp>
+                <project.version>${project.version}</project.version>
+                <version.copyright>${version.copyright}</version.copyright>
+                <version.license>${version.license}</version.license>
+                <version.url>${version.url}</version.url>
+                <target.java.version>${target.java.version}</target.java.version>
+              </properties>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+
       <!-- Some of the dependencies (Antlr4, Spring and SnakeYaml) have proven to be problematic -->
       <!-- for downstream users who need different versions of these in the same application.    -->
       <!-- So for only these we include and relocate the used classes into the main jar.         -->

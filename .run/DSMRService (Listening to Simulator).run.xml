@@ -2,7 +2,7 @@
   <configuration default="false" name="DSMRService (Listening to Simulator)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" value="simulator" />
     <module name="dsmr-graphql" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="nl.basjes.dsmr.graphql.DSMRService" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="nl.basjes.dsmr.service.DSMRService" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

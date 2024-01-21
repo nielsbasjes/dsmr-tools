@@ -16,15 +16,25 @@
  *
  */
 
-package nl.basjes.dsmr.graphql;
+package nl.basjes.dsmr.service.device;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import nl.basjes.dsmr.DSMRTelegram;
+import reactor.core.publisher.Flux;
 
-// CHECKSTYLE.OFF: HideUtilityClassConstructor
-@SpringBootApplication
-public class DSMRService {
-    public static void main(String[] args) {
-        SpringApplication.run(DSMRService.class, args);
-    }
+import java.util.List;
+
+public interface DSMRTelegramPublisher {
+    /**
+     * Publish a new measurement
+     * @param measurement The measurement to be published
+     */
+    void publish(DSMRTelegram measurement);
+
+    /**
+     * Get all the future published measurements as a flux
+     * @return The flux
+     */
+    Flux<DSMRTelegram> asFlux();
+
+    List<DSMRTelegram> getMeasurements(Long epoch, Integer count);
 }
