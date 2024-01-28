@@ -27,8 +27,6 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 abstract class AbstractTestingBase {
     protected static final Logger LOG = LogManager.getLogger(AbstractTestingBase.class);
 
-    boolean runTestsThatNeedResourceFiles = true;
-
     abstract int getPort();
 
     private static int attemptsRemaining = 50;
@@ -70,10 +68,5 @@ abstract class AbstractTestingBase {
             isRunning = true;
         }
     }
-
-    public static final String BASEURL                     = "/yauaa/v1";
-    public static final String NONSENSE_USER_AGENT         = "Niels Basjes/42";
-    public static final String TEST_USER_AGENT             = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36";
-    public static final String EXPECTED_AGENTNAMEVERSION   = "Chrome 84.0.4147.89";
 
 }

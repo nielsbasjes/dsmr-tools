@@ -197,12 +197,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-    </dependency>
-
-
-    <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
       <version>5.4.0</version>
@@ -216,8 +210,6 @@
   </dependencies>
 
   <build>
-<!--    <outputDirectory>target/${project.artifactId}/WEB-INF/classes</outputDirectory>-->
-
     <plugins>
 
       <plugin>

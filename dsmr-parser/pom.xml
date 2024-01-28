@@ -64,6 +64,17 @@
 
   <build>
 
+    <resources>
+      <resource>
+        <directory>${project.basedir}/src/main/code-gen/version/</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>Version.java</include>
+        </includes>
+        <targetPath>${project.basedir}/target/generated-sources/java/nl/basjes/dsmr/</targetPath>
+      </resource>
+    </resources>
+
     <plugins>
 
       <plugin>
@@ -83,35 +94,6 @@
         <configuration>
           <dateFormat>yyyy-MM-dd '@' HH:mm:ss z</dateFormat>
         </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>nl.basjes.stringtemplate</groupId>
-        <artifactId>stringtemplate-maven-plugin</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-        <executions>
-          <execution>
-            <id>Generate Version class</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>render</goal>
-            </goals>
-            <configuration>
-              <templateFile>${project.basedir}/src/main/code-gen/version/Version.java.stg</templateFile>
-              <outputFile>${project.basedir}/target/generated-sources/java/nl/basjes/dsmr/Version.java</outputFile>
-              <properties>
-                <git.commit.id>${git.commit.id}</git.commit.id>
-                <git.commit.id.describe-short>${git.commit.id.describe-short}</git.commit.id.describe-short>
-                <project.build.outputTimestamp>${project.build.outputTimestamp}</project.build.outputTimestamp>
-                <project.version>${project.version}</project.version>
-                <version.copyright>${version.copyright}</version.copyright>
-                <version.license>${version.license}</version.license>
-                <version.url>${version.url}</version.url>
-                <target.java.version>${target.java.version}</target.java.version>
-              </properties>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
 
 
