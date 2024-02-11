@@ -62,9 +62,9 @@ public class ReadUTF8RecordStream {
         }
 
         // In case the previous read retrieved multiple records
-        String record = extractRecordFromBuffer();
-        if (record != null) {
-            return record;
+        String recordString = extractRecordFromBuffer();
+        if (recordString != null) {
+            return recordString;
         }
 
         // Keep reading until we have atleast one record in the buffer (sometimes we get multiple records)
@@ -78,9 +78,9 @@ public class ReadUTF8RecordStream {
 
             previousLastRecord.append(new String(readBuffer, 0, bytesRead, UTF_8));
 
-            record = extractRecordFromBuffer();
-            if (record != null) {
-                return record;
+            recordString = extractRecordFromBuffer();
+            if (recordString != null) {
+                return recordString;
             }
 
             final int length = previousLastRecord.length();

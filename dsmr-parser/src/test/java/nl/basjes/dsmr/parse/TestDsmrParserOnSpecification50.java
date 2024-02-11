@@ -41,7 +41,7 @@ class TestDsmrParserOnSpecification50 {
     //
     // The example telegram below is based on:
     // - DSMR version 5.0 (value 50 behind OBIS code 1-3:0.2.8.255)
-    // - It is send at 2010, December 9th, 11h30m20s
+    // - It is sent at 2010, December 9th, 11h30m20s
     // - Gas value of 2010, December 9th, 11:25h is presented
     // - 4 power failures in any phase
     // - 2 long power failure in any phase

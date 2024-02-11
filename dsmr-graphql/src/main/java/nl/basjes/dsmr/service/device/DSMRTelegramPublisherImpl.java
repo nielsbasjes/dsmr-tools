@@ -39,7 +39,7 @@ public class DSMRTelegramPublisherImpl implements DSMRTelegramPublisher {
     private static final long MAX_HISTORY = 60*60*24*2L;
     private final TreeMap<Long, DSMRTelegram> history = new TreeMap<>();
 
-    GraphQlConfig config;
+    final GraphQlConfig config;
 
     public DSMRTelegramPublisherImpl(GraphQlConfig config) {
         this.config = config;

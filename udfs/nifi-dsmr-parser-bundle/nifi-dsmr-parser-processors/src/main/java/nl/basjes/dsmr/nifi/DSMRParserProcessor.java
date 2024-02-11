@@ -129,8 +129,8 @@ public class DSMRParserProcessor extends AbstractProcessor {
         if (value != null) {
             map.put(ATTRIBUTE_PREFIX + name, ISO_OFFSET_DATE_TIME.format(value));
 
-            // In DSMR the are no times more accurate than a second.
-            // If you need milli/micro or even nano seconds just append some zeros.
+            // In DSMR there are no times more accurate than a second.
+            // If you need milli/micro or even nanoseconds just append some zeros.
             map.put(ATTRIBUTE_PREFIX + name + ".epochSecond", String.valueOf(value.toEpochSecond()));
         }
     }

@@ -345,7 +345,7 @@ public final class ParseDsmrTelegram extends DsmrBaseVisitor<Void> implements AN
         // The parser ONLY allows a eventDurationUnit of seconds because the specification explicitly states that.
         powerFailureEvent.duration =  Duration.ofSeconds(Long.parseLong(ctx.eventDuration.getText()));
 
-        // For convenience we calculate the start time
+        // For convenience, we calculate the start time
         powerFailureEvent.startTime = powerFailureEvent.endTime.minus(powerFailureEvent.duration);
 
         dsmrTelegram.powerFailureEventLog.add(powerFailureEvent);

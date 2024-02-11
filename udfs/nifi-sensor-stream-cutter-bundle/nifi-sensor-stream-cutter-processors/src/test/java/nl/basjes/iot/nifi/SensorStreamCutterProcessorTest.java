@@ -51,7 +51,7 @@ class SensorStreamCutterProcessorTest {
         // Run the enqueued content, it also takes an int = number of contents queued
         runner.run(5); // We have 4 lines in the file !!
 
-        // All results were processed with out failure
+        // All results were processed without failure
         runner.assertQueueEmpty();
 
         // If you need to read or do additional tests on results you can access the content

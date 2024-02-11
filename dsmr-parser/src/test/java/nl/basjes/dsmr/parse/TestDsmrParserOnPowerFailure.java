@@ -81,7 +81,7 @@ class TestDsmrParserOnPowerFailure {
 
         // Start was reported on Twitter @ 8:57 AM · May 25, 2022
         // - https://twitter.com/LianderNL/status/1529355943716200454
-        // End was reported on twitter @ 9:49 AM · May 25, 2022
+        // End was reported on Twitter @ 9:49 AM · May 25, 2022
         // - https://twitter.com/LianderNL/status/1529369061255266304
     }
 }

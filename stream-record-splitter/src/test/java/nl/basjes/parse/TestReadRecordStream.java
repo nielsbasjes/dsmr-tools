@@ -137,6 +137,7 @@ class TestReadRecordStream {
 
 
             /* Thread for writing data to pipe */
+            //noinspection Convert2Lambda
             pipeWriter = new Thread(new Runnable() { // NOTE: This CANNOT be a Lambda !
                 @Override
                 public void run() {

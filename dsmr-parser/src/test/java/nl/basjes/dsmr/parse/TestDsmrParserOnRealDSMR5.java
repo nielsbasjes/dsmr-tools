@@ -173,7 +173,7 @@ class TestDsmrParserOnRealDSMR5 {
 
     @Test
     void testParseRealTelegramWithSpaceInDeviceName(){
-        // From a Enexis/Sagemcom T120D that has a space in the device name
+        // From an Enexis/Sagemcom T120D that has a space in the device name
         DSMRTelegram dsmrTelegram = ParseDsmrTelegram.parse(
             "/Ene5\\SAGEMCOM CX2000-\r\n" +
             "\r\n" +

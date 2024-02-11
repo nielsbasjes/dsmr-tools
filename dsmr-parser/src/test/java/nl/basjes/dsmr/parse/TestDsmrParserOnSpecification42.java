@@ -39,7 +39,7 @@ class TestDsmrParserOnSpecification42 {
 
     // The example telegram below is based on:
     // - DSMR version 4.2 (value 42 behind OBIS code 1-3:0.2.8.255)
-    // - It is send at 2010, December 9th, 11h30m20s
+    // - It is sent at 2010, December 9th, 11h30m20s
     // - Gas value of 2010, December 9th, 11:00h is presented
     // - Standard message is in this case 01 61 81
     // - 4 power failures in any phase

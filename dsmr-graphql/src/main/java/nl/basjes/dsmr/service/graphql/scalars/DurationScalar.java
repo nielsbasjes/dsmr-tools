@@ -37,7 +37,7 @@ public final class DurationScalar {
     private DurationScalar() {}
 
     static {
-        Coercing<Duration, Long> coercing = new Coercing<Duration, Long>() {
+        Coercing<Duration, Long> coercing = new Coercing<>() {
             @Override
             public @Nullable Long serialize(@NotNull Object dataFetcherResult,
                                             @NotNull GraphQLContext graphQLContext,

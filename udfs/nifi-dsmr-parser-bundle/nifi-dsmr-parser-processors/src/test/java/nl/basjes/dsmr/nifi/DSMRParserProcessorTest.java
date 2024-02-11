@@ -112,7 +112,7 @@ class DSMRParserProcessorTest {
         // Run the enqueued content, it also takes an int = number of contents queued
         runner.run(1);
 
-        // All results were processed with out failure
+        // All results were processed without failure
         runner.assertQueueEmpty();
 
         // If you need to read or do additional tests on results you can access the content
@@ -275,7 +275,7 @@ class DSMRParserProcessorTest {
         // Run the enqueued content, it also takes an int = number of contents queued
         runner.run(1);
 
-        // All results were processed with out failure
+        // All results were processed without failure
         runner.assertQueueEmpty();
 
         // If you need to read or do additional tests on results you can access the content
@@ -360,7 +360,7 @@ class DSMRParserProcessorTest {
         // Run the enqueued content, it also takes an int = number of contents queued
         runner.run(1);
 
-        // All results were processed with out failure
+        // All results were processed without failure
         runner.assertQueueEmpty();
 
         // If you need to read or do additional tests on results you can access the content
@@ -388,7 +388,7 @@ class DSMRParserProcessorTest {
         // Run the enqueued content, it also takes an int = number of contents queued
         runner.run(1);
 
-        // All results were processed with out failure
+        // All results were processed without failure
         runner.assertQueueEmpty();
 
         // If you need to read or do additional tests on results you can access the content
@@ -441,7 +441,7 @@ class DSMRParserProcessorTest {
         // Run the enqueued content, it also takes an int = number of contents queued
         runner.run(1);
 
-        // All results were processed with out failure
+        // All results were processed without failure
         runner.assertQueueEmpty();
 
         // If you need to read or do additional tests on results you can access the content

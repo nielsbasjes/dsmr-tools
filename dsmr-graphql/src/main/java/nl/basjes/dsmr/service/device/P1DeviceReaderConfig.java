@@ -29,6 +29,6 @@ public class P1DeviceReaderConfig {
     private String tty;
 
     @Value("${dsmr.delay:0}")
-    private Long delayRead = 0L;
+    private Long delayRead;
 
 }

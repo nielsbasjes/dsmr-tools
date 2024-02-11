@@ -32,7 +32,7 @@ class TestTimestampParser {
         TimestampParser timestampParser = new TimestampParser();
 
         // "0-0:1.0.0(101209113020W)"
-        // It is send at 2010, December 9 th , 11h30m20s
+        // It is sent at 2010, December 9 th , 11h30m20s
         assertEquals("2010-12-09T11:30:20+01:00", timestampParser.parse("101209113020W").format(ISO_OFFSET_DATE_TIME));
 
         // "0-1:24.2.1(101209112500W)(12785.123*m3)"

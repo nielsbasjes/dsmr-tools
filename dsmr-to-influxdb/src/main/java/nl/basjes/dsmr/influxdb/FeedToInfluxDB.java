@@ -171,6 +171,7 @@ public final class FeedToInfluxDB {
         }
     }
 
+    @SuppressWarnings("CanBeFinal")
     private static final class CommandOptions {
         @Option(name = "-tty", usage = "The tty device from which to read")
         private String tty = "/dev/ttyUSB0";
