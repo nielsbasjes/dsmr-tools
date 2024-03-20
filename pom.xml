@@ -72,7 +72,7 @@
     <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
     <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 
-    <git-commit-id-plugin.version>8.0.1</git-commit-id-plugin.version>
+    <git-commit-id-plugin.version>8.0.2</git-commit-id-plugin.version>
     <version.copyright>Copyright (C) 2019-2024 Niels Basjes</version.copyright>
     <version.license>License Apache 2.0</version.license>
     <version.url>${project.url}</version.url>
@@ -287,9 +287,9 @@
         </plugin>
 
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-artifact-plugin</artifactId><version>3.4.1</version></plugin>
-        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-assembly-plugin</artifactId><version>3.7.0</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-assembly-plugin</artifactId><version>3.7.1</version></plugin>
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-clean-plugin</artifactId><version>3.3.2</version></plugin>
-        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.12.1</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.13.0</version></plugin>
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-deploy-plugin</artifactId><version>3.1.1</version></plugin>
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-enforcer-plugin</artifactId><version>3.4.1</version></plugin>
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-install-plugin</artifactId><version>3.1.1</version></plugin>
