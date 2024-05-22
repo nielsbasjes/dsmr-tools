@@ -120,7 +120,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.3.0</version>
         <executions>
           <!-- FIXME: Building under Java 21 results in [this-escape] warnings in the generated Antlr4 code. -->
           <!-- Waiting for https://github.com/antlr/antlr4/pull/4486 to be approved and released. -->
@@ -161,7 +161,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.5.0</version>
+        <version>3.6.0</version>
         <executions>
           <execution>
             <id>add-source</id>
