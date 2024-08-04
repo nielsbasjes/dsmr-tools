@@ -53,7 +53,7 @@
 
     <!-- ============================================== -->
 
-    <antlr.version>4.13.1</antlr.version>
+    <antlr.version>4.13.2</antlr.version>
     <slf4j.version>2.0.13</slf4j.version>
     <kryo.version>5.6.0</kryo.version>
 
@@ -608,7 +608,6 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
-              <compilerVersion>${target.java.version}</compilerVersion>
               <source>${target.java.version}</source>
               <target>${target.java.version}</target>
               <compilerArgs>
