@@ -21,7 +21,7 @@ package nl.basjes.dsmr.service;
 import io.restassured.response.ValidatableResponse;
 import nl.basjes.dsmr.Version;
 import org.apache.commons.text.StringEscapeUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
@@ -30,35 +30,53 @@ import static org.hamcrest.CoreMatchers.equalTo;
 abstract class AbstractParseServletGraphQlTests extends AbstractTestingBase {
 
     private ValidatableResponse getGraphQLResponse(String body) {
-        return
+        ValidatableResponse response =
             given()
                 .port(getPort())
+                .header("User-Agent", "Niels Basjes / 42")
                 .accept(JSON)
                 .contentType(JSON)
                 .body("{\"query\":\""+ StringEscapeUtils.escapeJson(body)+"\"}")
             .when()
                 .post("/graphql")
             .then();
+        LOG.info("{}", response.extract().body().jsonPath().get().toString());
+        return response;
     }
 
     // ------------------------------------------
     @Test
-    public void testVersion() {
+    void testVersion() {
+        Version version = Version.getInstance();
+
         LOG.info("Testing GraphQL: version");
         getGraphQLResponse(
-            "{" +
-            "  version {" +
-            "    projectVersion" +
-            "    url" +
-            "    targetJREVersion" +
-            "  }" +
-            "}")
+            "                                    \n" +
+            "    query {                         \n" +
+            "      version {                     \n" +
+            "        gitCommitId                 \n" +
+            "        gitCommitIdDescribeShort    \n" +
+            "        buildTimeStamp              \n" +
+            "        projectVersion              \n" +
+            "        copyright                   \n" +
+            "        license                     \n" +
+            "        url                         \n" +
+            "        targetJREVersion            \n" +
+            "      }                             \n" +
+            "    }                               \n"
+            )
             .statusCode(200)
             .contentType(JSON)
-            .body("data.version.projectVersion", equalTo(Version.PROJECT_VERSION))
-            .body("data.version.url", equalTo(Version.URL))
-            .body("data.version.targetJREVersion", equalTo(Version.TARGET_JRE_VERSION));
+            .body("data.version.gitCommitId",              equalTo(version.getGitCommitId()))
+            .body("data.version.gitCommitIdDescribeShort", equalTo(version.getGitCommitIdDescribeShort()))
+            .body("data.version.buildTimeStamp",           equalTo(version.getBuildTimeStamp()))
+            .body("data.version.projectVersion",           equalTo(version.getProjectVersion()))
+            .body("data.version.copyright",                equalTo(version.getCopyright()))
+            .body("data.version.license",                  equalTo(version.getLicense()))
+            .body("data.version.url",                      equalTo(version.getUrl()))
+            .body("data.version.targetJREVersion",         equalTo(version.getTargetJREVersion()));
     }
+
 //
 //    @Test
 //    public void testAnalyzeDirectUserAgent() {
