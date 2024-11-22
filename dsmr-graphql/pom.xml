@@ -38,7 +38,7 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.release>${java.version}</maven.compiler.release>
     <main.class>nl.basjes.dsmr.service.DSMRService</main.class>
-    <spring-boot.version>3.3.5</spring-boot.version>
+    <spring-boot.version>3.4.0</spring-boot.version>
   </properties>
 
   <dependencyManagement>
