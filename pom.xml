@@ -58,7 +58,7 @@
     <kryo.version>5.6.2</kryo.version>
 
     <checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
-    <checkstyle.version>10.20.2</checkstyle.version>
+    <checkstyle.version>10.21.0</checkstyle.version>
     <rat.version>0.16.1</rat.version>
     <jacoco.version>0.8.12</jacoco.version>
     <junit5.version>5.11.3</junit5.version>
