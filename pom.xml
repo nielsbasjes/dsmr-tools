@@ -50,7 +50,7 @@
 
     <!-- Apache Nifi -->
     <nifi-api.version>2.0.0</nifi-api.version>
-    <nifi.version>2.1.0</nifi.version>
+    <nifi.version>2.2.0</nifi.version>
 
     <!-- ============================================== -->
 
@@ -59,7 +59,7 @@
     <kryo.version>5.6.2</kryo.version>
 
     <checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
-    <checkstyle.version>10.21.1</checkstyle.version>
+    <checkstyle.version>10.21.2</checkstyle.version>
     <rat.version>0.16.1</rat.version>
     <jacoco.version>0.8.12</jacoco.version>
     <junit5.version>5.11.4</junit5.version>
