@@ -49,7 +49,7 @@
     <!-- ============================================== -->
 
     <!-- Apache Nifi -->
-    <nifi-api.version>2.0.0</nifi-api.version>
+    <nifi-api.version>2.1.0</nifi-api.version>
     <nifi.version>2.3.0</nifi.version>
 
     <!-- ============================================== -->
