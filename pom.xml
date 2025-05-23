@@ -73,7 +73,7 @@
     <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
     <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 
-    <git-commit-id-maven-plugin.version>9.0.1</git-commit-id-maven-plugin.version>
+    <git-commit-id-maven-plugin.version>9.0.2</git-commit-id-maven-plugin.version>
     <version.copyright>Copyright (C) 2019-2024 Niels Basjes</version.copyright>
     <version.license>Apache 2.0</version.license>
     <version.url>${project.url}</version.url>
