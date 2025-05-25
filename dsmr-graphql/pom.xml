@@ -74,28 +74,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-graphql</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.yaml</groupId>
-          <artifactId>snakeyaml</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.graphql-java</groupId>
-          <artifactId>graphql-java</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
       <version>2.4</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.graphql-java</groupId>
-      <artifactId>graphql-java</artifactId>
-      <version>23.1</version>
     </dependency>
 
     <dependency>
@@ -112,22 +96,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-websocket</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.graphql-java</groupId>
-      <artifactId>graphiql-spring-boot-starter</artifactId>
-      <version>5.0.2</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.graphql-java</groupId>
-          <artifactId>graphql-java</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.commons</groupId>
-          <artifactId>commons-text</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -202,6 +170,7 @@
       <version>5.5.5</version>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>

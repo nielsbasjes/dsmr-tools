@@ -20,7 +20,6 @@ server:
 
 spring:
   graphql:
-    path: /graphql
     websocket:
       path: /graphql # ws://localhost:8080/service
       connection-init-timeout: 60s # defines the WebSocket connection initialization timeout to 60 sec
