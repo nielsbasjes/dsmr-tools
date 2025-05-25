@@ -16,4 +16,4 @@
 # limitations under the License.
 #
 
-java -jar target/dsmr-to-influxdb-*.jar -tty ../dsmr-simulator/ttyDSMR -databaseUrl http://127.0.0.1:8086 -databaseName simulated
+java -jar target/dsmr-to-influxdb-*.jar -tty ../dsmr-simulator/ttyDSMR #-databaseUrl http://127.0.0.1:8086 -databaseName simulated
