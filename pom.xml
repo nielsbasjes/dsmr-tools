@@ -62,7 +62,7 @@
     <checkstyle.version>10.26.1</checkstyle.version>
     <rat.version>0.16.1</rat.version>
     <jacoco.version>0.8.13</jacoco.version>
-    <junit5.version>5.13.3</junit5.version>
+    <junit5.version>5.13.4</junit5.version>
 
     <!-- See http://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html-->
     <jacoco.surefireArgLine/>
