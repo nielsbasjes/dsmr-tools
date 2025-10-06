@@ -50,7 +50,7 @@
 
     <!-- Apache Nifi -->
     <nifi-api.version>2.3.0</nifi-api.version>
-    <nifi.version>2.5.0</nifi.version>
+    <nifi.version>2.6.0</nifi.version>
 
     <!-- ============================================== -->
 
@@ -59,10 +59,10 @@
     <kryo.version>5.6.2</kryo.version>
 
     <checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
-    <checkstyle.version>11.0.1</checkstyle.version>
+    <checkstyle.version>11.1.0</checkstyle.version>
     <rat.version>0.16.1</rat.version>
     <jacoco.version>0.8.13</jacoco.version>
-    <junit5.version>5.13.4</junit5.version>
+    <junit5.version>5.14.0</junit5.version>
 
     <!-- See http://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html-->
     <jacoco.surefireArgLine/>
@@ -274,24 +274,24 @@
           <version>5.2.0.4988</version>
         </plugin>
 
-        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-artifact-plugin</artifactId><version>3.6.0</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-artifact-plugin</artifactId><version>3.6.1</version></plugin>
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-assembly-plugin</artifactId><version>3.7.1</version></plugin>
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-clean-plugin</artifactId><version>3.5.0</version></plugin>
-        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.14.0</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.14.1</version></plugin>
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-deploy-plugin</artifactId><version>3.1.4</version></plugin>
-        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-enforcer-plugin</artifactId><version>3.6.1</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-enforcer-plugin</artifactId><version>3.6.2</version></plugin>
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-install-plugin</artifactId><version>3.1.4</version></plugin>
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-jar-plugin</artifactId><version>3.4.2</version></plugin>
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-resources-plugin</artifactId><version>3.3.1</version></plugin>
-        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-shade-plugin</artifactId><version>3.6.0</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-shade-plugin</artifactId><version>3.6.1</version></plugin>
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-site-plugin</artifactId><version>3.21.0</version></plugin>
-        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.5.3</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.5.4</version></plugin>
         <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-toolchains-plugin</artifactId><version>3.2.0</version></plugin>
 
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>versions-maven-plugin</artifactId>
-          <version>2.19.0</version>
+          <version>2.19.1</version>
           <configuration>
             <rulesUri>classpath:///maven-version-rules.xml</rulesUri>
           </configuration>
@@ -419,7 +419,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.11.3</version>
+            <version>3.12.0</version>
             <executions>
               <execution>
                 <id>attach-javadocs</id>
