@@ -60,7 +60,7 @@
 
     <checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
     <checkstyle.version>12.0.1</checkstyle.version>
-    <rat.version>0.16.1</rat.version>
+    <rat.version>0.17</rat.version>
     <jacoco.version>0.8.14</jacoco.version>
     <junit5.version>6.0.0</junit5.version>
 
@@ -129,41 +129,42 @@
         <configuration>
           <consoleOutput>true</consoleOutput>
           <excludeSubProjects>false</excludeSubProjects>
-          <excludes>
+          <inputExcludes>
             <!-- Version control files -->
-            <exclude>**/.git/**</exclude>
-            <exclude>**/.gitignore</exclude>
+            <inputExclude>**/.git/**</inputExclude>
+            <inputExclude>**/.gitignore</inputExclude>
             <!-- IDE settings and files -->
-            <exclude>**/.classpath</exclude>
-            <exclude>**/.project</exclude>
-            <exclude>**/.settings/**</exclude>
-            <exclude>**/.idea/**</exclude>
-            <exclude>**/*.iml</exclude>
-            <exclude>*.patch</exclude>
-            <exclude>*.diff</exclude>
+            <inputExclude>**/.classpath</inputExclude>
+            <inputExclude>**/.project</inputExclude>
+            <inputExclude>**/.settings/**</inputExclude>
+            <inputExclude>**/.idea/**</inputExclude>
+            <inputExclude>**/*.iml</inputExclude>
+            <inputExclude>*.patch</inputExclude>
+            <inputExclude>*.diff</inputExclude>
             <!-- Documentation -->
-            <exclude>docs/**</exclude>
+            <inputExclude>docs/**</inputExclude>
+            <inputExclude>**/*.pdf</inputExclude> <!-- https://issues.apache.org/jira/browse/RAT-512 -->
             <!-- Files that cannot be 'polluted' -->
-            <exclude>.github/**</exclude>
-            <exclude>*.json</exclude>
-            <exclude>CNAME</exclude>
-            <exclude>.run/*.run.xml</exclude>
+            <inputExclude>.github/**</inputExclude>
+            <inputExclude>*.json</inputExclude>
+            <inputExclude>CNAME</inputExclude>
+            <inputExclude>.run/*.run.xml</inputExclude>
             <!-- Test and demo input files -->
-            <exclude>**/testfiles/**</exclude>
-            <exclude>**/testinput.txt</exclude>
-            <exclude>**/*.log</exclude>
-            <exclude>**/src/test/data/**</exclude>
-            <exclude>dsmr-graphql/src/test/resources/ttyUSB0-raw.txt</exclude>
+            <inputExclude>**/testfiles/**</inputExclude>
+            <inputExclude>**/testinput.txt</inputExclude>
+            <inputExclude>**/*.log</inputExclude>
+            <inputExclude>**/src/test/data/**</inputExclude>
+            <inputExclude>dsmr-graphql/src/test/resources/ttyUSB0-raw.txt</inputExclude>
             <!-- File generated during build -->
-            <exclude>**/target/**</exclude>
-            <exclude>**/dependency-reduced-pom.xml</exclude>
+            <inputExclude>**/target/**</inputExclude>
+            <inputExclude>**/dependency-reduced-pom.xml</inputExclude>
             <!-- Other files -->
-            <exclude>ReleaseProcedure.txt</exclude>
-            <exclude>**/.~lock.*</exclude>
+            <inputExclude>ReleaseProcedure.txt</inputExclude>
+            <inputExclude>**/.~lock.*</inputExclude>
             <!-- Test scripts -->
-            <exclude>*.sh</exclude>
-            <exclude>**/_*/**</exclude>
-          </excludes>
+            <inputExclude>*.sh</inputExclude>
+            <inputExclude>**/_*/**</inputExclude>
+          </inputExcludes>
         </configuration>
       </plugin>
 
