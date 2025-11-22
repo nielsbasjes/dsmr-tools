@@ -27,7 +27,6 @@
   </parent>
 
   <artifactId>nifi-dsmr-parser-bundle</artifactId>
-  <version>0.7-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>DSMR : UDF : Nifi : DSMR Parser :</name>
   <description>A toolkit for reading and parsing the data conforming to the Dutch Smart Meter Requirements (DSMR).</description>

@@ -57,7 +57,7 @@
     <dependency>
       <groupId>nl.basjes.iot</groupId>
       <artifactId>stream-record-splitter</artifactId>
-      <version>0.7-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
 
   </dependencies>

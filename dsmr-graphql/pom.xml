@@ -101,28 +101,6 @@
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-<!--      <exclusions>-->
-<!--        <exclusion>-->
-<!--          <groupId>org.slf4j</groupId>-->
-<!--          <artifactId>slf4j-api</artifactId>-->
-<!--        </exclusion>-->
-<!--        <exclusion>-->
-<!--          <groupId>org.springframework</groupId>-->
-<!--          <artifactId>spring-webmvc</artifactId>-->
-<!--        </exclusion>-->
-<!--        <exclusion>-->
-<!--          <groupId>org.springframework.boot</groupId>-->
-<!--          <artifactId>spring-boot-autoconfigure</artifactId>-->
-<!--        </exclusion>-->
-<!--        <exclusion>-->
-<!--          <groupId>org.apache.commons</groupId>-->
-<!--          <artifactId>commons-lang3</artifactId>-->
-<!--        </exclusion>-->
-<!--        <exclusion>-->
-<!--          <groupId>org.yaml</groupId>-->
-<!--          <artifactId>snakeyaml</artifactId>-->
-<!--        </exclusion>-->
-<!--      </exclusions>-->
     </dependency>
 
     <dependency>

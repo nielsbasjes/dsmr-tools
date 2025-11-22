@@ -37,7 +37,7 @@
     <dependency>
       <groupId>nl.basjes.dsmr</groupId>
       <artifactId>dsmr-parser</artifactId>
-      <version>0.7-SNAPSHOT</version>
+      <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

@@ -28,7 +28,6 @@
 
   <groupId>nl.basjes.iot</groupId>
   <artifactId>nifi-sensor-stream-cutter-bundle</artifactId>
-  <version>0.7-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>DSMR : UDF : Nifi : Sensor Stream Cutter :</name>

@@ -27,7 +27,6 @@
   </parent>
 
   <artifactId>nifi-sensor-stream-cutter</artifactId>
-  <version>0.7-SNAPSHOT</version>
   <packaging>nar</packaging>
 
   <name>DSMR : UDF : Nifi : Sensor Stream Cutter : Nar</name>
@@ -43,7 +42,7 @@
     <dependency>
       <groupId>nl.basjes.iot</groupId>
       <artifactId>nifi-sensor-stream-cutter-processors</artifactId>
-      <version>0.7-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 
