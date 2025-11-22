@@ -35,11 +35,10 @@
     <target.java.release>11</target.java.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
-    <maven.compiler.source>${target.java.version}</maven.compiler.source>
-    <maven.compiler.target>${target.java.version}</maven.compiler.target>
+    <maven.compiler.release>${target.java.release}</maven.compiler.release>
 
     <!-- In order for everything to work correctly we need at least this version of maven. -->
-    <maven.minimal.version>3.5.2</maven.minimal.version>
+    <maven.minimal.version>3.9.11</maven.minimal.version>
 
     <!-- Needed to make the build reproducible https://reproducible-builds.org/ -->
     <project.build.outputTimestamp>2024-01-15T18:32:01Z</project.build.outputTimestamp>
@@ -114,6 +113,26 @@
 
   <build>
     <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-toolchains-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>select-jdk-toolchain</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <toolchains>
+            <jdk>
+              <version>[25,26)</version>
+            </jdk>
+          </toolchains>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
@@ -187,10 +206,34 @@
                   <!-- https://issues.apache.org/jira/browse/MDEPLOY-221 -->
                   <!-- https://issues.apache.org/jira/browse/MNG-6581    -->
                 </requireMavenVersion>
+
+                <banDuplicateClasses>
+                  <scopes>
+                    <scope>compile</scope>
+                    <scope>runtime</scope>
+                    <scope>provided</scope>
+                  </scopes>
+                  <findAllDuplicates>true</findAllDuplicates>
+                  <ignoreWhenIdentical>true</ignoreWhenIdentical>
+                </banDuplicateClasses>
+
+                <enforceBytecodeVersion>
+                  <maxJdkVersion>11</maxJdkVersion>
+                  <ignoredScopes>test</ignoredScopes>
+                </enforceBytecodeVersion>
+
               </rules>
+              <fail>true</fail>
             </configuration>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>extra-enforcer-rules</artifactId>
+            <version>1.11.0</version>
+          </dependency>
+        </dependencies>
       </plugin>
 
     </plugins>
@@ -557,43 +600,6 @@
     </profile>
 
     <profile>
-      <id>EnableReportPlugins</id>
-      <activation>
-        <property>
-          <name>EnableReportPlugins</name>
-        </property>
-        <jdk>1.8</jdk>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <groupId>org.eluder.coveralls</groupId>
-            <artifactId>coveralls-maven-plugin</artifactId>
-            <version>4.3.0</version>
-            <configuration>
-              <timestampFormat>EpochMillis</timestampFormat>
-            </configuration>
-            <dependencies>
-              <!-- Explicit dep on jaxb-api to avoid problems with
-                JDK9 and later, until a new version of
-                coveralls-maven-plugin is released.
-                See also https://github.com/trautonen/coveralls-maven-plugin/issues/112 -->
-              <dependency>
-                <groupId>javax.xml.bind</groupId>
-                <artifactId>jaxb-api</artifactId>
-                <version>2.3.1</version>
-              </dependency>
-            </dependencies>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
       <id>SkipSonarBecauseItWasNotConfigured</id>
       <activation>
         <property>
@@ -604,79 +610,6 @@
         <sonar.skip>true</sonar.skip>
       </properties>
     </profile>
-
-    <profile>
-      <id>Build with JDK 8</id>
-      <activation>
-        <jdk>1.8</jdk>
-      </activation>
-      <properties>
-        <!-- Sonar is no longer supported on Java 8                                -->
-        <!-- https://sonarcloud.io/documentation/user-guide/move-analysis-java-11/ -->
-        <sonar.skip>true</sonar.skip>
-      </properties>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <source>${target.java.version}</source>
-              <target>${target.java.version}</target>
-              <compilerArgs>
-                <!-- Enable almost all warnings.-->
-                <!-- Ignore 'classfile' to allow leaving Kryo out. -->
-                <!-- Ignore 'processing' to avoid "No processor claimed any of these annotations" in several places. -->
-                <!-- Ignore 'serial' warnings about not having a serialVersionUID -->
-                <arg>-Xlint:all,-classfile,-processing,-serial</arg>
-                <arg>-Werror</arg>
-              </compilerArgs>
-              <showWarnings>true</showWarnings>
-              <showDeprecation>true</showDeprecation>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
-      <id>Build with JDK 11+</id>
-      <activation>
-        <jdk>[1.11,)</jdk>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <release>${target.java.release}</release>
-              <compilerArgs>
-                <!-- Enable almost all warnings.-->
-                <!-- Ignore 'classfile' to allow leaving Kryo out. -->
-                <!-- Ignore 'processing' to avoid "No processor claimed any of these annotations" in several places. -->
-                <!-- Ignore 'serial' warnings about not having a serialVersionUID -->
-                <!-- Ignore 'options' warnings about java 8 being obsolete in JDK 21 -->
-                <arg>-Xlint:all,-classfile,-processing,-serial,-options</arg>
-                <arg>-Werror</arg>
-                <arg>-implicit:class</arg>
-              </compilerArgs>
-              <showWarnings>true</showWarnings>
-              <showDeprecation>true</showDeprecation>
-              <annotationProcessorPaths>
-                <path>
-                  <groupId>org.projectlombok</groupId>
-                  <artifactId>lombok</artifactId>
-                  <version>${lombok.version}</version>
-                </path>
-              </annotationProcessorPaths>
-            </configuration>
-          </plugin>
-
-        </plugins>
-      </build>
-    </profile>
-
 
   </profiles>
 

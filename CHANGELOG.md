@@ -7,6 +7,7 @@ v0.7-SNAPSHOT
   - `ident` renamed to `rawIdent`, parsed into `equimpentBrandTag` and `ident`.
   - Include the reception timestamp (of the server which is usually much more accurate).
   - Added GraphQL service
+  - Build using Java 25 with target Java 11
 
 v0.6
 ===

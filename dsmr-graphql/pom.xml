@@ -194,7 +194,7 @@
         <configuration>
           <toolchains>
             <jdk>
-              <version>[21,22)</version>
+              <version>[25,26)</version>
             </jdk>
           </toolchains>
         </configuration>
@@ -250,13 +250,19 @@
           </execution>
 
           <execution>
-            <id>enforce-quality</id>
-            <phase>validate</phase>
+            <id>enforce-maven</id>
             <goals>
               <goal>enforce</goal>
             </goals>
             <configuration>
               <rules>
+                <requireMavenVersion>
+                  <version>[${maven.minimal.version},)</version>
+                  <message>You must use Maven version ${maven.minimal.version} or newer to build this project.</message>
+                  <!-- Reasons for this need:                            -->
+                  <!-- https://issues.apache.org/jira/browse/MDEPLOY-221 -->
+                  <!-- https://issues.apache.org/jira/browse/MNG-6581    -->
+                </requireMavenVersion>
 
                 <banDuplicateClasses>
                   <scopes>
@@ -268,11 +274,15 @@
                   <ignoreWhenIdentical>true</ignoreWhenIdentical>
                 </banDuplicateClasses>
 
+                <enforceBytecodeVersion>
+                  <maxJdkVersion>21</maxJdkVersion>
+                  <ignoredScopes>test</ignoredScopes>
+                </enforceBytecodeVersion>
+
               </rules>
               <fail>true</fail>
             </configuration>
           </execution>
-
         </executions>
         <dependencies>
           <dependency>
