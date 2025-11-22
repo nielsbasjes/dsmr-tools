@@ -128,7 +128,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.42</version>
+      <version>${lombok.version}</version>
       <scope>provided</scope>
     </dependency>
 
@@ -203,20 +203,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-          <compilerArgs>
-            <!-- Enable almost all warnings.-->
-            <!-- Ignore 'processing' to avoid "No processor claimed any of these annotations" in several places. -->
-            <!-- Ignore 'serial' warnings about not having a serialVersionUID -->
-            <!-- Ignore 'options' warnings about java 8 being obsolete in JDK 21 -->
-            <arg>-Xlint:all,-processing,-serial,-options</arg>
-            <arg>-Werror</arg>
-          </compilerArgs>
-          <showWarnings>true</showWarnings>
-          <showDeprecation>true</showDeprecation>
-        </configuration>
       </plugin>
 
       <plugin>
