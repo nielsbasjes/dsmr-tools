@@ -38,7 +38,7 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.release>${java.version}</maven.compiler.release>
     <main.class>nl.basjes.dsmr.service.DSMRService</main.class>
-    <spring-boot.version>3.5.9</spring-boot.version>
+    <spring-boot.version>4.0.1</spring-boot.version>
   </properties>
 
   <dependencyManagement>
@@ -53,7 +53,7 @@
       <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-      <version>2.8.14</version>
+      <version>3.0.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -145,7 +145,7 @@
     <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
-      <version>5.5.6</version>
+      <version>6.0.0</version>
       <scope>test</scope>
     </dependency>
 
