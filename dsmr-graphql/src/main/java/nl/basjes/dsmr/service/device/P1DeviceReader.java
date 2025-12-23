@@ -100,6 +100,10 @@ public class P1DeviceReader implements DisposableBean, Runnable {
 
                 output.publish(dsmrTelegram);
 
+                // ==============================
+                // Slow down for testing purposes
+                // TODO: Implement this in a better way
+                // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
                 Long delayRead = config.getDelayRead();
                 // Only a delay between 0 and 30 seconds is considered to be a valid value
                 if (delayRead != null && delayRead != 0) {
@@ -109,6 +113,9 @@ public class P1DeviceReader implements DisposableBean, Runnable {
                         log.warn("Ignoring the invalid delay value of {}", delayRead);
                     }
                 }
+                // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                // Slow down for testing purposes
+                // ==============================
             }
         } catch (FileNotFoundException e) {
             log.error("Got FileNotFoundException: {}", e.getMessage());
