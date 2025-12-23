@@ -23,12 +23,12 @@ import graphql.schema.DataFetchingEnvironment;
 import lombok.extern.log4j.Log4j2;
 import nl.basjes.dsmr.DSMRTelegram;
 import nl.basjes.dsmr.service.device.DSMRTelegramPublisher;
+import org.jspecify.annotations.NonNull;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.GraphQlExceptionHandler;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SubscriptionMapping;
 import org.springframework.graphql.execution.ErrorType;
-import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Flux;
@@ -64,10 +64,10 @@ public class GraphQlRequestHandler {
     }
 
     @SubscriptionMapping("dsmrTelegram")
-    public Flux<DSMRTelegram> subscribeMeasurement(
+    public Flux<@NonNull DSMRTelegram> subscribeMeasurement(
         @Argument("onlyValid")  Boolean onlyValid
     ) {
-        Flux<DSMRTelegram> dsmrTelegramFlux = output.asFlux();
+        Flux<@NonNull DSMRTelegram> dsmrTelegramFlux = output.asFlux();
         if (onlyValid == Boolean.TRUE) {
             dsmrTelegramFlux = dsmrTelegramFlux.filter(DSMRTelegram::isValid);
         }

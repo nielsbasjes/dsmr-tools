@@ -38,7 +38,7 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.release>${java.version}</maven.compiler.release>
     <main.class>nl.basjes.dsmr.service.DSMRService</main.class>
-    <spring-boot.version>3.5.9</spring-boot.version>
+    <spring-boot.version>4.0.0</spring-boot.version>
   </properties>
 
   <dependencyManagement>
@@ -53,7 +53,7 @@
       <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-      <version>2.8.14</version>
+      <version>3.0.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -79,7 +79,6 @@
     <dependency>
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
-      <version>2.5</version>
     </dependency>
 
     <dependency>
@@ -122,13 +121,6 @@
       <version>26.0.2-1</version>
     </dependency>
 
-
-    <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-      <scope>test</scope>
-    </dependency>
-
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -145,7 +137,7 @@
     <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
-      <version>5.5.6</version>
+      <version>6.0.0</version>
       <scope>test</scope>
     </dependency>
 
@@ -172,7 +164,7 @@
         <configuration>
           <toolchains>
             <jdk>
-              <version>[25,26)</version>
+              <version>[21,22)</version>
             </jdk>
           </toolchains>
         </configuration>
@@ -203,6 +195,33 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
       </plugin>
+
+      <!-- ======================================================== -->
+      <!-- Needed for Mockito -->
+      <!-- https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3 -->
+      <!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>properties</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-javaagent:${org.mockito:mockito-core:jar}</argLine>
+        </configuration>
+      </plugin>
+      <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+      <!-- Needed for Mockito -->
+      <!-- ======================================================== -->
 
       <plugin>
         <groupId>org.jacoco</groupId>
