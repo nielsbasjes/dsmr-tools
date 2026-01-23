@@ -48,7 +48,7 @@
     <!-- ============================================== -->
 
     <!-- Apache Nifi -->
-    <nifi-api.version>2.5.0</nifi-api.version>
+    <nifi-api.version>2.6.0</nifi-api.version>
     <nifi.version>2.7.2</nifi.version>
 
     <!-- ============================================== -->
