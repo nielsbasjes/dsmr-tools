@@ -37,7 +37,7 @@ public class GraphQlConfig {
     }
 
     @Bean
-    public Sinks.Many<DSMRTelegram> sink() {
+    public Sinks.Many<DSMRTelegram> dsmrTelegramSink() {
         return Sinks.many()
             .multicast()
             .directBestEffort();
@@ -46,7 +46,7 @@ public class GraphQlConfig {
 
     @Bean
     public Flux<DSMRTelegram> flux() {
-        return sink().asFlux();
+        return dsmrTelegramSink().asFlux();
     }
 
 }
