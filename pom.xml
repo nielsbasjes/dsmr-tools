@@ -60,7 +60,7 @@
 
     <checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
     <checkstyle.version>13.3.0</checkstyle.version>
-    <rat.version>0.17</rat.version>
+    <rat.version>0.18</rat.version>
     <jacoco.version>0.8.14</jacoco.version>
     <junit5.version>6.0.3</junit5.version>
 
