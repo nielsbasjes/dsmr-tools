@@ -67,7 +67,7 @@ public class DSMRTelegramPublisherImpl implements DSMRTelegramPublisher {
     }
 
     private void publishToSink(DSMRTelegram measurement) {
-        Sinks.EmitResult emitResult = config.dsmrTelegramSink().tryEmitNext(measurement);
+        Sinks.EmitResult emitResult = config.getDsmrTelegramSink().tryEmitNext(measurement);
         if (emitResult.isFailure()) {
             if (emitResult != FAIL_ZERO_SUBSCRIBER) {
                 log.error("Got an emit failure: Measurement {} --> Sinks.EmitResult {}", measurement, emitResult);
@@ -77,7 +77,7 @@ public class DSMRTelegramPublisherImpl implements DSMRTelegramPublisher {
 
     @Override
     public Flux<DSMRTelegram> asFlux() {
-        return config.flux();
+        return config.dsmrTelegramFlux();
     }
 
     @Override

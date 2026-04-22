@@ -36,17 +36,19 @@ public class GraphQlConfig {
                 .scalar(DurationScalar.INSTANCE);
     }
 
-    @Bean
-    public Sinks.Many<DSMRTelegram> dsmrTelegramSink() {
-        return Sinks.many()
+    private final Sinks.Many<DSMRTelegram> dsmrTelegramSink = Sinks.many()
             .multicast()
             .directBestEffort();
 //        .onBackpressureBuffer(Queues.SMALL_BUFFER_SIZE, false);
+
+
+    public Sinks.Many<DSMRTelegram> getDsmrTelegramSink() {
+        return dsmrTelegramSink;
     }
 
     @Bean
-    public Flux<DSMRTelegram> flux() {
-        return dsmrTelegramSink().asFlux();
+    public Flux<DSMRTelegram> dsmrTelegramFlux() {
+        return dsmrTelegramSink.asFlux();
     }
 
 }
