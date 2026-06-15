@@ -59,7 +59,7 @@
     <lombok.version>1.18.46</lombok.version>
 
     <checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
-    <checkstyle.version>13.5.0</checkstyle.version>
+    <checkstyle.version>13.6.0</checkstyle.version>
     <rat.version>0.18</rat.version>
     <jacoco.version>0.8.15</jacoco.version>
     <junit5.version>6.1.0</junit5.version>
