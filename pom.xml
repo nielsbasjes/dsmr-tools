@@ -55,7 +55,7 @@
 
     <antlr.version>4.13.2</antlr.version>
     <slf4j.version>2.0.20</slf4j.version>
-    <kryo.version>5.7.0</kryo.version>
+    <kryo.version>5.7.1</kryo.version>
     <lombok.version>1.18.48</lombok.version>
 
     <checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
